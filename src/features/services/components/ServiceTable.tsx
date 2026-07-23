@@ -1,29 +1,27 @@
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+
 import { Card } from "@/components/ui";
+import { DataTable } from "@/components/data-table";
 
 import { useServices } from "../hooks";
-import { ServiceTableRow } from "./ServiceTableRow";
+import { serviceColumns } from "./service-columns";
 
 export function ServiceTable() {
-  const { data = [] } = useServices();
+  const { data = [], isPending, isError } = useServices();
 
-  return (
-    <Card className="overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-muted/50">
-          <tr className="border-b text-left">
-            <th className="px-6 py-3 font-medium">Name</th>
-            <th className="px-6 py-3 font-medium">Status</th>
-            <th className="px-6 py-3 font-medium">Version</th>
-            <th className="px-6 py-3 font-medium">Environment</th>
-          </tr>
-        </thead>
+  const table = useReactTable({
+    data,
+    columns: serviceColumns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
-        <tbody>
-          {data.map((service) => (
-            <ServiceTableRow key={service.id} service={service} />
-          ))}
-        </tbody>
-      </table>
-    </Card>
-  );
+  if (isPending) {
+    return <Card className="p-6">Loading services...</Card>;
+  }
+
+  if (isError) {
+    return <Card className="p-6">Failed to load services.</Card>;
+  }
+
+  return <DataTable table={table} />;
 }
