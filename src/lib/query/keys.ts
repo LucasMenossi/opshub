@@ -9,4 +9,8 @@ export const queryKeys = {
   services: {
     all: ["services"] as const,
   },
+
+  deployments: {
+    all: ["deployments"] as const,
+  },
 } as const;
