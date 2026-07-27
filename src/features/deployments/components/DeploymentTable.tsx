@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import {
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   type SortingState,
   useReactTable,
@@ -12,19 +13,45 @@ import { Card } from "@/components/ui";
 
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
+import { formatDateTime } from "@/lib/formatters";
 
 export function DeploymentTable() {
   const { data = [], isPending, isError } = useDeployments();
+
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data,
     columns: deploymentColumns,
     state: {
       sorting,
+      globalFilter,
     },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+
+    globalFilterFn: (row, _columnId, filterValue) => {
+      const search = String(filterValue).toLowerCase().trim();
+
+      if (!search) {
+        return true;
+      }
+
+      const deployment = row.original;
+
+      return [
+        deployment.service,
+        deployment.version,
+        deployment.environment,
+        deployment.status,
+        deployment.author,
+        formatDateTime(deployment.deployedAt),
+      ].some((value) => String(value).toLowerCase().includes(search));
+    },
+
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
@@ -44,5 +71,11 @@ export function DeploymentTable() {
     );
   }
 
-  return <DataTable table={table} emptyMessage="No deployments found." />;
+  return (
+    <DataTable
+      table={table}
+      emptyMessage="No deployments found."
+      searchPlaceholder="Search deployments..."
+    />
+  );
 }

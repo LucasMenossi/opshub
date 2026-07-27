@@ -14,20 +14,20 @@ export const deployments: Deployment[] = [
     service: "API Gateway",
     version: "v2.4.1",
     status: "success",
-    deployedAt: "5 minutes ago",
+    deployedAt: "2026-07-27T14:35:00Z",
   },
   {
     id: "2",
     service: "Authentication",
     version: "v1.18.0",
     status: "running",
-    deployedAt: "12 minutes ago",
+    deployedAt: "2026-07-23T08:35:00Z",
   },
   {
     id: "3",
     service: "Payment Service",
     version: "v3.2.0",
     status: "failed",
-    deployedAt: "1 hour ago",
+    deployedAt: "2026-07-25T22:35:00Z",
   },
 ];

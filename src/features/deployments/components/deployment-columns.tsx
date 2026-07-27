@@ -2,13 +2,13 @@ import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { DeploymentStatusBadge } from "@/components/badges";
-import { EnvironmentLabel } from "@/components/formatters";
 
 import type {
   Deployment,
   DeploymentEnvironment,
   DeploymentStatus,
 } from "../api";
+import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 
 export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
@@ -31,9 +31,8 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
     accessorKey: "environment",
     header: "Environment",
-    cell: ({ getValue }) => (
-      <EnvironmentLabel environment={getValue<DeploymentEnvironment>()} />
-    ),
+    cell: ({ getValue }) =>
+      formatEnvironment(getValue<DeploymentEnvironment>()),
   },
   {
     accessorKey: "status",
@@ -49,5 +48,10 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
     accessorKey: "deployedAt",
     header: "Deployed",
+    cell: ({ getValue }) => (
+      <time dateTime={getValue<string>()}>
+        {formatDateTime(getValue<string>())}
+      </time>
+    ),
   },
 ];

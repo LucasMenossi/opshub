@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Environment, Service, ServiceStatus } from "../data/services";
+import type { Service, ServiceStatus } from "../data/services";
 import { ServiceStatusBadge } from "@/components/badges";
-import { EnvironmentLabel } from "@/components/formatters";
+import { formatEnvironment } from "@/lib/formatters";
+import type { Environment } from "@/lib/formatters/environment";
 
 export const serviceColumns: ColumnDef<Service>[] = [
   {
@@ -35,9 +36,7 @@ export const serviceColumns: ColumnDef<Service>[] = [
   {
     accessorKey: "environment",
     header: "Environment",
-    cell: ({ getValue }) => (
-      <EnvironmentLabel environment={getValue<Environment>()} />
-    ),
+    cell: ({ getValue }) => formatEnvironment(getValue<Environment>()),
   },
   {
     accessorKey: "owner",

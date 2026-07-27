@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import {
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   type SortingState,
   useReactTable,
@@ -15,16 +16,21 @@ import { serviceColumns } from "./service-columns";
 
 export function ServiceTable() {
   const { data = [], isPending, isError } = useServices();
+
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data,
     columns: serviceColumns,
     state: {
       sorting,
+      globalFilter,
     },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
@@ -44,5 +50,11 @@ export function ServiceTable() {
     );
   }
 
-  return <DataTable table={table} emptyMessage="No services found." />;
+  return (
+    <DataTable
+      table={table}
+      emptyMessage="No services found."
+      searchPlaceholder="Search services..."
+    />
+  );
 }
