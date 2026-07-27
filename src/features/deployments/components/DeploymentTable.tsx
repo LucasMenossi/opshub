@@ -1,4 +1,11 @@
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { useState } from "react";
+
+import {
+  getCoreRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import { DataTable } from "@/components/data-table";
 import { Card } from "@/components/ui";
@@ -8,11 +15,17 @@ import { deploymentColumns } from "./deployment-columns";
 
 export function DeploymentTable() {
   const { data = [], isPending, isError } = useDeployments();
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
     columns: deploymentColumns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   if (isPending) {
