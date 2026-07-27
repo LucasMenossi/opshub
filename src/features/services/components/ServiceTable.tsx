@@ -23,5 +23,5 @@ export function ServiceTable() {
     return <Card className="p-6">Failed to load services.</Card>;
   }
 
-  return <DataTable table={table} />;
+  return <DataTable table={table} emptyMessage="No services found." />;
 }

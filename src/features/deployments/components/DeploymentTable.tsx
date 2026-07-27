@@ -31,13 +31,5 @@ export function DeploymentTable() {
     );
   }
 
-  if (data.length === 0) {
-    return (
-      <Card className="p-6">
-        <p className="text-sm text-muted-foreground">No deployments found.</p>
-      </Card>
-    );
-  }
-
-  return <DataTable table={table} />;
+  return <DataTable table={table} emptyMessage="No deployments found." />;
 }
