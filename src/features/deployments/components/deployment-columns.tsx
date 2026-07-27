@@ -17,9 +17,7 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
     cell: ({ row }) => (
       <Link
         to="/services/$serviceId"
-        params={{
-          serviceId: row.original.serviceId,
-        }}
+        params={{ serviceId: row.original.serviceId }}
         className="font-medium hover:underline"
       >
         {row.original.service}

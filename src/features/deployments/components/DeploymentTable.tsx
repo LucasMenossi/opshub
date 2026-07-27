@@ -1,7 +1,7 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
-import { Card } from "@/components/ui";
 import { DataTable } from "@/components/data-table";
+import { Card } from "@/components/ui";
 
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
@@ -16,11 +16,27 @@ export function DeploymentTable() {
   });
 
   if (isPending) {
-    return <Card className="p-6">Loading deployments...</Card>;
+    return (
+      <Card className="p-6">
+        <p className="text-sm text-muted-foreground">Loading deployments...</p>
+      </Card>
+    );
   }
 
   if (isError) {
-    return <Card className="p-6">Failed to load deployments.</Card>;
+    return (
+      <Card className="p-6">
+        <p className="text-sm text-destructive">Failed to load deployments.</p>
+      </Card>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <Card className="p-6">
+        <p className="text-sm text-muted-foreground">No deployments found.</p>
+      </Card>
+    );
   }
 
   return <DataTable table={table} />;
