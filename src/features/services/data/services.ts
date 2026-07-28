@@ -21,7 +21,7 @@ export const services: Service[] = [
     environment: "production",
     uptime: 99.99,
     owner: "Platform Team",
-    lastDeployment: "5 minutes ago",
+    lastDeployment: "2026-07-28T19:42:15.123Z",
   },
   {
     id: "authentication",
@@ -31,7 +31,7 @@ export const services: Service[] = [
     environment: "production",
     uptime: 99.95,
     owner: "Identity Team",
-    lastDeployment: "20 minutes ago",
+    lastDeployment: "2026-07-28T19:43:08.456Z",
   },
   {
     id: "payment-service",
@@ -41,7 +41,7 @@ export const services: Service[] = [
     environment: "production",
     uptime: 98.41,
     owner: "Payments Team",
-    lastDeployment: "2 hours ago",
+    lastDeployment: "2026-07-28T19:44:51.789Z",
   },
   {
     id: "notifications",
@@ -51,6 +51,6 @@ export const services: Service[] = [
     environment: "staging",
     uptime: 92.14,
     owner: "Messaging Team",
-    lastDeployment: "Yesterday",
+    lastDeployment: "2026-07-28T19:46:27.321Z",
   },
 ];

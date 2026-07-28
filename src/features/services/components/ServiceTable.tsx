@@ -12,7 +12,11 @@ import {
 
 import { DataTable } from "@/components/data-table";
 import { Card } from "@/components/ui";
-import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
+import {
+  formatDateTime,
+  formatEnvironment,
+  formatServiceStatus,
+} from "@/lib/formatters";
 
 import { useServices } from "../hooks";
 import { serviceColumns } from "./service-columns";
@@ -52,7 +56,7 @@ export function ServiceTable() {
         service.version,
         formatEnvironment(service.environment),
         service.owner,
-        service.lastDeployment,
+        formatDateTime(service.lastDeployment),
         String(service.uptime),
       ];
 

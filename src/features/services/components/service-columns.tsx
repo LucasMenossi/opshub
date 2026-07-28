@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import type { Service, ServiceStatus } from "../data/services";
 import { ServiceStatusBadge } from "@/components/badges";
-import { formatEnvironment } from "@/lib/formatters";
+import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 import type { Environment } from "@/lib/formatters/environment";
 
 export const serviceColumns: ColumnDef<Service>[] = [
@@ -45,5 +45,10 @@ export const serviceColumns: ColumnDef<Service>[] = [
   {
     accessorKey: "lastDeployment",
     header: "Last Deployment",
+    cell: ({ row }) => (
+      <time dateTime={row.original.lastDeployment}>
+        {formatDateTime(row.original.lastDeployment)}
+      </time>
+    ),
   },
 ];
