@@ -2,13 +2,9 @@ import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { DeploymentStatusBadge } from "@/components/badges";
-
-import type {
-  Deployment,
-  DeploymentEnvironment,
-  DeploymentStatus,
-} from "../api";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
+
+import type { Deployment } from "../api";
 
 export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
@@ -31,15 +27,12 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
     accessorKey: "environment",
     header: "Environment",
-    cell: ({ getValue }) =>
-      formatEnvironment(getValue<DeploymentEnvironment>()),
+    cell: ({ row }) => formatEnvironment(row.original.environment),
   },
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ getValue }) => (
-      <DeploymentStatusBadge status={getValue<DeploymentStatus>()} />
-    ),
+    cell: ({ row }) => <DeploymentStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "author",
@@ -48,9 +41,9 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
   {
     accessorKey: "deployedAt",
     header: "Deployed",
-    cell: ({ getValue }) => (
-      <time dateTime={getValue<string>()}>
-        {formatDateTime(getValue<string>())}
+    cell: ({ row }) => (
+      <time dateTime={row.original.deployedAt}>
+        {formatDateTime(row.original.deployedAt)}
       </time>
     ),
   },

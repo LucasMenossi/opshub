@@ -10,6 +10,7 @@ import {
 
 import { DataTable } from "@/components/data-table";
 import { Card } from "@/components/ui";
+import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 
 import { useServices } from "../hooks";
 import { serviceColumns } from "./service-columns";
@@ -29,6 +30,29 @@ export function ServiceTable() {
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: (row, _columnId, filterValue) => {
+      const search = String(filterValue).trim().toLowerCase();
+
+      if (!search) {
+        return true;
+      }
+
+      const service = row.original;
+
+      const searchableValues = [
+        service.name,
+        formatServiceStatus(service.status),
+        service.version,
+        formatEnvironment(service.environment),
+        service.owner,
+        service.lastDeployment,
+        String(service.uptime),
+      ];
+
+      return searchableValues.some((value) =>
+        value.toLowerCase().includes(search),
+      );
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),

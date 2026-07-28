@@ -10,10 +10,14 @@ import {
 
 import { DataTable } from "@/components/data-table";
 import { Card } from "@/components/ui";
+import {
+  formatDateTime,
+  formatDeploymentStatus,
+  formatEnvironment,
+} from "@/lib/formatters";
 
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
-import { formatDateTime } from "@/lib/formatters";
 
 export function DeploymentTable() {
   const { data = [], isPending, isError } = useDeployments();
@@ -30,9 +34,8 @@ export function DeploymentTable() {
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
-
     globalFilterFn: (row, _columnId, filterValue) => {
-      const search = String(filterValue).toLowerCase().trim();
+      const search = String(filterValue).trim().toLowerCase();
 
       if (!search) {
         return true;
@@ -40,16 +43,19 @@ export function DeploymentTable() {
 
       const deployment = row.original;
 
-      return [
+      const searchableValues = [
         deployment.service,
         deployment.version,
-        deployment.environment,
-        deployment.status,
+        formatEnvironment(deployment.environment),
+        formatDeploymentStatus(deployment.status),
         deployment.author,
         formatDateTime(deployment.deployedAt),
-      ].some((value) => String(value).toLowerCase().includes(search));
-    },
+      ];
 
+      return searchableValues.some((value) =>
+        value.toLowerCase().includes(search),
+      );
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
