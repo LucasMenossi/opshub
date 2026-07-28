@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  type ColumnFiltersState,
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -18,12 +19,14 @@ import {
 
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
+import { deploymentTableFilters } from "./deployment-table-filters";
 
 export function DeploymentTable() {
   const { data = [], isPending, isError } = useDeployments();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -31,9 +34,12 @@ export function DeploymentTable() {
     state: {
       sorting,
       globalFilter,
+      columnFilters,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+
     globalFilterFn: (row, _columnId, filterValue) => {
       const search = String(filterValue).trim().toLowerCase();
 
@@ -56,6 +62,7 @@ export function DeploymentTable() {
         value.toLowerCase().includes(search),
       );
     },
+
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -82,6 +89,7 @@ export function DeploymentTable() {
       table={table}
       emptyMessage="No deployments found."
       searchPlaceholder="Search deployments..."
+      filters={deploymentTableFilters}
     />
   );
 }

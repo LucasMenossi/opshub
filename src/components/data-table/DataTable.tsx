@@ -1,32 +1,72 @@
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
 
+export interface DataTableFilter {
+  columnId: string;
+  label: string;
+  options: {
+    label: string;
+    value: string;
+  }[];
+}
+
 interface DataTableProps<TData> {
   table: Table<TData>;
   emptyMessage?: string;
   searchPlaceholder?: string;
+  filters?: DataTableFilter[];
 }
 
 export function DataTable<TData>({
   table,
   emptyMessage = "No results found.",
   searchPlaceholder = "Search...",
+  filters = [],
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
   const hasData = table.getCoreRowModel().rows.length > 0;
 
   return (
     <div className="space-y-4">
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative w-full max-w-sm">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-        <input
-          type="search"
-          value={table.getState().globalFilter ?? ""}
-          onChange={(event) => table.setGlobalFilter(event.target.value)}
-          placeholder={searchPlaceholder}
-          className="h-10 w-full rounded-lg border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
-        />
+          <input
+            type="search"
+            value={table.getState().globalFilter ?? ""}
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="h-10 w-full rounded-lg border bg-background pr-3 pl-9 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
+          />
+        </div>
+
+        {filters.map((filter) => {
+          const column = table.getColumn(filter.columnId);
+
+          if (!column) {
+            return null;
+          }
+
+          return (
+            <select
+              key={filter.columnId}
+              value={(column.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                column.setFilterValue(event.target.value || undefined)
+              }
+              className="h-10 rounded-lg border bg-background px-3 text-sm outline-none transition-colors focus:border-foreground"
+            >
+              <option value="">All {filter.label}</option>
+
+              {filter.options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          );
+        })}
       </div>
 
       <div className="overflow-hidden rounded-lg border">
@@ -98,7 +138,7 @@ export function DataTable<TData>({
                   colSpan={table.getVisibleLeafColumns().length}
                   className="px-6 py-12 text-center text-sm text-muted-foreground"
                 >
-                  {hasData ? "No results match your search." : emptyMessage}
+                  {hasData ? "No results match your filters." : emptyMessage}
                 </td>
               </tr>
             )}

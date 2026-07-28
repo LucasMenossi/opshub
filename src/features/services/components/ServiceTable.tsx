@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  type ColumnFiltersState,
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -14,12 +15,14 @@ import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 
 import { useServices } from "../hooks";
 import { serviceColumns } from "./service-columns";
+import { serviceTableFilters } from "./service-table-filters";
 
 export function ServiceTable() {
   const { data = [], isPending, isError } = useServices();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -27,9 +30,12 @@ export function ServiceTable() {
     state: {
       sorting,
       globalFilter,
+      columnFilters,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+
     globalFilterFn: (row, _columnId, filterValue) => {
       const search = String(filterValue).trim().toLowerCase();
 
@@ -53,6 +59,7 @@ export function ServiceTable() {
         value.toLowerCase().includes(search),
       );
     },
+
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -79,6 +86,7 @@ export function ServiceTable() {
       table={table}
       emptyMessage="No services found."
       searchPlaceholder="Search services..."
+      filters={serviceTableFilters}
     />
   );
 }
