@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
 
 import { deployments } from "@/features/deployments/data/deployments";
-import { incidents } from "@/features/dashboard/data/incidents";
 import { serviceHealth } from "@/features/dashboard/data/service-health";
+import { incidents } from "@/features/incidents/data/incidents";
 
 export const dashboardHandlers = [
   http.get("/api/dashboard/metrics", () => {
@@ -18,9 +18,5 @@ export const dashboardHandlers = [
 
   http.get("/api/dashboard/service-health", () => {
     return HttpResponse.json(serviceHealth);
-  }),
-
-  http.get("/api/dashboard/incidents", () => {
-    return HttpResponse.json(incidents);
   }),
 ];

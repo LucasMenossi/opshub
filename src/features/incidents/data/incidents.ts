@@ -1,29 +1,22 @@
-export type IncidentSeverity = "critical" | "warning" | "resolved";
-
-export interface Incident {
-  id: string;
-  title: string;
-  severity: IncidentSeverity;
-  occurredAt: string;
-}
+import type { Incident } from "../api";
 
 export const incidents: Incident[] = [
   {
     id: "1",
     title: "Database latency",
     severity: "critical",
-    occurredAt: "15 minutes ago",
+    occurredAt: "2026-07-28T16:45:00Z",
   },
   {
     id: "2",
     title: "Authentication timeout",
     severity: "warning",
-    occurredAt: "1 hour ago",
+    occurredAt: "2026-07-28T16:00:00Z",
   },
   {
     id: "3",
     title: "CDN cache miss",
     severity: "resolved",
-    occurredAt: "3 hours ago",
+    occurredAt: "2026-07-28T14:00:00Z",
   },
 ];
