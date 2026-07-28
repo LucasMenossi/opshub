@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   type ColumnFiltersState,
   type SortingState,
@@ -66,6 +67,14 @@ export function DeploymentTable() {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+    },
   });
 
   if (isPending) {

@@ -7,6 +7,7 @@ import {
   type ColumnFiltersState,
   type SortingState,
   useReactTable,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/data-table";
@@ -63,6 +64,14 @@ export function ServiceTable() {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+    },
   });
 
   if (isPending) {
