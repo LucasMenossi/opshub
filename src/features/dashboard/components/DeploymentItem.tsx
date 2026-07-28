@@ -1,36 +1,26 @@
-import { Badge } from "@/components/ui";
-
-import type { Deployment } from "../data/deployments";
+import type { Deployment } from "@/features/deployments/api";
+import { DeploymentStatusBadge } from "@/components/badges";
+import { formatDateTime } from "@/lib/formatters";
 
 interface DeploymentItemProps {
   deployment: Deployment;
 }
 
-const statusTone = {
-  success: "success",
-  running: "info",
-  failed: "danger",
-} as const;
-
-const statusLabel = {
-  success: "Success",
-  running: "Running",
-  failed: "Failed",
-} as const;
-
 export function DeploymentItem({ deployment }: DeploymentItemProps) {
   return (
-    <li className="flex items-center justify-between py-3">
-      <div>
-        <p className="font-medium">{deployment.service}</p>
+    <li className="flex items-center justify-between gap-4 py-3">
+      <div className="min-w-0">
+        <p className="truncate font-medium">{deployment.service}</p>
+
         <p className="text-sm text-muted-foreground">
-          {deployment.version} • {deployment.deployedAt}
+          {deployment.version} •{" "}
+          <time dateTime={deployment.deployedAt}>
+            {formatDateTime(deployment.deployedAt)}
+          </time>
         </p>
       </div>
 
-      <Badge tone={statusTone[deployment.status]}>
-        {statusLabel[deployment.status]}
-      </Badge>
+      <DeploymentStatusBadge status={deployment.status} />
     </li>
   );
 }

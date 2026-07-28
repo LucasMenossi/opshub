@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 
-import { deployments } from "@/features/dashboard/data/deployments";
+import { deployments } from "@/features/deployments/data/deployments";
 import { incidents } from "@/features/dashboard/data/incidents";
 import { serviceHealth } from "@/features/dashboard/data/service-health";
 
@@ -18,10 +18,6 @@ export const dashboardHandlers = [
 
   http.get("/api/dashboard/service-health", () => {
     return HttpResponse.json(serviceHealth);
-  }),
-
-  http.get("/api/dashboard/deployments", () => {
-    return HttpResponse.json(deployments);
   }),
 
   http.get("/api/dashboard/incidents", () => {

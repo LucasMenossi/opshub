@@ -1,7 +1,6 @@
 import { api } from "@/lib/api/client";
 
 import type {
-  DashboardDeployment,
   DashboardIncident,
   DashboardMetrics,
   DashboardServiceHealth,
@@ -16,14 +15,6 @@ export const dashboardApi = {
   async getServiceHealth(): Promise<DashboardServiceHealth[]> {
     const { data } = await api.get<DashboardServiceHealth[]>(
       "/dashboard/service-health",
-    );
-
-    return data;
-  },
-
-  async getDeployments(): Promise<DashboardDeployment[]> {
-    const { data } = await api.get<DashboardDeployment[]>(
-      "/dashboard/deployments",
     );
 
     return data;
