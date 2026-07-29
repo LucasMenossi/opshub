@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeploymentsRouteImport } from './routes/deployments'
+import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesServiceIdRouteImport } from './routes/services.$serviceId'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DeploymentsRoute = DeploymentsRouteImport.update({
   id: '/deployments',
   path: '/deployments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IncidentsRoute = IncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -44,6 +50,7 @@ const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
+  '/incidents': typeof IncidentsRoute
   '/services': typeof ServicesRouteWithChildren
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
+  '/incidents': typeof IncidentsRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services': typeof ServicesIndexRoute
 }
@@ -58,6 +66,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
+  '/incidents': typeof IncidentsRoute
   '/services': typeof ServicesRouteWithChildren
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
@@ -65,13 +74,19 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/deployments' | '/services' | '/services/$serviceId' | '/services/'
+    | '/'
+    | '/deployments'
+    | '/incidents'
+    | '/services'
+    | '/services/$serviceId'
+    | '/services/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/deployments' | '/services/$serviceId' | '/services'
+  to: '/' | '/deployments' | '/incidents' | '/services/$serviceId' | '/services'
   id:
     | '__root__'
     | '/'
     | '/deployments'
+    | '/incidents'
     | '/services'
     | '/services/$serviceId'
     | '/services/'
@@ -80,6 +95,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeploymentsRoute: typeof DeploymentsRoute
+  IncidentsRoute: typeof IncidentsRoute
   ServicesRoute: typeof ServicesRouteWithChildren
 }
 
@@ -97,6 +113,13 @@ declare module '@tanstack/react-router' {
       path: '/deployments'
       fullPath: '/deployments'
       preLoaderRoute: typeof DeploymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/incidents': {
+      id: '/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof IncidentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -140,6 +163,7 @@ const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeploymentsRoute: DeploymentsRoute,
+  IncidentsRoute: IncidentsRoute,
   ServicesRoute: ServicesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
