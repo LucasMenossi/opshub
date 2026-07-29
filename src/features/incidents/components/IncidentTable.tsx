@@ -11,8 +11,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DataTable, DataTableSkeleton } from "@/components/data-table";
-import { Card } from "@/components/ui";
+import {
+  DataTable,
+  DataTableError,
+  DataTableSkeleton,
+} from "@/components/data-table";
 
 import type { IncidentSeverity, IncidentStatus } from "../api";
 import { useIncidents } from "../hooks";
@@ -202,26 +205,12 @@ export function IncidentTable() {
 
   if (isError) {
     return (
-      <Card className="p-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="font-medium">Failed to load incidents</p>
-
-            <p className="mt-1 text-sm text-muted-foreground">
-              We couldn't retrieve the incident data.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => void refetch()}
-            disabled={isFetching}
-            className="h-9 rounded-lg border px-3 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isFetching ? "Retrying..." : "Retry"}
-          </button>
-        </div>
-      </Card>
+      <DataTableError
+        title="Failed to load incidents"
+        description="The incident data could not be retrieved."
+        isRetrying={isFetching}
+        onRetry={() => void refetch()}
+      />
     );
   }
 

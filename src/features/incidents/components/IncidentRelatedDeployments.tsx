@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui";
 import { DeploymentStatusBadge } from "@/components/badges";
 import type { Deployment } from "@/features/deployments/api";
-import { formatDateTime } from "@/lib/formatters";
+import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 
 interface IncidentRelatedDeploymentsProps {
   deployments: Deployment[];
@@ -29,7 +29,10 @@ export function IncidentRelatedDeployments({
                 <p className="font-medium">{deployment.version}</p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {deployment.author} ·{" "}
+                  {formatEnvironment(deployment.environment)}
+                  {" · "}
+                  {deployment.author}
+                  {" · "}
                   <time dateTime={deployment.deployedAt}>
                     {formatDateTime(deployment.deployedAt)}
                   </time>
