@@ -14,7 +14,13 @@ export const incidentColumns: ColumnDef<Incident>[] = [
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.title}</span>
+      <Link
+        to="/incidents/$incidentId"
+        params={{ incidentId: row.original.id }}
+        className="font-medium hover:underline"
+      >
+        {row.original.title}
+      </Link>
     ),
   },
   {

@@ -14,5 +14,6 @@ export const queryKeys = {
 
   incidents: {
     all: ["incidents"] as const,
+    detail: (incidentId: string) => ["incidents", incidentId] as const,
   },
 } as const;

@@ -16,7 +16,7 @@ export const incidents: Incident[] = [
     id: "2",
     title: "Authentication timeout",
     severity: "high",
-    status: "monitoring",
+    status: "open",
     owner: "Identity Team",
     service: "Authentication",
     serviceId: "authentication",

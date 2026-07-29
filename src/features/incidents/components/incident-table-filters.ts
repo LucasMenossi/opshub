@@ -5,12 +5,7 @@ import type { Incident, IncidentSeverity, IncidentStatus } from "../api";
 
 const severities: IncidentSeverity[] = ["low", "medium", "high", "critical"];
 
-const statuses: IncidentStatus[] = [
-  "open",
-  "investigating",
-  "monitoring",
-  "resolved",
-];
+const statuses: IncidentStatus[] = ["open", "investigating", "resolved"];
 
 export function getIncidentTableFilters(
   incidents: Incident[],

@@ -34,12 +34,7 @@ function isIncidentSeverity(value: unknown): value is IncidentSeverity {
 }
 
 function isIncidentStatus(value: unknown): value is IncidentStatus {
-  return (
-    value === "open" ||
-    value === "investigating" ||
-    value === "monitoring" ||
-    value === "resolved"
-  );
+  return value === "open" || value === "investigating" || value === "resolved";
 }
 
 export function IncidentTable() {

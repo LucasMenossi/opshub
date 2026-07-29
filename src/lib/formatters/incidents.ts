@@ -13,7 +13,6 @@ const severityLabels: Record<IncidentSeverity, string> = {
 const statusLabels: Record<IncidentStatus, string> = {
   open: "Open",
   investigating: "Investigating",
-  monitoring: "Monitoring",
   resolved: "Resolved",
 };
 

@@ -1,14 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { z } from "zod";
-
-import { IncidentsPage } from "@/features/incidents";
 
 const incidentSearchSchema = z.object({
   q: z.string().optional(),
   severity: z.enum(["low", "medium", "high", "critical"]).optional(),
-  status: z
-    .enum(["open", "investigating", "monitoring", "resolved"])
-    .optional(),
+  status: z.enum(["open", "investigating", "resolved"]).optional(),
   service: z.string().optional(),
   owner: z.string().optional(),
   from: z.string().optional(),
@@ -17,5 +13,5 @@ const incidentSearchSchema = z.object({
 
 export const Route = createFileRoute("/incidents")({
   validateSearch: incidentSearchSchema,
-  component: IncidentsPage,
+  component: Outlet,
 });

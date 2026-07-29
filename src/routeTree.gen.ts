@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeploymentsRouteImport } from './routes/deployments'
 import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
+import { Route as IncidentsIncidentIdRouteImport } from './routes/incidents.$incidentId'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesServiceIdRouteImport } from './routes/services.$serviceId'
 
@@ -36,6 +38,16 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => IncidentsRoute,
+} as any)
+const IncidentsIncidentIdRoute = IncidentsIncidentIdRouteImport.update({
+  id: '/$incidentId',
+  path: '/$incidentId',
+  getParentRoute: () => IncidentsRoute,
+} as any)
 const ServicesIndexRoute = ServicesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -50,25 +62,30 @@ const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
-  '/incidents': typeof IncidentsRoute
+  '/incidents': typeof IncidentsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
+  '/incidents/': typeof IncidentsIndexRoute
   '/services/': typeof ServicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
-  '/incidents': typeof IncidentsRoute
+  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
+  '/incidents': typeof IncidentsIndexRoute
   '/services': typeof ServicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
-  '/incidents': typeof IncidentsRoute
+  '/incidents': typeof IncidentsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
+  '/incidents/': typeof IncidentsIndexRoute
   '/services/': typeof ServicesIndexRoute
 }
 export interface FileRouteTypes {
@@ -78,24 +95,34 @@ export interface FileRouteTypes {
     | '/deployments'
     | '/incidents'
     | '/services'
+    | '/incidents/$incidentId'
     | '/services/$serviceId'
+    | '/incidents/'
     | '/services/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/deployments' | '/incidents' | '/services/$serviceId' | '/services'
+  to:
+    | '/'
+    | '/deployments'
+    | '/incidents/$incidentId'
+    | '/services/$serviceId'
+    | '/incidents'
+    | '/services'
   id:
     | '__root__'
     | '/'
     | '/deployments'
     | '/incidents'
     | '/services'
+    | '/incidents/$incidentId'
     | '/services/$serviceId'
+    | '/incidents/'
     | '/services/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeploymentsRoute: typeof DeploymentsRoute
-  IncidentsRoute: typeof IncidentsRoute
+  IncidentsRoute: typeof IncidentsRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
 }
 
@@ -129,6 +156,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/incidents/': {
+      id: '/incidents/'
+      path: '/'
+      fullPath: '/incidents/'
+      preLoaderRoute: typeof IncidentsIndexRouteImport
+      parentRoute: typeof IncidentsRoute
+    }
+    '/incidents/$incidentId': {
+      id: '/incidents/$incidentId'
+      path: '/$incidentId'
+      fullPath: '/incidents/$incidentId'
+      preLoaderRoute: typeof IncidentsIncidentIdRouteImport
+      parentRoute: typeof IncidentsRoute
+    }
     '/services/': {
       id: '/services/'
       path: '/'
@@ -145,6 +186,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface IncidentsRouteChildren {
+  IncidentsIncidentIdRoute: typeof IncidentsIncidentIdRoute
+  IncidentsIndexRoute: typeof IncidentsIndexRoute
+}
+
+const IncidentsRouteChildren: IncidentsRouteChildren = {
+  IncidentsIncidentIdRoute: IncidentsIncidentIdRoute,
+  IncidentsIndexRoute: IncidentsIndexRoute,
+}
+
+const IncidentsRouteWithChildren = IncidentsRoute._addFileChildren(
+  IncidentsRouteChildren,
+)
 
 interface ServicesRouteChildren {
   ServicesServiceIdRoute: typeof ServicesServiceIdRoute
@@ -163,7 +218,7 @@ const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeploymentsRoute: DeploymentsRoute,
-  IncidentsRoute: IncidentsRoute,
+  IncidentsRoute: IncidentsRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
 }
 export const routeTree = rootRouteImport

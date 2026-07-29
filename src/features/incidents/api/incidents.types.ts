@@ -1,7 +1,6 @@
 export type IncidentSeverity = "low" | "medium" | "high" | "critical";
 
-export type IncidentStatus =
-  "open" | "investigating" | "monitoring" | "resolved";
+export type IncidentStatus = "open" | "investigating" | "resolved";
 
 export interface Incident {
   id: string;
@@ -13,4 +12,22 @@ export interface Incident {
   serviceId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export type IncidentTimelineEventType =
+  "created" | "owner_assigned" | "status_changed" | "deployment" | "resolved";
+
+export interface IncidentTimelineEvent {
+  id: string;
+  type: IncidentTimelineEventType;
+  title: string;
+  description?: string;
+  occurredAt: string;
+}
+
+export interface IncidentDetails extends Incident {
+  description: string;
+  resolutionNotes?: string;
+  timeline: IncidentTimelineEvent[];
+  relatedDeploymentIds: string[];
 }

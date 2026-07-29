@@ -1,2 +1,4 @@
 export * from "./IncidentTable";
-export * from "./IncidentDataRangeFilter";
+export * from "./IncidentOverviewCard";
+export * from "./IncidentRelatedDeployments";
+export * from "./IncidentTimeline";
