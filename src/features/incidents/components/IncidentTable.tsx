@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -10,48 +11,180 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DataTable } from "@/components/data-table";
+import { DataTable, DataTableSkeleton } from "@/components/data-table";
 import { Card } from "@/components/ui";
 
+import type { IncidentSeverity, IncidentStatus } from "../api";
 import { useIncidents } from "../hooks";
 import { incidentColumns } from "./incident-columns";
-import { getIncidentTableFilters } from "./incident-table-filters";
 import { IncidentDateRangeFilter } from "./IncidentDataRangeFilter";
+import { getIncidentTableFilters } from "./incident-table-filters";
+
+function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
+  return filters.find((filter) => filter.id === id)?.value;
+}
+
+function isIncidentSeverity(value: unknown): value is IncidentSeverity {
+  return (
+    value === "low" ||
+    value === "medium" ||
+    value === "high" ||
+    value === "critical"
+  );
+}
+
+function isIncidentStatus(value: unknown): value is IncidentStatus {
+  return (
+    value === "open" ||
+    value === "investigating" ||
+    value === "monitoring" ||
+    value === "resolved"
+  );
+}
 
 export function IncidentTable() {
-  const { data = [], isPending, isError } = useIncidents();
+  const { data = [], isPending, isError, refetch, isFetching } = useIncidents();
+
+  const search = useSearch({
+    from: "/incidents",
+  });
+
+  const navigate = useNavigate({
+    from: "/incidents",
+  });
 
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
 
-  const filters = getIncidentTableFilters(data);
+  const filters = useMemo(() => getIncidentTableFilters(data), [data]);
+
+  const columnFilters = useMemo<ColumnFiltersState>(
+    () => [
+      ...(search.severity
+        ? [
+            {
+              id: "severity",
+              value: search.severity,
+            },
+          ]
+        : []),
+
+      ...(search.status
+        ? [
+            {
+              id: "status",
+              value: search.status,
+            },
+          ]
+        : []),
+
+      ...(search.service
+        ? [
+            {
+              id: "service",
+              value: search.service,
+            },
+          ]
+        : []),
+
+      ...(search.owner
+        ? [
+            {
+              id: "owner",
+              value: search.owner,
+            },
+          ]
+        : []),
+
+      ...(search.from || search.to
+        ? [
+            {
+              id: "createdAt",
+              value: {
+                from: search.from,
+                to: search.to,
+              },
+            },
+          ]
+        : []),
+    ],
+    [
+      search.severity,
+      search.status,
+      search.service,
+      search.owner,
+      search.from,
+      search.to,
+    ],
+  );
 
   const table = useReactTable({
     data,
     columns: incidentColumns,
+
     state: {
       sorting,
-      globalFilter,
+      globalFilter: search.q ?? "",
       columnFilters,
     },
+
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
+
+    onGlobalFilterChange: (updater) => {
+      const currentValue = search.q ?? "";
+
+      const nextValue =
+        typeof updater === "function" ? updater(currentValue) : updater;
+
+      void navigate({
+        search: {
+          ...search,
+          q: nextValue || undefined,
+        },
+        replace: true,
+      });
+    },
+
+    onColumnFiltersChange: (updater) => {
+      const nextFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+
+      const severityValue = getFilterValue(nextFilters, "severity");
+
+      const statusValue = getFilterValue(nextFilters, "status");
+
+      const serviceValue = getFilterValue(nextFilters, "service");
+
+      const ownerValue = getFilterValue(nextFilters, "owner");
+
+      void navigate({
+        search: {
+          ...search,
+
+          severity: isIncidentSeverity(severityValue)
+            ? severityValue
+            : undefined,
+
+          status: isIncidentStatus(statusValue) ? statusValue : undefined,
+
+          service: typeof serviceValue === "string" ? serviceValue : undefined,
+
+          owner: typeof ownerValue === "string" ? ownerValue : undefined,
+        },
+        replace: true,
+      });
+    },
 
     globalFilterFn: (row, _columnId, filterValue) => {
-      const search = String(filterValue).trim().toLowerCase();
+      const value = String(filterValue).trim().toLowerCase();
 
-      if (!search) {
+      if (!value) {
         return true;
       }
 
       const incident = row.original;
 
-      return [incident.title, incident.service, incident.owner].some((value) =>
-        value.toLowerCase().includes(search),
+      return [incident.title, incident.service, incident.owner].some((field) =>
+        field.toLowerCase().includes(value),
       );
     },
 
@@ -68,49 +201,31 @@ export function IncidentTable() {
     },
   });
 
-  function setDateRange(from: string, to: string) {
-    setColumnFilters((current) => {
-      const filters = current.filter((filter) => filter.id !== "createdAt");
-
-      if (!from && !to) {
-        return filters;
-      }
-
-      return [
-        ...filters,
-        {
-          id: "createdAt",
-          value: {
-            from: from || undefined,
-            to: to || undefined,
-          },
-        },
-      ];
-    });
-  }
-
-  function handleDateFromChange(value: string) {
-    setDateFrom(value);
-    setDateRange(value, dateTo);
-  }
-
-  function handleDateToChange(value: string) {
-    setDateTo(value);
-    setDateRange(dateFrom, value);
-  }
-
   if (isPending) {
-    return (
-      <Card className="p-6">
-        <p className="text-sm text-muted-foreground">Loading incidents...</p>
-      </Card>
-    );
+    return <DataTableSkeleton columns={7} />;
   }
 
   if (isError) {
     return (
       <Card className="p-6">
-        <p className="text-sm text-destructive">Failed to load incidents.</p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-medium">Failed to load incidents</p>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              We couldn't retrieve the incident data.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => void refetch()}
+            disabled={isFetching}
+            className="h-9 rounded-lg border px-3 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isFetching ? "Retrying..." : "Retry"}
+          </button>
+        </div>
       </Card>
     );
   }
@@ -123,10 +238,26 @@ export function IncidentTable() {
       filters={filters}
       toolbar={
         <IncidentDateRangeFilter
-          from={dateFrom}
-          to={dateTo}
-          onFromChange={handleDateFromChange}
-          onToChange={handleDateToChange}
+          from={search.from ?? ""}
+          to={search.to ?? ""}
+          onFromChange={(from) => {
+            void navigate({
+              search: {
+                ...search,
+                from: from || undefined,
+              },
+              replace: true,
+            });
+          }}
+          onToChange={(to) => {
+            void navigate({
+              search: {
+                ...search,
+                to: to || undefined,
+              },
+              replace: true,
+            });
+          }}
         />
       }
     />
