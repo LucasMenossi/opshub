@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
+import type { ReactNode } from "react";
 
 export interface DataTableFilter {
   columnId: string;
@@ -15,6 +16,7 @@ interface DataTableProps<TData> {
   emptyMessage?: string;
   searchPlaceholder?: string;
   filters?: DataTableFilter[];
+  toolbar?: ReactNode;
 }
 
 export function DataTable<TData>({
@@ -22,6 +24,7 @@ export function DataTable<TData>({
   emptyMessage = "No results found.",
   searchPlaceholder = "Search...",
   filters = [],
+  toolbar,
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
   const hasData = table.getCoreRowModel().rows.length > 0;
@@ -67,6 +70,8 @@ export function DataTable<TData>({
             </select>
           );
         })}
+
+        {toolbar}
       </div>
 
       <div className="overflow-hidden rounded-lg border">

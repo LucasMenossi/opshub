@@ -54,6 +54,37 @@ export const incidentColumns: ColumnDef<Incident>[] = [
         {formatDateTime(row.original.createdAt)}
       </time>
     ),
+    filterFn: (row, columnId, filterValue) => {
+      const value = row.getValue<string>(columnId);
+      const createdAt = new Date(value);
+
+      const { from, to } = filterValue as {
+        from?: string;
+        to?: string;
+      };
+
+      if (Number.isNaN(createdAt.getTime())) {
+        return false;
+      }
+
+      if (from) {
+        const start = new Date(`${from}T00:00:00`);
+
+        if (createdAt < start) {
+          return false;
+        }
+      }
+
+      if (to) {
+        const end = new Date(`${to}T23:59:59.999`);
+
+        if (createdAt > end) {
+          return false;
+        }
+      }
+
+      return true;
+    },
   },
   {
     accessorKey: "updatedAt",

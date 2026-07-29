@@ -12,15 +12,11 @@ import {
 
 import { DataTable } from "@/components/data-table";
 import { Card } from "@/components/ui";
-import {
-  formatDateTime,
-  formatIncidentSeverity,
-  formatIncidentStatus,
-} from "@/lib/formatters";
 
 import { useIncidents } from "../hooks";
 import { incidentColumns } from "./incident-columns";
-import { incidentTableFilters } from "./incident-table-filters";
+import { getIncidentTableFilters } from "./incident-table-filters";
+import { IncidentDateRangeFilter } from "./IncidentDataRangeFilter";
 
 export function IncidentTable() {
   const { data = [], isPending, isError } = useIncidents();
@@ -28,6 +24,10 @@ export function IncidentTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  const filters = getIncidentTableFilters(data);
 
   const table = useReactTable({
     data,
@@ -50,17 +50,7 @@ export function IncidentTable() {
 
       const incident = row.original;
 
-      const searchableValues = [
-        incident.title,
-        formatIncidentSeverity(incident.severity),
-        formatIncidentStatus(incident.status),
-        incident.owner,
-        incident.service,
-        formatDateTime(incident.createdAt),
-        formatDateTime(incident.updatedAt),
-      ];
-
-      return searchableValues.some((value) =>
+      return [incident.title, incident.service, incident.owner].some((value) =>
         value.toLowerCase().includes(search),
       );
     },
@@ -77,6 +67,37 @@ export function IncidentTable() {
       },
     },
   });
+
+  function setDateRange(from: string, to: string) {
+    setColumnFilters((current) => {
+      const filters = current.filter((filter) => filter.id !== "createdAt");
+
+      if (!from && !to) {
+        return filters;
+      }
+
+      return [
+        ...filters,
+        {
+          id: "createdAt",
+          value: {
+            from: from || undefined,
+            to: to || undefined,
+          },
+        },
+      ];
+    });
+  }
+
+  function handleDateFromChange(value: string) {
+    setDateFrom(value);
+    setDateRange(value, dateTo);
+  }
+
+  function handleDateToChange(value: string) {
+    setDateTo(value);
+    setDateRange(dateFrom, value);
+  }
 
   if (isPending) {
     return (
@@ -99,7 +120,15 @@ export function IncidentTable() {
       table={table}
       emptyMessage="No incidents found."
       searchPlaceholder="Search incidents..."
-      filters={incidentTableFilters}
+      filters={filters}
+      toolbar={
+        <IncidentDateRangeFilter
+          from={dateFrom}
+          to={dateTo}
+          onFromChange={handleDateFromChange}
+          onToChange={handleDateToChange}
+        />
+      }
     />
   );
 }
