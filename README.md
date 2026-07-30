@@ -1,75 +1,35 @@
-# React + TypeScript + Vite
+# OpsHub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+OpsHub is a work-in-progress operations dashboard for monitoring services, deployments, incidents, and overall system health from a single interface.
 
-Currently, two official plugins are available:
+The project is being built as a modern frontend application focused on creating a clean and practical experience for day-to-day operational visibility.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Current Status
 
-## React Compiler
+🚧 **Work in progress**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+OpsHub is under active development. Features, architecture, and UI may change as the project evolves.
 
-## Expanding the ESLint configuration
+Currently, the project includes areas for:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Service monitoring and service details
+- Deployment history and status
+- Incident tracking and incident details
+- Operational dashboard metrics
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+More features and improvements are planned as development continues.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- React
+- TypeScript
+- Vite
+- TanStack Router
+- TanStack Query
+- TanStack Table
+- Tailwind CSS
+- MSW
 
-```
+## About
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+OpsHub is primarily a learning and portfolio project exploring how to structure and build a maintainable operations-focused frontend using modern React tooling.
