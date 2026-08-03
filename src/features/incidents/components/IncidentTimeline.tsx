@@ -2,6 +2,7 @@ import { Card } from "@/components/ui";
 import { formatDateTime } from "@/lib/formatters";
 
 import type { IncidentTimelineEvent } from "../api";
+import { EmptyState } from "@/components/empty-state";
 
 interface IncidentTimelineProps {
   events: IncidentTimelineEvent[];
@@ -18,9 +19,10 @@ export function IncidentTimeline({ events }: IncidentTimelineProps) {
       <h2 className="text-lg font-semibold">Timeline</h2>
 
       {sortedEvents.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
-          No timeline events yet.
-        </p>
+        <EmptyState
+          title="No timeline events"
+          description="Timeline events will appear here."
+        />
       ) : (
         <ol className="mt-6 space-y-6">
           {sortedEvents.map((event) => (

@@ -2,6 +2,7 @@ import { Card } from "@/components/ui";
 import { DeploymentStatusBadge } from "@/components/badges";
 import type { Deployment } from "@/features/deployments/api";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
+import { EmptyState } from "@/components/empty-state";
 
 interface IncidentRelatedDeploymentsProps {
   deployments: Deployment[];
@@ -15,9 +16,10 @@ export function IncidentRelatedDeployments({
       <h2 className="text-lg font-semibold">Related deployments</h2>
 
       {deployments.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
-          No deployments are associated with this incident.
-        </p>
+        <EmptyState
+          title="No related deployments"
+          description="No deployments are associated with this incident."
+        />
       ) : (
         <ul className="mt-4 divide-y">
           {deployments.map((deployment) => (
