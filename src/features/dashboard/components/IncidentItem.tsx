@@ -1,23 +1,10 @@
-import { Badge } from "@/components/ui";
-import type { Incident, IncidentSeverity } from "@/features/incidents/api";
+import { IncidentSeverityBadge } from "@/components/badges";
+import type { Incident } from "@/features/incidents/api";
 import { formatDateTime } from "@/lib/formatters";
 
 interface IncidentItemProps {
   incident: Incident;
 }
-
-const severityTone: Record<IncidentSeverity, "danger" | "warning" | "default"> =
-  {
-    critical: "danger",
-    warning: "warning",
-    resolved: "default",
-  };
-
-const severityLabel: Record<IncidentSeverity, string> = {
-  critical: "Critical",
-  warning: "Warning",
-  resolved: "Resolved",
-};
 
 export function IncidentItem({ incident }: IncidentItemProps) {
   return (
@@ -26,15 +13,13 @@ export function IncidentItem({ incident }: IncidentItemProps) {
         <p className="truncate font-medium">{incident.title}</p>
 
         <p className="text-sm text-muted-foreground">
-          <time dateTime={incident.occurredAt}>
-            {formatDateTime(incident.occurredAt)}
+          <time dateTime={incident.createdAt}>
+            {formatDateTime(incident.createdAt)}
           </time>
         </p>
       </div>
 
-      <Badge tone={severityTone[incident.severity]}>
-        {severityLabel[incident.severity]}
-      </Badge>
+      <IncidentSeverityBadge severity={incident.severity} />
     </li>
   );
 }

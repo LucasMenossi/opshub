@@ -11,7 +11,7 @@ export function useRecentIncidents() {
       [...incidents]
         .sort(
           (a, b) =>
-            new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         )
         .slice(0, 3),
   });
