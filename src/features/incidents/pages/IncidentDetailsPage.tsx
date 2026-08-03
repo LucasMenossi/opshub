@@ -10,6 +10,7 @@ import {
   IncidentRelatedDeployments,
   IncidentTimeline,
 } from "../components";
+import { PageErrorState, PageLoadingState } from "@/components/page-state";
 
 export function IncidentDetailsPage() {
   const { incidentId } = useParams({
@@ -27,38 +28,17 @@ export function IncidentDetailsPage() {
   const { data: deployments = [] } = useDeployments();
 
   if (isPending) {
-    return (
-      <Container>
-        <Card className="p-6">
-          <p className="text-sm text-muted-foreground">Loading incident...</p>
-        </Card>
-      </Container>
-    );
+    return <PageLoadingState message="Loading incident..." />;
   }
 
   if (isError || !incident) {
     return (
-      <Container>
-        <Card className="p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="font-medium">Failed to load incident</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                The incident could not be retrieved.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              disabled={isFetching}
-              onClick={() => void refetch()}
-              className="h-9 rounded-lg border px-3 text-sm font-medium hover:bg-muted disabled:opacity-50"
-            >
-              {isFetching ? "Retrying..." : "Retry"}
-            </button>
-          </div>
-        </Card>
-      </Container>
+      <PageErrorState
+        title="Failed to load incident"
+        description="The incident could not be retrieved."
+        isRetrying={isFetching}
+        onRetry={() => void refetch()}
+      />
     );
   }
 

@@ -5,23 +5,29 @@ import { Container } from "@/components/ui";
 
 import { useServices } from "../hooks";
 import { ServiceMetricsCard, ServiceOverviewCard } from "../components";
+import { PageErrorState, PageLoadingState } from "@/components/page-state";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({
     from: "/services/$serviceId",
   });
 
-  const { data = [] } = useServices();
+  const { data = [], isError, isPending, isFetching, refetch } = useServices();
 
   const service = data.find((service) => service.id === serviceId);
 
-  if (!service) {
+  if (isPending) {
+    return <PageLoadingState message="Loading service..." />;
+  }
+
+  if (isError || !service) {
     return (
-      <Container>
-        <div className="py-12 text-center">
-          <h2 className="text-xl font-semibold">Service not found</h2>
-        </div>
-      </Container>
+      <PageErrorState
+        title="Failed to load service"
+        description="The service could not be retrieved."
+        isRetrying={isFetching}
+        onRetry={() => void refetch()}
+      />
     );
   }
 
