@@ -21,6 +21,7 @@ import {
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
 import { deploymentTableFilters } from "./deployment-table-filters";
+import { createGlobalFilter } from "@/lib/table";
 
 export function DeploymentTable() {
   const { data = [], isPending, isError } = useDeployments();
@@ -41,28 +42,14 @@ export function DeploymentTable() {
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
 
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const search = String(filterValue).trim().toLowerCase();
-
-      if (!search) {
-        return true;
-      }
-
-      const deployment = row.original;
-
-      const searchableValues = [
-        deployment.service,
-        deployment.version,
-        formatEnvironment(deployment.environment),
-        formatDeploymentStatus(deployment.status),
-        deployment.author,
-        formatDateTime(deployment.deployedAt),
-      ];
-
-      return searchableValues.some((value) =>
-        value.toLowerCase().includes(search),
-      );
-    },
+    globalFilterFn: createGlobalFilter((deployment) => [
+      deployment.service,
+      deployment.version,
+      deployment.author,
+      formatEnvironment(deployment.environment),
+      formatDeploymentStatus(deployment.status),
+      formatDateTime(deployment.deployedAt),
+    ]),
 
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

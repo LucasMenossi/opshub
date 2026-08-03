@@ -22,6 +22,7 @@ import { useIncidents } from "../hooks";
 import { incidentColumns } from "./incident-columns";
 import { IncidentDateRangeFilter } from "./IncidentDataRangeFilter";
 import { getIncidentTableFilters } from "./incident-table-filters";
+import { createGlobalFilter } from "@/lib/table";
 
 function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
   return filters.find((filter) => filter.id === id)?.value;
@@ -172,19 +173,11 @@ export function IncidentTable() {
       });
     },
 
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const value = String(filterValue).trim().toLowerCase();
-
-      if (!value) {
-        return true;
-      }
-
-      const incident = row.original;
-
-      return [incident.title, incident.service, incident.owner].some((field) =>
-        field.toLowerCase().includes(value),
-      );
-    },
+    globalFilterFn: createGlobalFilter((incident) => [
+      incident.title,
+      incident.service,
+      incident.owner,
+    ]),
 
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
