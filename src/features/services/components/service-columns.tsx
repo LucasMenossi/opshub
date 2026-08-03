@@ -28,6 +28,7 @@ export const serviceColumns: ColumnDef<Service>[] = [
     cell: ({ getValue }) => (
       <ServiceStatusBadge status={getValue<ServiceStatus>()} />
     ),
+    filterFn: "equalsString",
   },
   {
     accessorKey: "version",
@@ -37,6 +38,7 @@ export const serviceColumns: ColumnDef<Service>[] = [
     accessorKey: "environment",
     header: "Environment",
     cell: ({ getValue }) => formatEnvironment(getValue<Environment>()),
+    filterFn: "equalsString",
   },
   {
     accessorKey: "owner",

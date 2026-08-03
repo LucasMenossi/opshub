@@ -29,15 +29,18 @@ export const incidentColumns: ColumnDef<Incident>[] = [
     cell: ({ row }) => (
       <IncidentSeverityBadge severity={row.original.severity} />
     ),
+    filterFn: "equalsString",
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => <IncidentStatusBadge status={row.original.status} />,
+    filterFn: "equalsString",
   },
   {
     accessorKey: "owner",
     header: "Owner",
+    filterFn: "equalsString",
   },
   {
     accessorKey: "service",
@@ -51,6 +54,7 @@ export const incidentColumns: ColumnDef<Incident>[] = [
         {row.original.service}
       </Link>
     ),
+    filterFn: "equalsString",
   },
   {
     accessorKey: "createdAt",

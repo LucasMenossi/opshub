@@ -28,11 +28,13 @@ export const deploymentColumns: ColumnDef<Deployment>[] = [
     accessorKey: "environment",
     header: "Environment",
     cell: ({ row }) => formatEnvironment(row.original.environment),
+    filterFn: "equalsString",
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => <DeploymentStatusBadge status={row.original.status} />,
+    filterFn: "equalsString",
   },
   {
     accessorKey: "author",
