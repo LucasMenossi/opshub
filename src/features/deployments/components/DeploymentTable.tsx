@@ -10,8 +10,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DataTable } from "@/components/data-table";
-import { Card } from "@/components/ui";
+import {
+  DataTable,
+  DataTableError,
+  DataTableSkeleton,
+} from "@/components/data-table";
 import {
   formatDateTime,
   formatDeploymentStatus,
@@ -24,7 +27,13 @@ import { deploymentTableFilters } from "./deployment-table-filters";
 import { createGlobalFilter } from "@/lib/table";
 
 export function DeploymentTable() {
-  const { data = [], isPending, isError } = useDeployments();
+  const {
+    data = [],
+    isPending,
+    isError,
+    refetch,
+    isFetching,
+  } = useDeployments();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -65,18 +74,17 @@ export function DeploymentTable() {
   });
 
   if (isPending) {
-    return (
-      <Card className="p-6">
-        <p className="text-sm text-muted-foreground">Loading deployments...</p>
-      </Card>
-    );
+    return <DataTableSkeleton columns={6} />;
   }
 
   if (isError) {
     return (
-      <Card className="p-6">
-        <p className="text-sm text-destructive">Failed to load deployments.</p>
-      </Card>
+      <DataTableError
+        title="Failed to load deployments"
+        description="The deployment data could not be retrieved."
+        isRetrying={isFetching}
+        onRetry={() => void refetch()}
+      />
     );
   }
 

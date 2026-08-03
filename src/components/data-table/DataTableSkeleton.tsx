@@ -5,7 +5,7 @@ interface DataTableSkeletonProps {
 
 export function DataTableSkeleton({
   columns,
-  rows = 5,
+  rows = 10,
 }: DataTableSkeletonProps) {
   return (
     <div className="space-y-4">
