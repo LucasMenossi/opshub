@@ -20,7 +20,7 @@ import {
 import type { IncidentSeverity, IncidentStatus } from "../api";
 import { useIncidents } from "../hooks";
 import { incidentColumns } from "./incident-columns";
-import { IncidentDateRangeFilter } from "./IncidentDataRangeFilter";
+import { IncidentDateRangeFilter } from "./IncidentDateRangeFilter";
 import { getIncidentTableFilters } from "./incident-table-filters";
 import { createGlobalFilter } from "@/lib/table";
 
