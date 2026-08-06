@@ -8,6 +8,8 @@ interface SearchInputProps {
   className?: string;
   autoFocus?: boolean;
   disabled?: boolean;
+  name?: string;
+  id?: string;
 }
 
 export function SearchInput({
@@ -17,6 +19,8 @@ export function SearchInput({
   className,
   autoFocus,
   disabled,
+  name,
+  id,
 }: SearchInputProps) {
   return (
     <div className={cn("relative", className)}>
@@ -29,6 +33,8 @@ export function SearchInput({
         placeholder={placeholder}
         autoFocus={autoFocus}
         disabled={disabled}
+        name={name}
+        id={id}
         className="h-10 w-full rounded-lg border bg-background pr-3 pl-9 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
       />
     </div>

@@ -2,15 +2,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { SearchInput } from "../search-input";
-
-export interface DataTableFilter {
-  columnId: string;
-  label: string;
-  options: {
-    label: string;
-    value: string;
-  }[];
-}
+import type { DataTableFilter } from "./types";
 
 interface DataTableProps<TData> {
   table: Table<TData>;

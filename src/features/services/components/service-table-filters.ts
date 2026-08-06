@@ -3,7 +3,7 @@ import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 
 import type { Environment, ServiceStatus } from "../data/services";
 
-const serviceStatuses: ServiceStatus[] = ["healthy", "degraded", "down"];
+export const serviceStatuses: ServiceStatus[] = ["healthy", "degraded", "down"];
 
 const serviceEnvironments: Environment[] = ["production", "staging"];
 
