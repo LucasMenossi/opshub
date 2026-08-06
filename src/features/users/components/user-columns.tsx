@@ -8,10 +8,7 @@ export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "name",
     header: "Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
+    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {
     accessorKey: "role",
@@ -20,14 +17,21 @@ export const userColumns: ColumnDef<User>[] = [
     filterFn: "equalsString",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => <UserStatusBadge status={getValue<UserStatus>()} />,
+    filterFn: "equalsString",
+  },
+  {
     accessorKey: "team",
     header: "Team",
     filterFn: "equalsString",
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => <UserStatusBadge status={getValue<UserStatus>()} />,
-    filterFn: "equalsString",
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ getValue }) => (
+      <span className="text-muted-foreground">{getValue<string>()}</span>
+    ),
   },
 ];

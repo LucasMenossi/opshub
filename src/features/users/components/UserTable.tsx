@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   getCoreRowModel,
@@ -22,7 +22,11 @@ import { useUsers } from "../hooks";
 import { userColumns } from "./user-columns";
 import { getUserTableFilters } from "./user-table-filters";
 
-export function UserTable() {
+interface UserTableProps {
+  onSummaryChange?: (summary: { users: number; teams: number }) => void;
+}
+
+export function UserTable({ onSummaryChange }: UserTableProps) {
   const { data = [], isPending, isError, refetch, isFetching } = useUsers();
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -63,6 +67,13 @@ export function UserTable() {
       },
     },
   });
+
+  useEffect(() => {
+    onSummaryChange?.({
+      users: data.length,
+      teams: new Set(data.map((user) => user.team)).size,
+    });
+  }, [data, onSummaryChange]);
 
   if (isPending) {
     return <DataTableSkeleton columns={5} />;

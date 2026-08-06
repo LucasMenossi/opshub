@@ -25,7 +25,7 @@ export function getUserTableFilters(users: User[]): DataTableFilter[] {
   return [
     {
       columnId: "role",
-      label: "Roles",
+      label: "Role",
       options: userRoles.map((role) => ({
         value: role,
         label: formatUserRole(role),
@@ -33,7 +33,7 @@ export function getUserTableFilters(users: User[]): DataTableFilter[] {
     },
     {
       columnId: "status",
-      label: "Statuses",
+      label: "Status",
       options: userStatuses.map((status) => ({
         value: status,
         label: formatUserStatus(status),
@@ -41,7 +41,7 @@ export function getUserTableFilters(users: User[]): DataTableFilter[] {
     },
     {
       columnId: "team",
-      label: "Teams",
+      label: "Team",
       options: teams,
     },
   ];
