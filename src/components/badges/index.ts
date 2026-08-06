@@ -4,3 +4,4 @@ export * from "./IncidentSeverityBadge";
 export * from "./IncidentStatusBadge";
 export * from "./UserRoleBadge";
 export * from "./UserStatusBadge";
+export * from "./LogLevelBadge";

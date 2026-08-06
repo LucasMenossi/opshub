@@ -1,13 +1,19 @@
 import { Container } from "@/components/ui";
 import { PageHeader } from "@/components/data-display";
 
+import { LogExplorer } from "../components";
+
 export function LogsPage() {
   return (
     <Container>
-      <PageHeader
-        title="Logs"
-        description="Search and inspect application logs."
-      />
+      <div className="space-y-8">
+        <PageHeader
+          title="Logs"
+          description="Search and inspect application logs."
+        />
+
+        <LogExplorer />
+      </div>
     </Container>
   );
 }
