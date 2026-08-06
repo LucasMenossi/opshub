@@ -2,13 +2,8 @@ import { useMemo, useState } from "react";
 
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type SortingState,
-  useReactTable,
 } from "@tanstack/react-table";
 
 import {
@@ -22,7 +17,7 @@ import { useIncidents } from "../hooks";
 import { incidentColumns } from "./incident-columns";
 import { IncidentDateRangeFilter } from "./IncidentDateRangeFilter";
 import { getIncidentTableFilters } from "./incident-table-filters";
-import { createGlobalFilter } from "@/lib/table";
+import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
   return filters.find((filter) => filter.id === id)?.value;
@@ -116,7 +111,7 @@ export function IncidentTable() {
     ],
   );
 
-  const table = useReactTable({
+  const table = useDataTable({
     data,
     columns: incidentColumns,
 
@@ -178,11 +173,6 @@ export function IncidentTable() {
       incident.service,
       incident.owner,
     ]),
-
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
 
     initialState: {
       pagination: {

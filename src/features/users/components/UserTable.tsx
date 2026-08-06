@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type SortingState,
-  useReactTable,
 } from "@tanstack/react-table";
 
 import {
@@ -16,7 +11,7 @@ import {
   DataTableSkeleton,
 } from "@/components/data-table";
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
-import { createGlobalFilter } from "@/lib/table";
+import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 import { useUsers } from "../hooks";
 import { userColumns } from "./user-columns";
@@ -33,7 +28,7 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const table = useReactTable({
+  const table = useDataTable({
     data,
     columns: userColumns,
 
@@ -54,11 +49,6 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
       formatUserRole(user.role),
       formatUserStatus(user.status),
     ]),
-
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
 
     initialState: {
       pagination: {

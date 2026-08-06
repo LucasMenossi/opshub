@@ -1,13 +1,8 @@
 import { useState } from "react";
 
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type SortingState,
-  useReactTable,
 } from "@tanstack/react-table";
 
 import {
@@ -24,7 +19,7 @@ import {
 import { useDeployments } from "../hooks";
 import { deploymentColumns } from "./deployment-columns";
 import { deploymentTableFilters } from "./deployment-table-filters";
-import { createGlobalFilter } from "@/lib/table";
+import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 export function DeploymentTable() {
   const {
@@ -39,7 +34,7 @@ export function DeploymentTable() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const table = useReactTable({
+  const table = useDataTable({
     data,
     columns: deploymentColumns,
     state: {
@@ -59,11 +54,6 @@ export function DeploymentTable() {
       formatDeploymentStatus(deployment.status),
       formatDateTime(deployment.deployedAt),
     ]),
-
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
 
     initialState: {
       pagination: {

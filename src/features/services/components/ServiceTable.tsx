@@ -1,14 +1,11 @@
 import { useState } from "react";
 
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type SortingState,
-  useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
+
+import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 import {
   DataTable,
@@ -20,7 +17,6 @@ import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 import { useServices } from "../hooks";
 import { serviceColumns } from "./service-columns";
 import { serviceTableFilters } from "./service-table-filters";
-import { createGlobalFilter } from "@/lib/table";
 
 export function ServiceTable() {
   const { data = [], isPending, isError, refetch, isFetching } = useServices();
@@ -29,7 +25,7 @@ export function ServiceTable() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const table = useReactTable({
+  const table = useDataTable({
     data,
     columns: serviceColumns,
     state: {
@@ -48,11 +44,6 @@ export function ServiceTable() {
       formatEnvironment(service.environment),
       formatServiceStatus(service.status),
     ]),
-
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
 
     initialState: {
       pagination: {
