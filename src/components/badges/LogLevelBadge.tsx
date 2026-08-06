@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui";
 
 import type { LogSeverity } from "@/features/logs";
+import { formatLogSeverity } from "@/lib/formatters";
 
 interface LogLevelBadgeProps {
   severity: LogSeverity;
@@ -16,5 +17,5 @@ const tones = {
 } as const;
 
 export function LogLevelBadge({ severity }: LogLevelBadgeProps) {
-  return <Badge tone={tones[severity]}>{severity.toUpperCase()}</Badge>;
+  return <Badge tone={tones[severity]}>{formatLogSeverity(severity)}</Badge>;
 }

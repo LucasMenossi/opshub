@@ -1,16 +1,4 @@
-export type ServiceStatus = "healthy" | "degraded" | "down";
-export type Environment = "production" | "staging";
-
-export interface Service {
-  id: string;
-  name: string;
-  status: ServiceStatus;
-  version: string;
-  environment: Environment;
-  uptime: number;
-  owner: string;
-  lastDeployment: string;
-}
+import type { Service } from "../api";
 
 export const services: Service[] = [
   {

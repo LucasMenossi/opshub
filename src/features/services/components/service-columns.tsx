@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Service, ServiceStatus } from "../data/services";
 import { ServiceStatusBadge } from "@/components/badges";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
-import type { Environment } from "@/lib/formatters/environment";
+import type { Environment, Service, ServiceStatus } from "@/features/services";
 
 export const serviceColumns: ColumnDef<Service>[] = [
   {

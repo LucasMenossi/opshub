@@ -1,4 +1,4 @@
-import type { Environment } from "@/lib/formatters/environment";
+import type { Environment } from "@/features/services";
 
 export type LogSeverity =
   "trace" | "debug" | "info" | "warning" | "error" | "fatal";

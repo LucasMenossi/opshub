@@ -1,5 +1,3 @@
-export type Environment = "production" | "staging";
-
 export function formatEnvironment(environment: string) {
   switch (environment) {
     case "production":

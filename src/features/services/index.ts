@@ -1,2 +1,4 @@
-export { ServicesPage } from "./pages/ServicesPage";
-export { ServiceDetailsPage } from "./pages/ServiceDetailsPage";
+export * from "./api";
+export * from "./pages";
+export * from "./components";
+export * from "./hooks";

@@ -4,30 +4,60 @@ import { DataTableError, DataTableSkeleton } from "@/components/data-table";
 import { formatEnvironment } from "@/lib/formatters";
 
 import { useLogs } from "../hooks";
+import type { LogSeverity } from "../api";
+import type { Environment } from "@/features/services";
+import { createUniqueFilterOptions } from "@/lib/table";
 import { LogItem } from "./LogItem";
-import { SearchInput } from "@/components/search-input";
+import { LogFilters } from "./LogsFilter";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs();
 
+  const serviceOptions = useMemo(
+    () => createUniqueFilterOptions(data?.items ?? [], (log) => log.service),
+    [data],
+  );
+
+  const environmentOptions = useMemo(
+    () =>
+      createUniqueFilterOptions(
+        data?.items ?? [],
+        (log) => log.environment,
+        formatEnvironment,
+      ),
+    [data],
+  );
+
   const [query, setQuery] = useState("");
+  const [severity, setSeverity] = useState<LogSeverity | "">("");
+  const [service, setService] = useState("");
+  const [environment, setEnvironment] = useState<Environment | "">("");
 
   const logs = useMemo(() => {
-    const value = query.trim().toLowerCase();
+    return (data?.items ?? []).filter((log) => {
+      const value = query.trim().toLowerCase();
 
-    if (!value) {
-      return data?.items ?? [];
-    }
+      const matchesSearch =
+        !value ||
+        [
+          log.message,
+          log.service,
+          formatEnvironment(log.environment),
+          log.severity,
+        ].some((field) => field.toLowerCase().includes(value));
 
-    return (data?.items ?? []).filter((log) =>
-      [
-        log.message,
-        log.service,
-        formatEnvironment(log.environment),
-        log.severity,
-      ].some((field) => field.toLowerCase().includes(value)),
-    );
-  }, [data, query]);
+      const matchesSeverity = !severity || log.severity === severity;
+
+      const matchesService = !service || log.service === service;
+
+      const matchesEnvironment =
+        !environment || log.environment === environment;
+
+      return (
+        matchesSearch && matchesSeverity && matchesService && matchesEnvironment
+      );
+    });
+  }, [data, query, severity, service, environment]);
 
   if (isPending) {
     return <DataTableSkeleton columns={5} />;
@@ -46,20 +76,32 @@ export function LogExplorer() {
 
   return (
     <div className="space-y-4">
-      <SearchInput
-        value={query}
-        onChange={setQuery}
-        placeholder="Search logs..."
-        className="relative max-w-md"
+      <LogFilters
+        query={query}
+        severity={severity}
+        service={service}
+        environment={environment}
+        serviceOptions={serviceOptions}
+        environmentOptions={environmentOptions}
+        onQueryChange={setQuery}
+        onSeverityChange={setSeverity}
+        onServiceChange={setService}
+        onEnvironmentChange={setEnvironment}
       />
 
-      <div className="overflow-hidden rounded-lg border">
-        <ul className="divide-y rounded-lg border bg-card">
-          {logs.map((log) => (
-            <LogItem key={log.id} log={log} />
-          ))}
-        </ul>
-      </div>
+      {logs.length === 0 ? (
+        <div className="rounded-lg border py-12 text-center">
+          <p className="text-sm text-muted-foreground">No logs found.</p>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-lg border bg-card">
+          <ul className="divide-y">
+            {logs.map((log) => (
+              <LogItem key={log.id} log={log} />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
