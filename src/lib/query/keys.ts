@@ -20,4 +20,8 @@ export const queryKeys = {
   users: {
     all: ["users"] as const,
   },
+
+  logs: {
+    all: ["logs"] as const,
+  },
 } as const;
