@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
 
-import { Search } from "lucide-react";
-
 import { DataTableError, DataTableSkeleton } from "@/components/data-table";
 import { formatEnvironment } from "@/lib/formatters";
 
 import { useLogs } from "../hooks";
 import { LogItem } from "./LogItem";
+import { SearchInput } from "@/components/search-input";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs();
@@ -47,16 +46,12 @@ export function LogExplorer() {
 
   return (
     <div className="space-y-4">
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search logs..."
-          className="h-10 w-full rounded-lg border bg-background pl-9 pr-3 text-sm outline-none"
-        />
-      </div>
+      <SearchInput
+        value={query}
+        onChange={setQuery}
+        placeholder="Search logs..."
+        className="relative max-w-md"
+      />
 
       <div className="overflow-hidden rounded-lg border">
         <ul className="divide-y rounded-lg border bg-card">

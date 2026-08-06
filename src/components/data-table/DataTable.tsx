@@ -1,6 +1,7 @@
-import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
+import { SearchInput } from "../search-input";
 
 export interface DataTableFilter {
   columnId: string;
@@ -32,17 +33,12 @@ export function DataTable<TData>({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-          <input
-            type="search"
-            value={table.getState().globalFilter ?? ""}
-            onChange={(event) => table.setGlobalFilter(event.target.value)}
-            placeholder={searchPlaceholder}
-            className="h-10 w-full rounded-lg border bg-background pr-3 pl-9 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
-          />
-        </div>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={table.getState().globalFilter ?? ""}
+          onChange={table.setGlobalFilter}
+          placeholder={searchPlaceholder}
+        />
 
         {filters.map((filter) => {
           const column = table.getColumn(filter.columnId);
