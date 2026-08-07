@@ -11,9 +11,14 @@ import { LogFilters } from "./LogFilter";
 import { LogList } from "./LogList";
 import { LogDetails } from "./LogDetails";
 import type { LogSortOrder } from "../constants";
+import { LogMetrics } from "./LogMetrics";
+import { cn } from "@/lib/utils";
+import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 export function LogExplorer() {
-  const { data, isPending, isError, refetch, isFetching } = useLogs();
+  const { data, isPending, isError, refetch, isFetching } = useLogs({
+    refetchInterval: 10000,
+  });
 
   const [query, setQuery] = useState("");
   const [severity, setSeverity] = useState<LogSeverity | "">("");
@@ -21,6 +26,7 @@ export function LogExplorer() {
   const [environment, setEnvironment] = useState<Environment | "">("");
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<LogSortOrder>("desc");
+  const [detailsOpen, setDetailsOpen] = useState(true);
 
   const serviceOptions = useMemo(
     () => createUniqueFilterOptions(data?.items ?? [], (log) => log.service),
@@ -112,21 +118,44 @@ export function LogExplorer() {
         onSortOrderChange={setSortOrder}
       />
 
+      <button
+        type="button"
+        onClick={() => setDetailsOpen((previous) => !previous)}
+        className="inline-flex h-10 items-center gap-2 rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+      >
+        {detailsOpen ? (
+          <PanelRightClose className="h-4 w-4" />
+        ) : (
+          <PanelRightOpen className="h-4 w-4" />
+        )}
+
+        {detailsOpen ? "Hide Details" : "Show Details"}
+      </button>
+
+      <LogMetrics logs={logs} />
+
       {logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
           <p className="text-sm text-muted-foreground">No logs found.</p>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <div
+          className={cn(
+            "grid gap-6",
+            detailsOpen ? "lg:grid-cols-[2fr_1fr]" : "grid-cols-1",
+          )}
+        >
           <LogList
             logs={logs}
             selectedLogId={selectedLog?.id ?? null}
             onSelect={(log) => setSelectedLogId(log.id)}
           />
 
-          <div className="sticky top-6 h-fit rounded-lg border bg-card">
-            <LogDetails log={selectedLog} />
-          </div>
+          {detailsOpen && (
+            <div className="sticky top-6 h-fit rounded-lg border bg-card">
+              <LogDetails log={selectedLog} />
+            </div>
+          )}
         </div>
       )}
     </div>

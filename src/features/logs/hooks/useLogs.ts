@@ -4,9 +4,14 @@ import { queryKeys } from "@/lib/query/keys";
 
 import { getLogs } from "../api";
 
-export function useLogs() {
+interface UseLogsOptions {
+  refetchInterval?: number | false;
+}
+
+export function useLogs(options?: UseLogsOptions) {
   return useQuery({
     queryKey: queryKeys.logs.all,
     queryFn: getLogs,
+    refetchInterval: options?.refetchInterval,
   });
 }
