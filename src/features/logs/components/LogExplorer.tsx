@@ -7,8 +7,8 @@ import { useLogs } from "../hooks";
 import type { LogSeverity } from "../api";
 import type { Environment } from "@/features/services";
 import { createUniqueFilterOptions } from "@/lib/table";
-import { LogItem } from "./LogItem";
 import { LogFilters } from "./LogsFilter";
+import { LogList } from "./LogList";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs();
@@ -94,13 +94,7 @@ export function LogExplorer() {
           <p className="text-sm text-muted-foreground">No logs found.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border bg-card">
-          <ul className="divide-y">
-            {logs.map((log) => (
-              <LogItem key={log.id} log={log} />
-            ))}
-          </ul>
-        </div>
+        <LogList logs={logs} />
       )}
     </div>
   );
