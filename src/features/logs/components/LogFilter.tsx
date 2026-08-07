@@ -4,7 +4,7 @@ import { SearchInput } from "@/components/search-input";
 import type { FilterOption } from "@/lib/types";
 import type { LogSeverity } from "../api";
 import { createStaticFilterOptions } from "@/lib/table";
-import { LOG_SEVERITIES } from "../constants";
+import { LOG_SEVERITIES, type LogSortOrder } from "../constants";
 import { formatLogSeverity } from "@/lib/formatters";
 
 interface LogFiltersProps {
@@ -20,6 +20,8 @@ interface LogFiltersProps {
   onSeverityChange: (value: LogSeverity | "") => void;
   onServiceChange: (value: string) => void;
   onEnvironmentChange: (value: Environment | "") => void;
+  sortOrder: LogSortOrder;
+  onSortOrderChange: (value: LogSortOrder) => void;
 }
 
 export function LogFilters({
@@ -33,6 +35,8 @@ export function LogFilters({
   onSeverityChange,
   onServiceChange,
   onEnvironmentChange,
+  onSortOrderChange,
+  sortOrder,
 }: LogFiltersProps) {
   const severityOptions = createStaticFilterOptions(
     LOG_SEVERITIES,
@@ -92,6 +96,17 @@ export function LogFilters({
             {option.label}
           </option>
         ))}
+      </select>
+
+      <select
+        value={sortOrder}
+        onChange={(event) =>
+          onSortOrderChange(event.target.value as LogSortOrder)
+        }
+        className="h-10 rounded-lg border bg-background px-3 text-sm"
+      >
+        <option value="desc">Newest first</option>
+        <option value="asc">Oldest first</option>
       </select>
     </div>
   );

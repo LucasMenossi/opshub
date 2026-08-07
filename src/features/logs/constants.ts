@@ -8,3 +8,5 @@ export const LOG_SEVERITIES: LogSeverity[] = [
   "error",
   "fatal",
 ];
+
+export type LogSortOrder = "desc" | "asc";

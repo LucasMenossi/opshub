@@ -4,14 +4,21 @@ import { LogItem } from "./LogItem";
 
 interface LogListProps {
   logs: LogEntry[];
+  selectedLogId: string | null;
+  onSelect: (log: LogEntry) => void;
 }
 
-export function LogList({ logs }: LogListProps) {
+export function LogList({ logs, selectedLogId, onSelect }: LogListProps) {
   return (
     <div className="overflow-hidden rounded-lg border bg-card">
       <ul className="divide-y">
         {logs.map((log) => (
-          <LogItem key={log.id} log={log} />
+          <LogItem
+            key={log.id}
+            log={log}
+            selected={selectedLogId === log.id}
+            onSelect={onSelect}
+          />
         ))}
       </ul>
     </div>

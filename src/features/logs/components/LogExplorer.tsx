@@ -7,11 +7,20 @@ import { useLogs } from "../hooks";
 import type { LogSeverity } from "../api";
 import type { Environment } from "@/features/services";
 import { createUniqueFilterOptions } from "@/lib/table";
-import { LogFilters } from "./LogsFilter";
+import { LogFilters } from "./LogFilter";
 import { LogList } from "./LogList";
+import { LogDetails } from "./LogDetails";
+import type { LogSortOrder } from "../constants";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs();
+
+  const [query, setQuery] = useState("");
+  const [severity, setSeverity] = useState<LogSeverity | "">("");
+  const [service, setService] = useState("");
+  const [environment, setEnvironment] = useState<Environment | "">("");
+  const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<LogSortOrder>("desc");
 
   const serviceOptions = useMemo(
     () => createUniqueFilterOptions(data?.items ?? [], (log) => log.service),
@@ -28,12 +37,7 @@ export function LogExplorer() {
     [data],
   );
 
-  const [query, setQuery] = useState("");
-  const [severity, setSeverity] = useState<LogSeverity | "">("");
-  const [service, setService] = useState("");
-  const [environment, setEnvironment] = useState<Environment | "">("");
-
-  const logs = useMemo(() => {
+  const filteredLogs = useMemo(() => {
     return (data?.items ?? []).filter((log) => {
       const value = query.trim().toLowerCase();
 
@@ -58,6 +62,23 @@ export function LogExplorer() {
       );
     });
   }, [data, query, severity, service, environment]);
+
+  const logs = useMemo(() => {
+    return [...filteredLogs].sort((a, b) => {
+      const aTime = new Date(a.timestamp).getTime();
+      const bTime = new Date(b.timestamp).getTime();
+
+      return sortOrder === "desc" ? bTime - aTime : aTime - bTime;
+    });
+  }, [filteredLogs, sortOrder]);
+
+  const selectedLog = useMemo(() => {
+    if (logs.length === 0) {
+      return null;
+    }
+
+    return logs.find((log) => log.id === selectedLogId) ?? logs[0];
+  }, [logs, selectedLogId]);
 
   if (isPending) {
     return <DataTableSkeleton columns={5} />;
@@ -87,6 +108,8 @@ export function LogExplorer() {
         onSeverityChange={setSeverity}
         onServiceChange={setService}
         onEnvironmentChange={setEnvironment}
+        sortOrder={sortOrder}
+        onSortOrderChange={setSortOrder}
       />
 
       {logs.length === 0 ? (
@@ -94,7 +117,17 @@ export function LogExplorer() {
           <p className="text-sm text-muted-foreground">No logs found.</p>
         </div>
       ) : (
-        <LogList logs={logs} />
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+          <LogList
+            logs={logs}
+            selectedLogId={selectedLog?.id ?? null}
+            onSelect={(log) => setSelectedLogId(log.id)}
+          />
+
+          <div className="sticky top-6 h-fit rounded-lg border bg-card">
+            <LogDetails log={selectedLog} />
+          </div>
+        </div>
       )}
     </div>
   );
