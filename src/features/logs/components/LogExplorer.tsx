@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import { DataTableError, DataTableSkeleton } from "@/components/data-table";
-import { formatEnvironment } from "@/lib/formatters";
 
 import { useLogs } from "../hooks";
 import type { LogSeverity } from "../api";
 import type { Environment } from "@/features/services";
-import { createUniqueFilterOptions } from "@/lib/table";
 import { LogFilters } from "./LogFilter";
 import { LogList } from "./LogList";
 import { LogDetails } from "./LogDetails";
@@ -14,6 +13,12 @@ import type { LogSortOrder } from "../constants";
 import { LogMetrics } from "./LogMetrics";
 import { cn } from "@/lib/utils";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
+import { LogPagination } from "./LogPagination";
+import { filterLogs } from "../lib/log-filters";
+import { sortLogs } from "../lib/log-sort";
+import { getTotalPages, paginateLogs } from "../lib/log-pagination";
+import { getLogFilterOptions } from "../lib/log-filter-options";
+import { getSelectedLog } from "../lib/log-selection";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs({
@@ -27,64 +32,56 @@ export function LogExplorer() {
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<LogSortOrder>("desc");
   const [detailsOpen, setDetailsOpen] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
-  const serviceOptions = useMemo(
-    () => createUniqueFilterOptions(data?.items ?? [], (log) => log.service),
+  const updateFilter = <T,>(setter: Dispatch<SetStateAction<T>>, value: T) => {
+    setter(value);
+    setPage(1);
+  };
+
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    setSelectedLogId(null);
+  };
+
+  const handlePageSizeChange = (value: number) => {
+    setPageSize(value);
+    setPage(1);
+    setSelectedLogId(null);
+  };
+
+  const { serviceOptions, environmentOptions } = useMemo(
+    () => getLogFilterOptions(data?.items ?? []),
     [data],
   );
 
-  const environmentOptions = useMemo(
+  const filteredLogs = useMemo(
     () =>
-      createUniqueFilterOptions(
-        data?.items ?? [],
-        (log) => log.environment,
-        formatEnvironment,
-      ),
-    [data],
+      filterLogs(data?.items ?? [], {
+        query,
+        severity,
+        service,
+        environment,
+      }),
+    [data, query, severity, service, environment],
   );
 
-  const filteredLogs = useMemo(() => {
-    return (data?.items ?? []).filter((log) => {
-      const value = query.trim().toLowerCase();
+  const logs = useMemo(
+    () => sortLogs(filteredLogs, sortOrder),
+    [filteredLogs, sortOrder],
+  );
 
-      const matchesSearch =
-        !value ||
-        [
-          log.message,
-          log.service,
-          formatEnvironment(log.environment),
-          log.severity,
-        ].some((field) => field.toLowerCase().includes(value));
+  const totalPages = getTotalPages(logs.length, pageSize);
 
-      const matchesSeverity = !severity || log.severity === severity;
+  const currentPage = Math.min(page, totalPages);
 
-      const matchesService = !service || log.service === service;
+  const paginatedLogs = useMemo(
+    () => paginateLogs(logs, currentPage, pageSize),
+    [logs, currentPage, pageSize],
+  );
 
-      const matchesEnvironment =
-        !environment || log.environment === environment;
-
-      return (
-        matchesSearch && matchesSeverity && matchesService && matchesEnvironment
-      );
-    });
-  }, [data, query, severity, service, environment]);
-
-  const logs = useMemo(() => {
-    return [...filteredLogs].sort((a, b) => {
-      const aTime = new Date(a.timestamp).getTime();
-      const bTime = new Date(b.timestamp).getTime();
-
-      return sortOrder === "desc" ? bTime - aTime : aTime - bTime;
-    });
-  }, [filteredLogs, sortOrder]);
-
-  const selectedLog = useMemo(() => {
-    if (logs.length === 0) {
-      return null;
-    }
-
-    return logs.find((log) => log.id === selectedLogId) ?? logs[0];
-  }, [logs, selectedLogId]);
+  const selectedLog = getSelectedLog(paginatedLogs, selectedLogId);
 
   if (isPending) {
     return <DataTableSkeleton columns={5} />;
@@ -103,6 +100,8 @@ export function LogExplorer() {
 
   return (
     <div className="space-y-4">
+      <LogMetrics logs={logs} />
+
       <LogFilters
         query={query}
         severity={severity}
@@ -110,12 +109,12 @@ export function LogExplorer() {
         environment={environment}
         serviceOptions={serviceOptions}
         environmentOptions={environmentOptions}
-        onQueryChange={setQuery}
-        onSeverityChange={setSeverity}
-        onServiceChange={setService}
-        onEnvironmentChange={setEnvironment}
         sortOrder={sortOrder}
-        onSortOrderChange={setSortOrder}
+        onQueryChange={(value) => updateFilter(setQuery, value)}
+        onSeverityChange={(value) => updateFilter(setSeverity, value)}
+        onServiceChange={(value) => updateFilter(setService, value)}
+        onEnvironmentChange={(value) => updateFilter(setEnvironment, value)}
+        onSortOrderChange={(value) => updateFilter(setSortOrder, value)}
       />
 
       <button
@@ -132,8 +131,6 @@ export function LogExplorer() {
         {detailsOpen ? "Hide Details" : "Show Details"}
       </button>
 
-      <LogMetrics logs={logs} />
-
       {logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
           <p className="text-sm text-muted-foreground">No logs found.</p>
@@ -145,11 +142,22 @@ export function LogExplorer() {
             detailsOpen ? "lg:grid-cols-[2fr_1fr]" : "grid-cols-1",
           )}
         >
-          <LogList
-            logs={logs}
-            selectedLogId={selectedLog?.id ?? null}
-            onSelect={(log) => setSelectedLogId(log.id)}
-          />
+          <div className="min-w-0 space-y-4">
+            <LogList
+              logs={paginatedLogs}
+              selectedLogId={selectedLog?.id ?? null}
+              onSelect={(log) => setSelectedLogId(log.id)}
+            />
+
+            <LogPagination
+              page={currentPage}
+              pageSize={pageSize}
+              totalPages={totalPages}
+              totalResults={logs.length}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+            />
+          </div>
 
           {detailsOpen && (
             <div className="sticky top-6 h-fit rounded-lg border bg-card">
