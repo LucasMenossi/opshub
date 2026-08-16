@@ -3,6 +3,7 @@ import { flexRender, type Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { SearchInput } from "../search-input";
 import type { DataTableFilter } from "./types";
+import { Select } from "../ui";
 
 interface DataTableProps<TData> {
   table: Table<TData>;
@@ -40,13 +41,12 @@ export function DataTable<TData>({
           }
 
           return (
-            <select
+            <Select
               key={filter.columnId}
               value={(column.getFilterValue() as string) ?? ""}
               onChange={(event) =>
                 column.setFilterValue(event.target.value || undefined)
               }
-              className="h-10 rounded-lg border bg-background px-3 text-sm outline-none transition-colors focus:border-foreground"
             >
               <option value="">All {filter.label}</option>
 
@@ -55,7 +55,7 @@ export function DataTable<TData>({
                   {option.label}
                 </option>
               ))}
-            </select>
+            </Select>
           );
         })}
 
@@ -147,19 +147,18 @@ export function DataTable<TData>({
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 text-sm text-muted-foreground">
             Rows per page
-            <select
+            <Select
               value={table.getState().pagination.pageSize}
               onChange={(event) => {
                 table.setPageSize(Number(event.target.value));
               }}
-              className="h-9 rounded-lg border bg-background px-2 text-sm text-foreground outline-none"
             >
               {[5, 10, 20, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   {pageSize}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
 
           <span className="text-sm text-muted-foreground">

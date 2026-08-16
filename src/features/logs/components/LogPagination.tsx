@@ -1,3 +1,5 @@
+import { Select } from "@/components/ui";
+
 interface LogPaginationProps {
   page: number;
   pageSize: number;
@@ -22,15 +24,14 @@ export function LogPagination({
       </p>
 
       <div className="flex items-center gap-3">
-        <select
+        <Select
           value={pageSize}
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
-          className="h-9 rounded-lg border bg-background px-2 text-sm"
         >
           <option value={10}>10 / page</option>
           <option value={25}>25 / page</option>
           <option value={50}>50 / page</option>
-        </select>
+        </Select>
 
         <span className="text-sm text-muted-foreground">
           Page {page} of {totalPages}

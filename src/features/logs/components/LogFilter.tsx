@@ -6,6 +6,7 @@ import type { LogSeverity } from "../api";
 import { createStaticFilterOptions } from "@/lib/table";
 import { LOG_SEVERITIES, type LogSortOrder } from "../constants";
 import { formatLogSeverity } from "@/lib/formatters";
+import { Select } from "@/components/ui";
 
 interface LogFiltersProps {
   query: string;
@@ -52,12 +53,11 @@ export function LogFilters({
         className="max-w-md flex-1"
       />
 
-      <select
+      <Select
         value={severity}
         onChange={(event) =>
           onSeverityChange(event.target.value as LogSeverity | "")
         }
-        className="h-10 rounded-lg border bg-background px-3 text-sm"
       >
         <option value="">All Levels</option>
 
@@ -66,12 +66,11 @@ export function LogFilters({
             {option.label}
           </option>
         ))}
-      </select>
+      </Select>
 
-      <select
+      <Select
         value={service}
         onChange={(event) => onServiceChange(event.target.value)}
-        className="h-10 rounded-lg border bg-background px-3 text-sm"
       >
         <option value="">All Services</option>
 
@@ -80,14 +79,13 @@ export function LogFilters({
             {option.label}
           </option>
         ))}
-      </select>
+      </Select>
 
-      <select
+      <Select
         value={environment}
         onChange={(event) =>
           onEnvironmentChange(event.target.value as Environment | "")
         }
-        className="h-10 rounded-lg border bg-background px-3 text-sm"
       >
         <option value="">All Environments</option>
 
@@ -96,18 +94,17 @@ export function LogFilters({
             {option.label}
           </option>
         ))}
-      </select>
+      </Select>
 
-      <select
+      <Select
         value={sortOrder}
         onChange={(event) =>
           onSortOrderChange(event.target.value as LogSortOrder)
         }
-        className="h-10 rounded-lg border bg-background px-3 text-sm"
       >
         <option value="desc">Newest first</option>
         <option value="asc">Oldest first</option>
-      </select>
+      </Select>
     </div>
   );
 }
