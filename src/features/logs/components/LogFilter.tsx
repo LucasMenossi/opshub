@@ -1,12 +1,18 @@
-import type { Environment } from "@/features/services";
 import { SearchInput } from "@/components/search-input";
-
-import type { FilterOption } from "@/lib/types";
-import type { LogSeverity } from "../api";
-import { createStaticFilterOptions } from "@/lib/table";
-import { LOG_SEVERITIES, type LogSortOrder } from "../constants";
-import { formatLogSeverity } from "@/lib/formatters";
 import { Select } from "@/components/ui";
+
+import type { Environment } from "@/features/services";
+import type { FilterOption } from "@/lib/types";
+import { createStaticFilterOptions } from "@/lib/table";
+import { formatLogSeverity } from "@/lib/formatters";
+
+import type { LogSeverity } from "../api";
+import {
+  LOG_SEVERITIES,
+  LOG_TIME_RANGES,
+  type LogSortOrder,
+  type LogTimeRange,
+} from "../constants";
 
 interface LogFiltersProps {
   query: string;
@@ -17,11 +23,19 @@ interface LogFiltersProps {
   serviceOptions: FilterOption[];
   environmentOptions: FilterOption[];
 
+  timeRange: LogTimeRange;
+  customStart: string;
+  customEnd: string;
+
+  sortOrder: LogSortOrder;
+
   onQueryChange: (value: string) => void;
   onSeverityChange: (value: LogSeverity | "") => void;
   onServiceChange: (value: string) => void;
   onEnvironmentChange: (value: Environment | "") => void;
-  sortOrder: LogSortOrder;
+  onTimeRangeChange: (value: LogTimeRange) => void;
+  onCustomStartChange: (value: string) => void;
+  onCustomEndChange: (value: string) => void;
   onSortOrderChange: (value: LogSortOrder) => void;
 }
 
@@ -32,12 +46,18 @@ export function LogFilters({
   environment,
   serviceOptions,
   environmentOptions,
+  timeRange,
+  customStart,
+  customEnd,
+  sortOrder,
   onQueryChange,
   onSeverityChange,
   onServiceChange,
   onEnvironmentChange,
+  onTimeRangeChange,
+  onCustomStartChange,
+  onCustomEndChange,
   onSortOrderChange,
-  sortOrder,
 }: LogFiltersProps) {
   const severityOptions = createStaticFilterOptions(
     LOG_SEVERITIES,
@@ -95,6 +115,57 @@ export function LogFilters({
           </option>
         ))}
       </Select>
+
+      <Select
+        value={timeRange}
+        onChange={(event) =>
+          onTimeRangeChange(event.target.value as LogTimeRange)
+        }
+      >
+        {LOG_TIME_RANGES.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </Select>
+
+      {timeRange === "custom" && (
+        <>
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="log-range-start"
+              className="text-sm text-muted-foreground"
+            >
+              From
+            </label>
+
+            <input
+              id="log-range-start"
+              type="datetime-local"
+              value={customStart}
+              onChange={(event) => onCustomStartChange(event.target.value)}
+              className="h-10 rounded-lg border bg-background px-3 text-sm outline-none transition-colors focus:border-foreground"
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="log-range-end"
+              className="text-sm text-muted-foreground"
+            >
+              To
+            </label>
+
+            <input
+              id="log-range-end"
+              type="datetime-local"
+              value={customEnd}
+              onChange={(event) => onCustomEndChange(event.target.value)}
+              className="h-10 rounded-lg border bg-background px-3 text-sm outline-none transition-colors focus:border-foreground"
+            />
+          </div>
+        </>
+      )}
 
       <Select
         value={sortOrder}

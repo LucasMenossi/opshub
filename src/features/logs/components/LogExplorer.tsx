@@ -9,12 +9,12 @@ import type { Environment } from "@/features/services";
 import { LogFilters } from "./LogFilter";
 import { LogList } from "./LogList";
 import { LogDetails } from "./LogDetails";
-import type { LogSortOrder } from "../constants";
+import type { LogSortOrder, LogTimeRange } from "../constants";
 import { LogMetrics } from "./LogMetrics";
 import { cn } from "@/lib/utils";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 import { LogPagination } from "./LogPagination";
-import { filterLogs } from "../lib/log-filters";
+import { filterLogs, isValidCustomTimeRange } from "../lib/log-filters";
 import { sortLogs } from "../lib/log-sort";
 import { getTotalPages, paginateLogs } from "../lib/log-pagination";
 import { getLogFilterOptions } from "../lib/log-filter-options";
@@ -34,6 +34,9 @@ export function LogExplorer() {
   const [detailsOpen, setDetailsOpen] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [timeRange, setTimeRange] = useState<LogTimeRange>("");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
 
   const updateFilter = <T,>(setter: Dispatch<SetStateAction<T>>, value: T) => {
     setter(value);
@@ -63,8 +66,20 @@ export function LogExplorer() {
         severity,
         service,
         environment,
+        timeRange,
+        customEnd,
+        customStart,
       }),
-    [data, query, severity, service, environment],
+    [
+      data,
+      query,
+      severity,
+      service,
+      environment,
+      timeRange,
+      customEnd,
+      customStart,
+    ],
   );
 
   const logs = useMemo(
@@ -80,6 +95,9 @@ export function LogExplorer() {
     () => paginateLogs(logs, currentPage, pageSize),
     [logs, currentPage, pageSize],
   );
+
+  const customTimeRangeValid =
+    timeRange !== "custom" || isValidCustomTimeRange(customStart, customEnd);
 
   const selectedLog = getSelectedLog(paginatedLogs, selectedLogId);
 
@@ -110,11 +128,30 @@ export function LogExplorer() {
         serviceOptions={serviceOptions}
         environmentOptions={environmentOptions}
         sortOrder={sortOrder}
+        timeRange={timeRange}
+        customStart={customStart}
+        customEnd={customEnd}
         onQueryChange={(value) => updateFilter(setQuery, value)}
         onSeverityChange={(value) => updateFilter(setSeverity, value)}
         onServiceChange={(value) => updateFilter(setService, value)}
         onEnvironmentChange={(value) => updateFilter(setEnvironment, value)}
         onSortOrderChange={(value) => updateFilter(setSortOrder, value)}
+        onTimeRangeChange={(value) => {
+          updateFilter(setTimeRange, value);
+
+          if (value !== "custom") {
+            setCustomStart("");
+            setCustomEnd("");
+          }
+        }}
+        onCustomStartChange={(value) => {
+          setCustomStart(value);
+          setPage(1);
+        }}
+        onCustomEndChange={(value) => {
+          setCustomEnd(value);
+          setPage(1);
+        }}
       />
 
       <button
@@ -131,7 +168,13 @@ export function LogExplorer() {
         {detailsOpen ? "Hide Details" : "Show Details"}
       </button>
 
-      {logs.length === 0 ? (
+      {!customTimeRangeValid ? (
+        <div className="rounded-lg border py-12 text-center">
+          <p className="text-sm text-muted-foreground">
+            Select a valid start and end date.
+          </p>
+        </div>
+      ) : logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
           <p className="text-sm text-muted-foreground">No logs found.</p>
         </div>
