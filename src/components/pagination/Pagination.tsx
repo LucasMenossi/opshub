@@ -1,22 +1,23 @@
 import { Select } from "@/components/ui";
 
-interface LogPaginationProps {
+interface PaginationProps {
   page: number;
   pageSize: number;
   totalPages: number;
   totalResults: number;
+  pageSizes?: number[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
 }
 
-export function LogPagination({
+export function Pagination({
   page,
   pageSize,
   totalPages,
   totalResults,
   onPageChange,
   onPageSizeChange,
-}: LogPaginationProps) {
+}: PaginationProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <p className="text-sm text-muted-foreground">

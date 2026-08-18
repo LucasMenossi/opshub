@@ -13,12 +13,12 @@ import type { LogSortOrder, LogTimeRange } from "../constants";
 import { LogMetrics } from "./LogMetrics";
 import { cn } from "@/lib/utils";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
-import { LogPagination } from "./LogPagination";
 import { filterLogs, isValidCustomTimeRange } from "../lib/log-filters";
 import { sortLogs } from "../lib/log-sort";
 import { getTotalPages, paginateLogs } from "../lib/log-pagination";
 import { getLogFilterOptions } from "../lib/log-filter-options";
 import { getSelectedLog } from "../lib/log-selection";
+import { Pagination } from "@/components/pagination";
 
 export function LogExplorer() {
   const { data, isPending, isError, refetch, isFetching } = useLogs({
@@ -192,7 +192,7 @@ export function LogExplorer() {
               onSelect={(log) => setSelectedLogId(log.id)}
             />
 
-            <LogPagination
+            <Pagination
               page={currentPage}
               pageSize={pageSize}
               totalPages={totalPages}

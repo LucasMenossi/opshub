@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { SearchInput } from "../search-input";
 import type { DataTableFilter } from "./types";
 import { Select } from "../ui";
+import { Pagination } from "../pagination";
 
 interface DataTableProps<TData> {
   table: Table<TData>;
@@ -138,55 +139,14 @@ export function DataTable<TData>({
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} result
-          {table.getFilteredRowModel().rows.length === 1 ? "" : "s"}
-        </p>
-
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm text-muted-foreground">
-            Rows per page
-            <Select
-              value={table.getState().pagination.pageSize}
-              onChange={(event) => {
-                table.setPageSize(Number(event.target.value));
-              }}
-            >
-              {[5, 10, 20, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  {pageSize}
-                </option>
-              ))}
-            </Select>
-          </label>
-
-          <span className="text-sm text-muted-foreground">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {Math.max(table.getPageCount(), 1)}
-          </span>
-
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="h-9 rounded-lg border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Previous
-            </button>
-
-            <button
-              type="button"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="h-9 rounded-lg border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
+      <Pagination
+        page={table.getState().pagination.pageIndex + 1}
+        pageSize={table.getState().pagination.pageSize}
+        totalPages={Math.max(table.getPageCount(), 1)}
+        totalResults={table.getFilteredRowModel().rows.length}
+        onPageChange={(page) => table.setPageIndex(page - 1)}
+        onPageSizeChange={table.setPageSize}
+      />
     </div>
   );
 }
