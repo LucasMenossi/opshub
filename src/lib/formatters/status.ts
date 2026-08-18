@@ -1,4 +1,4 @@
-import type { ServiceStatus } from "@/features/services/data/services";
+import type { ServiceStatus } from "@/features/services/api";
 import type { DeploymentStatus } from "@/features/deployments/api";
 
 const serviceStatusLabels: Record<ServiceStatus, string> = {

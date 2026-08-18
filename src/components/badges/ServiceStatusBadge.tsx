@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui";
-import type { ServiceStatus } from "@/features/services/data/services";
+import type { ServiceStatus } from "@/features/services/api";
 import { formatServiceStatus } from "@/lib/formatters";
 
 const toneByStatus: Record<ServiceStatus, "success" | "warning" | "danger"> = {

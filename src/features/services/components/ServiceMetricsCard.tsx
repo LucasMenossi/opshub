@@ -1,6 +1,6 @@
 import { Card, CardHeader } from "@/components/ui";
 
-import type { Service } from "../data/services";
+import type { Service } from "../api";
 
 interface ServiceMetricsCardProps {
   service: Service;

@@ -2,7 +2,7 @@ import { Badge, Card, CardHeader } from "@/components/ui";
 
 import type { ReactNode } from "react";
 
-import type { Service } from "../data/services";
+import type { Service } from "../api";
 
 const statusTone = {
   healthy: "success",

@@ -9,9 +9,8 @@ export const dashboardHandlers = [
     return HttpResponse.json({
       services: serviceHealth.length,
       deployments: deployments.length,
-      incidents: incidents.filter(
-        (incident) => incident.severity !== "resolved",
-      ).length,
+      incidents: incidents.filter((incident) => incident.status !== "resolved")
+        .length,
       uptime: 99.98,
     });
   }),
