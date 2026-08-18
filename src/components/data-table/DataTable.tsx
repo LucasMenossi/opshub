@@ -22,6 +22,8 @@ export function DataTable<TData>({
   toolbar,
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
+  const filteredRows = table.getFilteredRowModel().rows;
+  const pagination = table.getState().pagination;
   const hasData = table.getCoreRowModel().rows.length > 0;
 
   return (
@@ -140,10 +142,10 @@ export function DataTable<TData>({
         </table>
       </div>
       <Pagination
-        page={table.getState().pagination.pageIndex + 1}
-        pageSize={table.getState().pagination.pageSize}
+        page={pagination.pageIndex + 1}
+        pageSize={pagination.pageSize}
         totalPages={Math.max(table.getPageCount(), 1)}
-        totalResults={table.getFilteredRowModel().rows.length}
+        totalResults={filteredRows.length}
         onPageChange={(page) => table.setPageIndex(page - 1)}
         onPageSizeChange={table.setPageSize}
       />

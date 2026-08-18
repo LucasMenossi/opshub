@@ -1,4 +1,4 @@
-import { Select } from "@/components/ui";
+import { Button, Select } from "@/components/ui";
 
 interface PaginationProps {
   page: number;
@@ -15,6 +15,7 @@ export function Pagination({
   pageSize,
   totalPages,
   totalResults,
+  pageSizes = [5, 10, 25, 50],
   onPageChange,
   onPageSizeChange,
 }: PaginationProps) {
@@ -29,9 +30,11 @@ export function Pagination({
           value={pageSize}
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
         >
-          <option value={10}>10 / page</option>
-          <option value={25}>25 / page</option>
-          <option value={50}>50 / page</option>
+          {pageSizes.map((size) => (
+            <option key={size} value={size}>
+              {size} / page
+            </option>
+          ))}
         </Select>
 
         <span className="text-sm text-muted-foreground">
@@ -39,23 +42,21 @@ export function Pagination({
         </span>
 
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Button
+            size="sm"
             onClick={() => onPageChange(page - 1)}
             disabled={page === 1}
-            className="h-9 rounded-lg border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             Previous
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            size="sm"
             onClick={() => onPageChange(page + 1)}
             disabled={page === totalPages}
-            className="h-9 rounded-lg border px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </div>
