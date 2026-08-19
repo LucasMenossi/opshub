@@ -1,15 +1,14 @@
-import { cn } from "@/lib/utils";
+import type { InputHTMLAttributes } from "react";
 import { Search } from "lucide-react";
 
-interface SearchInputProps {
+import { cn } from "@/lib/utils";
+
+interface SearchInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange"
+> {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  autoFocus?: boolean;
-  disabled?: boolean;
-  name?: string;
-  id?: string;
 }
 
 export function SearchInput({
@@ -17,10 +16,7 @@ export function SearchInput({
   onChange,
   placeholder = "Search...",
   className,
-  autoFocus,
-  disabled,
-  name,
-  id,
+  ...props
 }: SearchInputProps) {
   return (
     <div className={cn("relative", className)}>
@@ -31,11 +27,8 @@ export function SearchInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        autoFocus={autoFocus}
-        disabled={disabled}
-        name={name}
-        id={id}
         className="h-10 w-full rounded-lg border bg-background pr-3 pl-9 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
+        {...props}
       />
     </div>
   );

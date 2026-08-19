@@ -1,10 +1,9 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { SearchInput } from "../search-input";
 import type { DataTableFilter } from "./types";
-import { Select } from "../ui";
 import { Pagination } from "../pagination";
+import { DataTableToolbar } from "./DataTableToolbar";
 
 interface DataTableProps<TData> {
   table: Table<TData>;
@@ -28,42 +27,12 @@ export function DataTable<TData>({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <SearchInput
-          className="w-full max-w-sm"
-          value={table.getState().globalFilter ?? ""}
-          onChange={table.setGlobalFilter}
-          placeholder={searchPlaceholder}
-        />
-
-        {filters.map((filter) => {
-          const column = table.getColumn(filter.columnId);
-
-          if (!column) {
-            return null;
-          }
-
-          return (
-            <Select
-              key={filter.columnId}
-              value={(column.getFilterValue() as string) ?? ""}
-              onChange={(event) =>
-                column.setFilterValue(event.target.value || undefined)
-              }
-            >
-              <option value="">All {filter.label}</option>
-
-              {filter.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          );
-        })}
-
-        {toolbar}
-      </div>
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder={searchPlaceholder}
+        filters={filters}
+        toolbar={toolbar}
+      />
 
       <div className="overflow-hidden rounded-lg border">
         <table className="w-full">
