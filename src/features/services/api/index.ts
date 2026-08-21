@@ -1,2 +1,7 @@
-export * from "./services.api";
-export * from "./services.types";
+export { servicesApi } from "./services.api";
+export type {
+  Environment,
+  Service,
+  ServiceStatus,
+  ServicesResponse,
+} from "./services.types";

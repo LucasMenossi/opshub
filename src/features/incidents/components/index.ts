@@ -1,4 +1,4 @@
-export * from "./IncidentTable";
-export * from "./IncidentOverviewCard";
-export * from "./IncidentRelatedDeployments";
-export * from "./IncidentTimeline";
+export { IncidentTable } from "./IncidentTable";
+export { IncidentOverviewCard } from "./IncidentOverviewCard";
+export { IncidentRelatedDeployments } from "./IncidentRelatedDeployments";
+export { IncidentTimeline } from "./IncidentTimeline";

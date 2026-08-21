@@ -1,1 +1,1 @@
-export * from "./filter-option";
+export type { FilterOption } from "./filter-option";

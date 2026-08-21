@@ -1,1 +1,1 @@
-export * from "./DeploymentTable";
+export { DeploymentTable } from "./DeploymentTable";

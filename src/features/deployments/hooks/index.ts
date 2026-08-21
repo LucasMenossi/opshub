@@ -1,1 +1,1 @@
-export * from "./useDeployments";
+export { useDeployments } from "./useDeployments";

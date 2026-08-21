@@ -1,2 +1,2 @@
-export * from "./ServiceDetailsPage";
-export * from "./ServicesPage";
+export { ServiceDetailsPage } from "./ServiceDetailsPage";
+export { ServicesPage } from "./ServicesPage";

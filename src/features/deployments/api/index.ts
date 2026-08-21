@@ -1,2 +1,6 @@
-export * from "./deployments.api";
-export * from "./deployments.types";
+export { getDeployments } from "./deployments.api";
+export type {
+  Deployment,
+  DeploymentEnvironment,
+  DeploymentStatus,
+} from "./deployments.types";

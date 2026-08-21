@@ -1,2 +1,2 @@
-export * from "./users.api";
-export * from "./users.types";
+export { getUsers } from "./users.api";
+export type { User, UserRole, UserStatus } from "./users.types";

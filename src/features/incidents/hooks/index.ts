@@ -1,2 +1,2 @@
-export * from "./useIncidents";
-export * from "./useIncident";
+export { useIncidents } from "./useIncidents";
+export { useIncident } from "./useIncident";
