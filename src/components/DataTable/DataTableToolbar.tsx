@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 
-import { SearchInput } from "../search-input";
-import { Select } from "../ui";
+import { SearchInput } from "../SearchInput";
+import { Select } from "../UI";
 
 import type { DataTableFilter } from "./types";
 

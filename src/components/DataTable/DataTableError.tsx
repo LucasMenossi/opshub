@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui";
+import { Card } from "@/components/UI";
 
 interface DataTableErrorProps {
   title?: string;

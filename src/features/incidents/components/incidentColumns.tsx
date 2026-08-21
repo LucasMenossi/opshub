@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
   IncidentSeverityBadge,
   IncidentStatusBadge,
-} from "@/components/badges";
+} from "@/components/Badges";
 import { formatDateTime } from "@/lib/formatters";
 
 import type { Incident } from "../api";

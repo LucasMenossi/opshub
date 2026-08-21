@@ -3,8 +3,8 @@ import { Link } from "@tanstack/react-router";
 import {
   IncidentSeverityBadge,
   IncidentStatusBadge,
-} from "@/components/badges";
-import { Card } from "@/components/ui";
+} from "@/components/Badges";
+import { Card } from "@/components/UI";
 import { formatDateTime } from "@/lib/formatters";
 
 import type { IncidentDetails } from "../api";

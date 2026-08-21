@@ -1,4 +1,4 @@
-import { IncidentSeverityBadge } from "@/components/badges";
+import { IncidentSeverityBadge } from "@/components/Badges";
 import type { Incident } from "@/features/incidents/api";
 import { formatDateTime } from "@/lib/formatters";
 

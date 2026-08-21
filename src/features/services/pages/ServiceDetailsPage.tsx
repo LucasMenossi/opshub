@@ -1,11 +1,11 @@
 import { useParams } from "@tanstack/react-router";
 
-import { PageHeader } from "@/components/data-display";
-import { Container } from "@/components/ui";
+import { PageHeader } from "@/components/DataDisplay";
+import { Container } from "@/components/UI";
 
 import { useServices } from "../hooks";
 import { ServiceMetricsCard, ServiceOverviewCard } from "../components";
-import { PageErrorState, PageLoadingState } from "@/components/page-state";
+import { PageErrorState, PageLoadingState } from "@/components/PageState";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({

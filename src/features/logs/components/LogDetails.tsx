@@ -1,7 +1,7 @@
-import { LogLevelBadge } from "@/components/badges";
+import { LogLevelBadge } from "@/components/Badges";
 import { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/UI";
 
 import {
   formatDateTime,

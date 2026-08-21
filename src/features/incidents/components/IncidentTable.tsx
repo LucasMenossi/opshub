@@ -10,13 +10,13 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
-} from "@/components/data-table";
+} from "@/components/DataTable";
 
 import type { IncidentSeverity, IncidentStatus } from "../api";
 import { useIncidents } from "../hooks";
-import { incidentColumns } from "./incident-columns";
+import { incidentColumns } from "./incidentColumns";
 import { IncidentDateRangeFilter } from "./IncidentDateRangeFilter";
-import { getIncidentTableFilters } from "./incident-table-filters";
+import { getIncidentTableFilters } from "./incidentTableFilters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 function getFilterValue(filters: ColumnFiltersState, id: string): unknown {

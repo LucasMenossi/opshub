@@ -1,4 +1,4 @@
-import { Card, CardHeader } from "@/components/ui";
+import { Card, CardHeader } from "@/components/UI";
 
 import { useServiceHealth } from "../hooks";
 import { ServiceHealthItem } from "./ServiceHealthItem";

@@ -1,4 +1,4 @@
-import type { DataTableFilter } from "@/components/data-table";
+import type { DataTableFilter } from "@/components/DataTable";
 import { formatDeploymentStatus, formatEnvironment } from "@/lib/formatters";
 
 import type { DeploymentEnvironment, DeploymentStatus } from "../api";

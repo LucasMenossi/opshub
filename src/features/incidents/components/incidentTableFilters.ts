@@ -1,4 +1,4 @@
-import type { DataTableFilter } from "@/components/data-table";
+import type { DataTableFilter } from "@/components/DataTable";
 import { formatIncidentSeverity, formatIncidentStatus } from "@/lib/formatters";
 
 import type { Incident, IncidentSeverity, IncidentStatus } from "../api";

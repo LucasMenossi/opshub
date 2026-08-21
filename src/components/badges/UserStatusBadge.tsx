@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/UI";
 
 import { formatUserStatus } from "@/lib/formatters";
 

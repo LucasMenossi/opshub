@@ -2,7 +2,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type { DataTableFilter } from "./types";
-import { Pagination } from "../pagination";
+import { Pagination } from "../Pagination";
 import { DataTableToolbar } from "./DataTableToolbar";
 
 interface DataTableProps<TData> {

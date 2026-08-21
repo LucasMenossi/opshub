@@ -1,4 +1,4 @@
-import { Badge, Card, CardHeader } from "@/components/ui";
+import { Badge, Card, CardHeader } from "@/components/UI";
 
 import type { ReactNode } from "react";
 

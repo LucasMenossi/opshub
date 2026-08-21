@@ -1,4 +1,4 @@
-import { Card, Container } from "@/components/ui";
+import { Card, Container } from "@/components/UI";
 
 interface PageNotFoundStateProps {
   title?: string;

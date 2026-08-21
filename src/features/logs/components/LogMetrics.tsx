@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import type { LogEntry } from "../api";
-import { MetricCard } from "@/components/data-display";
+import { MetricCard } from "@/components/DataDisplay";
 
 interface LogMetricsProps {
   logs: LogEntry[];

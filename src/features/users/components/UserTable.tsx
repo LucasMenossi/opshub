@@ -9,13 +9,13 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
-} from "@/components/data-table";
+} from "@/components/DataTable";
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 import { useUsers } from "../hooks";
-import { userColumns } from "./user-columns";
-import { getUserTableFilters } from "./user-table-filters";
+import { getUserTableFilters } from "./userTableFilters";
+import { userColumns } from "./userColumns";
 
 interface UserTableProps {
   onSummaryChange?: (summary: { users: number; teams: number }) => void;

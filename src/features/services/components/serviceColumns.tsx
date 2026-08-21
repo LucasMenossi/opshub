@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { ServiceStatusBadge } from "@/components/badges";
+import { ServiceStatusBadge } from "@/components/Badges";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 import type { Environment, Service, ServiceStatus } from "@/features/services";
 

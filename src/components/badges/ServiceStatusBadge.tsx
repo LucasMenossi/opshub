@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/UI";
 import type { ServiceStatus } from "@/features/services/api";
 import { formatServiceStatus } from "@/lib/formatters";
 

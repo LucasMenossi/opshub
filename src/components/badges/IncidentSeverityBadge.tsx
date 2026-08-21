@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/UI";
 import type { IncidentSeverity } from "@/features/incidents/api";
 import { formatIncidentSeverity } from "@/lib/formatters";
 

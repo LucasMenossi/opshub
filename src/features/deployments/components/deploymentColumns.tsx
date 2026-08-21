@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { DeploymentStatusBadge } from "@/components/badges";
+import { DeploymentStatusBadge } from "@/components/Badges";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 
 import type { Deployment } from "../api";

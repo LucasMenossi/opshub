@@ -1,5 +1,5 @@
-import { SearchInput } from "@/components/search-input";
-import { Select } from "@/components/ui";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 
 import type { Environment } from "@/features/services";
 import type { FilterOption } from "@/lib/types";

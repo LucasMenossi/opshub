@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 import { deployments } from "@/features/deployments/data/deployments";
-import { serviceHealth } from "@/features/dashboard/data/service-health";
+import { serviceHealth } from "@/features/dashboard/data/serviceHealth";
 import { incidents } from "@/features/incidents/data/incidents";
 
 export const dashboardHandlers = [

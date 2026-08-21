@@ -9,7 +9,7 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
-} from "@/components/data-table";
+} from "@/components/DataTable";
 import {
   formatDateTime,
   formatDeploymentStatus,
@@ -17,8 +17,8 @@ import {
 } from "@/lib/formatters";
 
 import { useDeployments } from "../hooks";
-import { deploymentColumns } from "./deployment-columns";
-import { deploymentTableFilters } from "./deployment-table-filters";
+import { deploymentColumns } from "./deploymentColumns";
+import { deploymentTableFilters } from "./deploymentTableFilters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 
 export function DeploymentTable() {

@@ -1,4 +1,4 @@
-import { LogLevelBadge } from "@/components/badges";
+import { LogLevelBadge } from "@/components/Badges";
 import { formatEnvironment } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 

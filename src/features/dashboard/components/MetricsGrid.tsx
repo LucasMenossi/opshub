@@ -1,7 +1,7 @@
 import { Activity, AlertTriangle, Rocket, Server } from "lucide-react";
 
 import { useDashboardMetrics } from "../hooks";
-import { MetricCard } from "@/components/data-display";
+import { MetricCard } from "@/components/DataDisplay";
 
 export function MetricsGrid() {
   const { data } = useDashboardMetrics();

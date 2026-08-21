@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/UI";
 
-import type { ServiceHealth } from "../data/service-health";
+import type { ServiceHealth } from "../data/serviceHealth";
 
 interface ServiceHealthItemProps {
   service: ServiceHealth;

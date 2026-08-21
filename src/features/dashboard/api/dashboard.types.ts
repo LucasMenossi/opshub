@@ -1,4 +1,4 @@
-import type { ServiceHealth } from "../data/service-health";
+import type { ServiceHealth } from "../data/serviceHealth";
 
 export interface DashboardMetrics {
   services: number;

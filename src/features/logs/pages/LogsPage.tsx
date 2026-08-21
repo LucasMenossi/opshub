@@ -1,5 +1,5 @@
-import { Container } from "@/components/ui";
-import { PageHeader } from "@/components/data-display";
+import { Container } from "@/components/UI";
+import { PageHeader } from "@/components/DataDisplay";
 
 import { LogExplorer } from "../components";
 

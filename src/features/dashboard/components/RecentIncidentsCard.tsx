@@ -1,4 +1,4 @@
-import { Card, CardHeader } from "@/components/ui";
+import { Card, CardHeader } from "@/components/UI";
 
 import { useRecentIncidents } from "../hooks";
 import { IncidentItem } from "./IncidentItem";

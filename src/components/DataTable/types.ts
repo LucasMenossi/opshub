@@ -1,4 +1,4 @@
-import type { FilterOption } from "@/lib/types/filter-option";
+import type { FilterOption } from "@/lib/types/filterOption";
 
 export interface DataTableFilter {
   columnId: string;

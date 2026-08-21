@@ -1,7 +1,7 @@
 import { useParams } from "@tanstack/react-router";
 
-import { PageHeader } from "@/components/data-display";
-import { Card, Container } from "@/components/ui";
+import { PageHeader } from "@/components/DataDisplay";
+import { Card, Container } from "@/components/UI";
 import { useDeployments } from "@/features/deployments/hooks";
 
 import { useIncident } from "../hooks";
@@ -10,7 +10,7 @@ import {
   IncidentRelatedDeployments,
   IncidentTimeline,
 } from "../components";
-import { PageErrorState, PageLoadingState } from "@/components/page-state";
+import { PageErrorState, PageLoadingState } from "@/components/PageState";
 
 export function IncidentDetailsPage() {
   const { incidentId } = useParams({

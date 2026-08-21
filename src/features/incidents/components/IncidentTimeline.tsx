@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui";
+import { Card } from "@/components/UI";
 import { formatDateTime } from "@/lib/formatters";
 
 import type { IncidentTimelineEvent } from "../api";
-import { EmptyState } from "@/components/empty-state";
+import { EmptyState } from "@/components/EmptyState";
 
 interface IncidentTimelineProps {
   events: IncidentTimelineEvent[];

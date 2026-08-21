@@ -11,12 +11,12 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
-} from "@/components/data-table";
+} from "@/components/DataTable";
 import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 
 import { useServices } from "../hooks";
-import { serviceColumns } from "./service-columns";
-import { serviceTableFilters } from "./service-table-filters";
+import { serviceColumns } from "./serviceColumns";
+import { serviceTableFilters } from "./serviceTableFilters";
 
 export function ServiceTable() {
   const { data = [], isPending, isError, refetch, isFetching } = useServices();

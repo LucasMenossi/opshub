@@ -1,5 +1,5 @@
 import type { Deployment } from "@/features/deployments/api";
-import { DeploymentStatusBadge } from "@/components/badges";
+import { DeploymentStatusBadge } from "@/components/Badges";
 import { formatDateTime } from "@/lib/formatters";
 
 interface DeploymentItemProps {

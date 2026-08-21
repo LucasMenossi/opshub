@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 
-import { AppHeader, AppSidebar } from "@/components/layout";
+import { AppHeader, AppSidebar } from "@/components/Layout";
 
 export function AppLayout({ children }: PropsWithChildren) {
   return (

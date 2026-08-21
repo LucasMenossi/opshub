@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 import { incidents } from "@/features/incidents/data/incidents";
-import { incidentDetails } from "@/features/incidents/data/incident-details";
+import { incidentDetails } from "@/features/incidents/data/incidentDetails";
 
 export const incidentsHandlers = [
   http.get("/api/incidents", () => {

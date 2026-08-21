@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui";
+import { Badge } from "@/components/UI";
 import type { DeploymentStatus } from "@/features/deployments/api";
 import { formatDeploymentStatus } from "@/lib/formatters";
 

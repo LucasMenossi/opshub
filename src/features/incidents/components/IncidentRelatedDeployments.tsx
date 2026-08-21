@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui";
-import { DeploymentStatusBadge } from "@/components/badges";
+import { Card } from "@/components/UI";
+import { DeploymentStatusBadge } from "@/components/Badges";
 import type { Deployment } from "@/features/deployments/api";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
-import { EmptyState } from "@/components/empty-state";
+import { EmptyState } from "@/components/EmptyState";
 
 interface IncidentRelatedDeploymentsProps {
   deployments: Deployment[];
