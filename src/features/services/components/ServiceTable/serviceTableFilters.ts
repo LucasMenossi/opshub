@@ -1,6 +1,6 @@
 import type { DataTableFilter } from "@/components/DataTable";
 import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
-import type { Environment, ServiceStatus } from "../api";
+import type { Environment, ServiceStatus } from "../../api";
 
 export const serviceStatuses: ServiceStatus[] = ["healthy", "degraded", "down"];
 

@@ -16,7 +16,7 @@ import {
   formatEnvironment,
 } from "@/lib/formatters";
 
-import { useDeployments } from "../hooks";
+import { useDeployments } from "../../hooks";
 import { deploymentColumns } from "./deploymentColumns";
 import { deploymentTableFilters } from "./deploymentTableFilters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";

@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { DeploymentStatusBadge } from "@/components/Badges";
 import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 
-import type { Deployment } from "../api";
+import type { Deployment } from "../../api";
 
 export const deploymentColumns: ColumnDef<Deployment>[] = [
   {

@@ -1,7 +1,7 @@
 import type { DataTableFilter } from "@/components/DataTable";
 import { formatIncidentSeverity, formatIncidentStatus } from "@/lib/formatters";
 
-import type { Incident, IncidentSeverity, IncidentStatus } from "../api";
+import type { Incident, IncidentSeverity, IncidentStatus } from "../../api";
 import {
   createStaticFilterOptions,
   createUniqueFilterOptions,

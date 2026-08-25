@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { UserRoleBadge, UserStatusBadge } from "@/components/Badges";
 
-import type { User, UserStatus } from "../api";
+import type { User, UserStatus } from "../../api";
 
 export const userColumns: ColumnDef<User>[] = [
   {

@@ -7,7 +7,7 @@ import {
 } from "@/components/Badges";
 import { formatDateTime } from "@/lib/formatters";
 
-import type { Incident } from "../api";
+import type { Incident } from "../../api";
 
 export const incidentColumns: ColumnDef<Incident>[] = [
   {

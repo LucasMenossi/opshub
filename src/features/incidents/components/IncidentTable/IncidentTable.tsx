@@ -12,10 +12,10 @@ import {
   DataTableSkeleton,
 } from "@/components/DataTable";
 
-import type { IncidentSeverity, IncidentStatus } from "../api";
-import { useIncidents } from "../hooks";
+import type { IncidentSeverity, IncidentStatus } from "../../api";
+import { useIncidents } from "../../hooks";
 import { incidentColumns } from "./incidentColumns";
-import { IncidentDateRangeFilter } from "./IncidentDateRangeFilter";
+import { IncidentDateRangeFilter } from "../IncidentDateRangeFilter";
 import { getIncidentTableFilters } from "./incidentTableFilters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 

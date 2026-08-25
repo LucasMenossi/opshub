@@ -13,7 +13,7 @@ import {
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 
-import { useUsers } from "../hooks";
+import { useUsers } from "../../hooks";
 import { getUserTableFilters } from "./userTableFilters";
 import { userColumns } from "./userColumns";
 

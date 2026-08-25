@@ -1,7 +1,7 @@
 import type { DataTableFilter } from "@/components/DataTable";
 import { formatDeploymentStatus, formatEnvironment } from "@/lib/formatters";
 
-import type { DeploymentEnvironment, DeploymentStatus } from "../api";
+import type { DeploymentEnvironment, DeploymentStatus } from "../../api";
 
 const deploymentStatuses: DeploymentStatus[] = [
   "pending",

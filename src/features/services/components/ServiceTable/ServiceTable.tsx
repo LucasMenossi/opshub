@@ -14,7 +14,7 @@ import {
 } from "@/components/DataTable";
 import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
 
-import { useServices } from "../hooks";
+import { useServices } from "../../hooks";
 import { serviceColumns } from "./serviceColumns";
 import { serviceTableFilters } from "./serviceTableFilters";
 

@@ -21,7 +21,7 @@ import {
   paginateLogs,
   getLogFilterOptions,
   getSelectedLog,
-} from "../lib";
+} from "../utils";
 import { Pagination } from "@/components/Pagination";
 
 export function LogExplorer() {

@@ -2,7 +2,7 @@ import type { DataTableFilter } from "@/components/DataTable";
 
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
 
-import type { User, UserRole, UserStatus } from "../api";
+import type { User, UserRole, UserStatus } from "../../api";
 import {
   createStaticFilterOptions,
   createUniqueFilterOptions,

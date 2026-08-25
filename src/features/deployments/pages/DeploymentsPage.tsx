@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/DataDisplay";
 import { Container } from "@/components/UI";
 
-import { DeploymentTable } from "../components";
+import { DeploymentTable } from "../components/DeploymentTable";
 
 export function DeploymentsPage() {
   return (
