@@ -9,7 +9,7 @@ import {
 
 export function DashboardPage() {
   return (
-    <Container>
+    <Container size="full">
       <div className="space-y-8">
         <PageHeader
           title="Dashboard"
@@ -18,10 +18,18 @@ export function DashboardPage() {
 
         <MetricsGrid />
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <ServiceHealthCard />
-          <RecentDeploymentsCard />
-          <RecentIncidentsCard />
+        <div className="grid gap-6 xl:grid-cols-11">
+          <div className="xl:col-span-3">
+            <ServiceHealthCard />
+          </div>
+
+          <div className="xl:col-span-4">
+            <RecentDeploymentsCard />
+          </div>
+
+          <div className="xl:col-span-4">
+            <RecentIncidentsCard />
+          </div>
         </div>
       </div>
     </Container>

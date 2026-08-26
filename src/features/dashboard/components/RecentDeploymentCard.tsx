@@ -7,7 +7,7 @@ export function RecentDeploymentsCard() {
   const { data = [] } = useRecentDeployments();
 
   return (
-    <Card className="p-6">
+    <Card className="h-full p-6">
       <CardHeader
         title="Recent Deployments"
         description="Latest deployment activity."

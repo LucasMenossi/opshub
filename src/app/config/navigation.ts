@@ -16,45 +16,66 @@ export interface NavigationItem {
   icon: LucideIcon;
 }
 
-export const navigation: NavigationItem[] = [
+export interface NavigationGroup {
+  label?: string;
+  items: NavigationItem[];
+}
+
+export const navigationGroups: NavigationGroup[] = [
   {
-    label: "Dashboard",
-    to: "/",
-    icon: Home,
+    label: "Overview",
+    items: [
+      {
+        label: "Dashboard",
+        to: "/",
+        icon: Home,
+      },
+    ],
   },
   {
-    label: "Services",
-    to: "/services",
-    icon: Server,
+    label: "Operations",
+    items: [
+      {
+        label: "Services",
+        to: "/services",
+        icon: Server,
+      },
+      {
+        label: "Deployments",
+        to: "/deployments",
+        icon: Rocket,
+      },
+      {
+        label: "Incidents",
+        to: "/incidents",
+        icon: TriangleAlert,
+      },
+      {
+        label: "Logs",
+        to: "/logs",
+        icon: Logs,
+      },
+    ],
   },
   {
-    label: "Deployments",
-    to: "/deployments",
-    icon: Rocket,
-  },
-  {
-    label: "Incidents",
-    to: "/incidents",
-    icon: TriangleAlert,
-  },
-  {
-    label: "Logs",
-    to: "/logs",
-    icon: Logs,
-  },
-  {
-    label: "Feature Flags",
-    to: "/feature-flags",
-    icon: Flag,
-  },
-  {
-    label: "Users",
-    to: "/users",
-    icon: Users,
-  },
-  {
-    label: "Settings",
-    to: "/settings",
-    icon: Settings,
+    label: "Management",
+    items: [
+      {
+        label: "Feature Flags",
+        to: "/feature-flags",
+        icon: Flag,
+      },
+      {
+        label: "Users",
+        to: "/users",
+        icon: Users,
+      },
+    ],
   },
 ];
+
+export const settingsNavigationItem: NavigationItem = {
+  label: "Settings",
+  to: "/settings",
+  icon: Settings,
+};

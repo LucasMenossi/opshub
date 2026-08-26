@@ -7,7 +7,7 @@ export function RecentIncidentsCard() {
   const { data = [] } = useRecentIncidents();
 
   return (
-    <Card className="p-6">
+    <Card className="h-full p-6">
       <CardHeader
         title="Recent Incidents"
         description="Latest incidents across your platform."

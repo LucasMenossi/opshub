@@ -10,11 +10,12 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "flex h-screen shrink-0 flex-col border-r bg-white transition-[width] duration-300",
-        isCollapsed ? "w-16" : "w-64",
+        "flex shrink-0 flex-col border-r bg-white transition-[width] duration-300",
+        isCollapsed ? "w-16" : "w-60",
       )}
     >
       <Logo />
+
       <Navigation />
     </aside>
   );

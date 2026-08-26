@@ -7,7 +7,7 @@ export function ServiceHealthCard() {
   const { data = [] } = useServiceHealth();
 
   return (
-    <Card className="p-6">
+    <Card className="h-full p-6">
       <CardHeader
         title="Service Health"
         description="Current status of platform services."

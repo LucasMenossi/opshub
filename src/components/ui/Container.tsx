@@ -17,13 +17,17 @@ const sizeClasses: Record<ContainerSize, string> = {
 };
 
 export function Container({
-  size = "lg",
+  size = "full",
   className,
   ...props
 }: ContainerProps) {
   return (
     <div
-      className={cn("mx-auto w-full", sizeClasses[size], className)}
+      className={cn(
+        "mx-auto w-full px-6 py-8 lg:px-8 lg:py-10",
+        sizeClasses[size],
+        className,
+      )}
       {...props}
     />
   );
