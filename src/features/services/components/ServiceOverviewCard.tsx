@@ -28,9 +28,14 @@ interface ServiceOverviewCardProps {
 export function ServiceOverviewCard({ service }: ServiceOverviewCardProps) {
   return (
     <Card>
-      <CardHeader title="Overview" description="General service information" />
+      <div className="p-6 pb-0">
+        <CardHeader
+          title="Overview"
+          description="General service information"
+        />
+      </div>
 
-      <dl className="grid gap-6 p-6 sm:grid-cols-2">
+      <dl className="grid grid-cols-2 gap-x-16 gap-y-6 p-6">
         <OverviewItem label="Status">
           <Badge tone={statusTone[service.status]}>
             {statusLabel[service.status]}
@@ -66,10 +71,10 @@ interface OverviewItemProps {
 
 function OverviewItem({ label, children }: OverviewItemProps) {
   return (
-    <div>
+    <div className="space-y-2">
       <dt className="text-sm text-muted-foreground">{label}</dt>
 
-      <dd className="mt-2">{children}</dd>
+      <dd>{children}</dd>
     </div>
   );
 }
