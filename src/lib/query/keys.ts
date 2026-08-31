@@ -24,4 +24,8 @@ export const queryKeys = {
   logs: {
     all: ["logs"] as const,
   },
+
+  featureFlags: {
+    all: ["feature-flags"] as const,
+  },
 } as const;
