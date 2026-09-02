@@ -1,11 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@/components/UI";
-
-import type { FeatureFlag } from "../../api";
+import type { FeatureFlagTableRow } from "../../types";
 import { FeatureFlagToggle } from "../FeatureFlagToggle";
 
-export const featureFlagColumns: ColumnDef<FeatureFlag>[] = [
+export const featureFlagColumns: ColumnDef<FeatureFlagTableRow>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -19,20 +17,34 @@ export const featureFlagColumns: ColumnDef<FeatureFlag>[] = [
     ),
   },
   {
-    accessorKey: "ownerId",
+    accessorKey: "ownerName",
     header: "Owner",
   },
   {
     accessorKey: "enabled",
     header: "Status",
+    filterFn: (row, columnId, value) =>
+      value === undefined ||
+      value === "" ||
+      String(row.getValue<boolean>(columnId)) === value,
     cell: ({ row }) => (
-      <FeatureFlagToggle id={row.original.id} enabled={row.original.enabled} />
+      <div className="flex items-center gap-3">
+        <FeatureFlagToggle
+          id={row.original.id}
+          enabled={row.original.enabled}
+        />
+
+        <span className="text-sm text-muted-foreground">
+          {row.original.enabled ? "Enabled" : "Disabled"}
+        </span>
+      </div>
     ),
-    filterFn: "equalsString",
   },
   {
     accessorKey: "rollout",
     header: "Rollout",
-    cell: ({ row }) => <Badge tone="info">{row.original.rollout}%</Badge>,
+    cell: ({ row }) => (
+      <span className="font-medium tabular-nums">{row.original.rollout}%</span>
+    ),
   },
 ];

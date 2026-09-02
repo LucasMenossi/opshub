@@ -1,9 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import {
-  type ColumnFiltersState,
-  type SortingState,
-} from "@tanstack/react-table";
+import type { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
 import {
   DataTable,
@@ -11,23 +8,42 @@ import {
   DataTableSkeleton,
 } from "@/components/DataTable";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { useUsers } from "@/features/users";
 
 import { useFeatureFlags } from "../../hooks";
+import type { FeatureFlagTableRow } from "../../types";
 import { featureFlagColumns } from "./featureFlagColumns";
 import { getFeatureFlagTableFilters } from "./featureFlagTableFilters";
 
 export function FeatureFlagTable() {
   const {
-    data = [],
-    isPending,
-    isError,
-    refetch,
-    isFetching,
+    data: featureFlags = [],
+    isPending: isFeatureFlagsPending,
+    isError: isFeatureFlagsError,
+    refetch: refetchFeatureFlags,
+    isFetching: isFeatureFlagsFetching,
   } = useFeatureFlags();
+
+  const {
+    data: users = [],
+    isPending: isUsersPending,
+    isError: isUsersError,
+  } = useUsers();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const data = useMemo<FeatureFlagTableRow[]>(
+    () =>
+      featureFlags.map((featureFlag) => ({
+        ...featureFlag,
+        ownerName:
+          users.find((user) => user.id === featureFlag.ownerId)?.name ??
+          featureFlag.ownerId,
+      })),
+    [featureFlags, users],
+  );
 
   const table = useDataTable({
     data,
@@ -46,7 +62,7 @@ export function FeatureFlagTable() {
     globalFilterFn: createGlobalFilter((featureFlag) => [
       featureFlag.name,
       featureFlag.description,
-      featureFlag.ownerId,
+      featureFlag.ownerName,
     ]),
 
     initialState: {
@@ -57,6 +73,10 @@ export function FeatureFlagTable() {
     },
   });
 
+  const isPending = isFeatureFlagsPending || isUsersPending;
+
+  const isError = isFeatureFlagsError || isUsersError;
+
   if (isPending) {
     return <DataTableSkeleton columns={5} />;
   }
@@ -65,9 +85,9 @@ export function FeatureFlagTable() {
     return (
       <DataTableError
         title="Failed to load feature flags"
-        description="The feature flag data could not be retrieved."
-        isRetrying={isFetching}
-        onRetry={() => void refetch()}
+        description="The feature flags could not be retrieved."
+        isRetrying={isFeatureFlagsFetching}
+        onRetry={() => void refetchFeatureFlags()}
       />
     );
   }
@@ -75,9 +95,9 @@ export function FeatureFlagTable() {
   return (
     <DataTable
       table={table}
-      emptyMessage="No feature flags found."
-      searchPlaceholder="Search feature flags..."
       filters={getFeatureFlagTableFilters(data)}
+      searchPlaceholder="Search feature flags..."
+      emptyMessage="No feature flags found."
     />
   );
 }

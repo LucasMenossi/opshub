@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { queryKeys } from "@/lib/query/keys";
 
@@ -30,6 +31,10 @@ export function useUpdateFeatureFlag() {
       return { previousFlags };
     },
 
+    onSuccess: (_data, { enabled }) => {
+      toast.success(enabled ? "Feature flag enabled" : "Feature flag disabled");
+    },
+
     onError: (_error, _variables, context) => {
       if (context?.previousFlags) {
         queryClient.setQueryData(
@@ -37,6 +42,8 @@ export function useUpdateFeatureFlag() {
           context.previousFlags,
         );
       }
+
+      toast.error("Failed to update feature flag");
     },
 
     onSettled: () => {

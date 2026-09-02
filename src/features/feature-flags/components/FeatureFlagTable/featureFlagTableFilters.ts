@@ -1,10 +1,11 @@
 import type { DataTableFilter } from "@/components/DataTable";
 
-import type { FeatureFlag } from "../../api";
+import type { FeatureFlagTableRow } from "../../types";
+
 import { createUniqueFilterOptions } from "@/lib/table";
 
 export function getFeatureFlagTableFilters(
-  featureFlags: FeatureFlag[],
+  data: FeatureFlagTableRow[],
 ): DataTableFilter[] {
   return [
     {
@@ -22,11 +23,11 @@ export function getFeatureFlagTableFilters(
       ],
     },
     {
-      columnId: "ownerId",
+      columnId: "ownerName",
       label: "Owner",
       options: createUniqueFilterOptions(
-        featureFlags,
-        (featureFlag) => featureFlag.ownerId,
+        data,
+        (featureFlag) => featureFlag.ownerName,
       ),
     },
   ];
