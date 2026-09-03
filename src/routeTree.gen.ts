@@ -15,6 +15,7 @@ import { Route as FeatureFlagsRouteImport } from './routes/feature-flags'
 import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as LogsRouteImport } from './routes/logs'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as UsersRouteImport } from './routes/users'
 import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
 import { Route as IncidentsIncidentIdRouteImport } from './routes/incidents.$incidentId'
@@ -51,6 +52,11 @@ const LogsRoute = LogsRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersRoute = UsersRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/incidents': typeof IncidentsRouteWithChildren
   '/logs': typeof LogsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/users': typeof UsersRouteWithChildren
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deployments': typeof DeploymentsRoute
   '/feature-flags': typeof FeatureFlagsRoute
+  '/settings': typeof SettingsRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/incidents': typeof IncidentsIndexRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/incidents': typeof IncidentsRouteWithChildren
   '/logs': typeof LogsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/users': typeof UsersRouteWithChildren
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/incidents'
     | '/logs'
     | '/services'
+    | '/settings'
     | '/users'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/'
     | '/deployments'
     | '/feature-flags'
+    | '/settings'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
     | '/incidents'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/incidents'
     | '/logs'
     | '/services'
+    | '/settings'
     | '/users'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   IncidentsRoute: typeof IncidentsRouteWithChildren
   LogsRoute: typeof LogsRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
   UsersRoute: typeof UsersRouteWithChildren
 }
 
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/users': {
@@ -336,6 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   IncidentsRoute: IncidentsRouteWithChildren,
   LogsRoute: LogsRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
+  SettingsRoute: SettingsRoute,
   UsersRoute: UsersRouteWithChildren,
 }
 export const routeTree = rootRouteImport

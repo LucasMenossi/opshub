@@ -5,6 +5,7 @@ import { logsHandlers } from "./logs.handlers";
 import { servicesHandlers } from "./services.handlers";
 import { usersHandlers } from "./users.handlers";
 import { featureFlagHandlers } from "./feature-flags.handlers";
+import { settingsHandlers } from "./settings.handlers";
 
 export const handlers = [
   ...dashboardHandlers,
@@ -14,4 +15,5 @@ export const handlers = [
   ...usersHandlers,
   ...logsHandlers,
   ...featureFlagHandlers,
+  ...settingsHandlers,
 ];
