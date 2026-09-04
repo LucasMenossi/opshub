@@ -15,7 +15,7 @@ export function Navigation() {
         {navigationGroups.map((group) => (
           <div key={group.label}>
             {!isCollapsed && group.label && (
-              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-zinc-400">
+              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 {group.label}
               </p>
             )}
@@ -34,7 +34,7 @@ export function Navigation() {
       </div>
 
       <div className="mt-auto pt-4">
-        <div className="border-t pt-4">
+        <div className="border-t border-border pt-4">
           <SidebarItem {...settingsNavigationItem} isCollapsed={isCollapsed} />
         </div>
       </div>

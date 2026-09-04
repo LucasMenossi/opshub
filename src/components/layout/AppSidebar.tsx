@@ -10,7 +10,10 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "flex shrink-0 flex-col border-r bg-white transition-[width] duration-300",
+        "flex shrink-0 flex-col",
+        "border-r border-border",
+        "bg-background text-foreground",
+        "transition-[width] duration-300",
         isCollapsed ? "w-16" : "w-60",
       )}
     >

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Check, Loader2, Moon, Monitor, Sun } from "lucide-react";
 
 import { PageHeader } from "@/components/DataDisplay";
-import { Container } from "@/components/UI";
+import { Container, Input } from "@/components/UI";
 import { PageErrorState } from "@/components/PageState";
 
 import { Button, Card, Select } from "@/components/UI";
@@ -22,9 +22,6 @@ import {
 
 import { SettingsPageSkeleton, SettingsSection } from "../components";
 import { useThemeStore } from "@/stores/theme.store";
-
-const inputClassName =
-  "h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10";
 
 function FieldError({ message }: { message?: string }) {
   if (!message) {
@@ -54,10 +51,10 @@ function ThemeOption({
       type="button"
       onClick={() => onSelect(value)}
       aria-pressed={selected}
-      className={`flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition ${
+      className={`flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition-colors ${
         selected
-          ? "border-zinc-900 bg-zinc-50"
-          : "border-zinc-200 hover:border-zinc-400"
+          ? "border-foreground bg-muted text-foreground"
+          : "border-border bg-background text-foreground hover:border-foreground/40 hover:bg-muted/50"
       }`}
     >
       <Icon className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
@@ -65,7 +62,9 @@ function ThemeOption({
       <span>
         <span className="block text-sm font-medium">{label}</span>
 
-        <span className="mt-1 block text-xs text-zinc-500">{description}</span>
+        <span className="mt-1 block text-xs text-muted-foreground">
+          {description}
+        </span>
       </span>
 
       {selected && <Check className="ml-auto h-4 w-4" aria-hidden="true" />}
@@ -166,9 +165,13 @@ export function SettingsPage() {
               label="System"
               description="Follow your device preference."
               icon={Monitor}
-              onSelect={(value) =>
-                form.setValue("theme", value, { shouldDirty: true })
-              }
+              onSelect={(value) => {
+                form.setValue("theme", value, {
+                  shouldDirty: true,
+                });
+
+                setTheme(value);
+              }}
             />
           </div>
         </SettingsSection>
@@ -180,38 +183,25 @@ export function SettingsPage() {
           <div className="grid gap-5 md:grid-cols-2">
             <label className="text-sm font-medium">
               Name
-              <input
-                className={inputClassName + " mt-2"}
-                {...form.register("profile.name")}
-              />
+              <Input className="mt-2" {...form.register("profile.name")} />
               <FieldError message={errors.profile?.name?.message} />
             </label>
 
             <label className="text-sm font-medium">
               Email
-              <input
-                type="email"
-                className={inputClassName + " mt-2"}
-                {...form.register("profile.email")}
-              />
+              <Input className="mt-2" {...form.register("profile.team")} />
               <FieldError message={errors.profile?.email?.message} />
             </label>
 
             <label className="text-sm font-medium">
               Team
-              <input
-                className={inputClassName + " mt-2"}
-                {...form.register("profile.team")}
-              />
+              <Input className="mt-2" {...form.register("profile.team")} />
               <FieldError message={errors.profile?.team?.message} />
             </label>
 
             <label className="text-sm font-medium">
               Role
-              <input
-                className={inputClassName + " mt-2"}
-                {...form.register("profile.role")}
-              />
+              <Input className="mt-2" {...form.register("profile.role")} />
               <FieldError message={errors.profile?.role?.message} />
             </label>
           </div>
