@@ -1,4 +1,5 @@
 import type { LogSeverity } from "./api";
+import type { FilterOption } from "@/lib/types";
 
 export const LOG_SEVERITIES: LogSeverity[] = [
   "trace",
@@ -21,3 +22,8 @@ export const LOG_TIME_RANGES = [
   { value: "7d", label: "Last 7 days" },
   { value: "custom", label: "Custom range" },
 ] satisfies { value: LogTimeRange; label: string }[];
+
+export const LOG_ENVIRONMENTS = [
+  { value: "production", label: "Production" },
+  { value: "staging", label: "Staging" },
+] satisfies FilterOption[];

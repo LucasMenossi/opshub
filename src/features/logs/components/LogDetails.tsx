@@ -1,5 +1,5 @@
 import { LogLevelBadge } from "@/components/Badges";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/UI";
 
@@ -59,6 +59,14 @@ export function LogDetails({ log }: LogDetailsProps) {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current !== null) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   if (!log) {
     return (
       <div className="flex h-full items-center justify-center p-8 text-center">
@@ -102,6 +110,7 @@ export function LogDetails({ log }: LogDetailsProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleCopyMessage}
+                className="cursor-pointer"
               >
                 {copied ? (
                   <>

@@ -1,17 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 import { DataTableError, DataTableSkeleton } from "@/components/DataTable";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import type { Environment } from "@/features/services";
 import { useServices } from "@/features/services";
-import type { FilterOption } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-import type { LogSeverity } from "../api";
-import type { LogSortOrder, LogTimeRange } from "../constants";
+import { LOG_ENVIRONMENTS, type LogTimeRange } from "../constants";
 import { useLogs } from "../hooks";
 import { getSelectedLog } from "../utils";
 
@@ -40,13 +37,9 @@ export function LogExplorer() {
   });
 
   const [query, setQuery] = useState(search.search ?? "");
-
   const [customStart, setCustomStart] = useState(search.customStart ?? "");
-
   const [customEnd, setCustomEnd] = useState(search.customEnd ?? "");
-
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
-
   const [detailsOpen, setDetailsOpen] = useState(true);
 
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
@@ -110,11 +103,6 @@ export function LogExplorer() {
     [servicesData],
   );
 
-  const environmentOptions = [
-    { value: "production", label: "Production" },
-    { value: "staging", label: "Staging" },
-  ] satisfies FilterOption[];
-
   const selectedLog = useMemo(
     () => getSelectedLog(logs, selectedLogId),
     [logs, selectedLogId],
@@ -137,7 +125,6 @@ export function LogExplorer() {
       updateSearch({
         timeRange: "custom",
       });
-
       return;
     }
 
@@ -169,15 +156,27 @@ export function LogExplorer() {
     });
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) {
       return;
     }
 
     void fetchNextPage();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const handleClearFilters = () => {
+    setQuery("");
+    setCustomStart("");
+    setCustomEnd("");
+    setSelectedLogId(null);
+
+    void navigate({
+      search: {},
+      replace: true,
+    });
   };
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return <DataTableSkeleton columns={5} />;
   }
 
@@ -207,7 +206,7 @@ export function LogExplorer() {
           />
 
           <LogSeverityFilter
-            value={severity as LogSeverity | ""}
+            value={severity}
             onChange={(value) =>
               updateSearch({
                 severity: value || undefined,
@@ -226,8 +225,8 @@ export function LogExplorer() {
           />
 
           <LogEnvironmentFilter
-            value={environment as Environment | ""}
-            options={environmentOptions}
+            value={environment}
+            options={LOG_ENVIRONMENTS}
             onChange={(value) =>
               updateSearch({
                 environment: value || undefined,
@@ -236,7 +235,7 @@ export function LogExplorer() {
           />
 
           <LogTimeRangeFilter
-            value={timeRange as LogTimeRange}
+            value={timeRange}
             start={customStart}
             end={customEnd}
             onChange={handleTimeRangeChange}
@@ -246,7 +245,7 @@ export function LogExplorer() {
           />
 
           <LogSortFilter
-            value={sortOrder as LogSortOrder}
+            value={sortOrder}
             onChange={(value) =>
               updateSearch({
                 sortOrder: value === "desc" ? undefined : value,
@@ -254,10 +253,11 @@ export function LogExplorer() {
             }
           />
         </LogFilters>
-
-        {isFetching && !isFetchingNextPage && (
-          <span className="text-xs text-muted-foreground">Updating...</span>
-        )}
+        <div className="h-4">
+          {isFetching && !isFetchingNextPage && (
+            <span className="text-xs text-muted-foreground">Updating...</span>
+          )}
+        </div>
       </div>
 
       <button
@@ -276,7 +276,19 @@ export function LogExplorer() {
 
       {logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
-          <p className="text-sm text-muted-foreground">No logs found.</p>
+          <p className="text-sm font-medium">No logs found.</p>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            Try adjusting your filters or search query.
+          </p>
+
+          <button
+            type="button"
+            onClick={handleClearFilters}
+            className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+          >
+            Clear filters
+          </button>
         </div>
       ) : (
         <div

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import type { LogEntry } from "../api";
+
 import { MetricCard } from "@/components/DataDisplay";
 
 interface LogMetricsProps {
@@ -27,12 +28,9 @@ export function LogMetrics({ logs }: LogMetricsProps) {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <MetricCard title="Total Logs" value={metrics.total} />
-
+      <MetricCard title="Loaded Logs" value={metrics.total} />
       <MetricCard title="Errors" value={metrics.errors} />
-
       <MetricCard title="Warnings" value={metrics.warnings} />
-
       <MetricCard title="Services" value={metrics.services} />
     </div>
   );

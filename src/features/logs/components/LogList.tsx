@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import type { LogEntry } from "../api";
+
 import { LogItem } from "./LogItem";
 
 interface LogListProps {
@@ -69,9 +71,15 @@ export function LogList({
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const log = logs[virtualRow.index];
 
+            if (!log) {
+              return null;
+            }
+
             return (
               <li
                 key={log.id}
+                data-index={virtualRow.index}
+                ref={rowVirtualizer.measureElement}
                 className="absolute left-0 top-0 w-full"
                 style={{
                   transform: `translateY(${virtualRow.start}px)`,
