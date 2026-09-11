@@ -49,12 +49,12 @@ export function LogDetails({ log }: LogDetailsProps) {
       await navigator.clipboard.writeText(log.message);
 
       if (copyTimeoutRef.current !== null) {
-        window.clearTimeout(copyTimeoutRef.current);
+        clearTimeout(copyTimeoutRef.current);
       }
 
       setCopiedLogId(log.id);
 
-      copyTimeoutRef.current = window.setTimeout(() => {
+      copyTimeoutRef.current = setTimeout(() => {
         setCopiedLogId(null);
         copyTimeoutRef.current = null;
       }, 2000);

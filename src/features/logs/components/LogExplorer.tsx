@@ -1,34 +1,35 @@
-import { useMemo, useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+
+import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 import { DataTableError, DataTableSkeleton } from "@/components/DataTable";
-
-import { useLogs } from "../hooks";
-import type { LogSeverity } from "../api";
 import type { Environment } from "@/features/services";
-import { LogFilters } from "./LogFilter";
-import { LogList } from "./LogList";
-import { LogDetails } from "./LogDetails";
-import type { LogSortOrder, LogTimeRange } from "../constants";
-import { LogMetrics } from "./LogMetrics";
+import { useServices } from "@/features/services";
+import type { FilterOption } from "@/lib/types";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { cn } from "@/lib/utils";
-import { PanelRightClose, PanelRightOpen } from "lucide-react";
+
+import type { LogSeverity } from "../api";
+import type { LogSortOrder, LogTimeRange } from "../constants";
+import { useLogs } from "../hooks";
+import { getSelectedLog } from "../utils";
+
+import { LogDetails } from "./LogDetails";
 import {
-  filterLogs,
-  isValidCustomTimeRange,
-  sortLogs,
-  getTotalPages,
-  paginateLogs,
-  getLogFilterOptions,
-  getSelectedLog,
-} from "../utils";
-import { Pagination } from "@/components/Pagination";
+  LogFilters,
+  LogEnvironmentFilter,
+  LogSearch,
+  LogServiceFilter,
+  LogSeverityFilter,
+  LogSortFilter,
+  LogTimeRangeFilter,
+} from "./LogFilters";
+import { LogList } from "./LogList";
+import { LogMetrics } from "./LogMetrics";
+
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 export function LogExplorer() {
-  const { data, isPending, isError, refetch, isFetching } = useLogs({
-    refetchInterval: 10000,
-  });
-
   const [query, setQuery] = useState("");
   const [severity, setSeverity] = useState<LogSeverity | "">("");
   const [service, setService] = useState("");
@@ -36,76 +37,105 @@ export function LogExplorer() {
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<LogSortOrder>("desc");
   const [detailsOpen, setDetailsOpen] = useState(true);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
+
   const [timeRange, setTimeRange] = useState<LogTimeRange>("");
+
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
 
-  const updateFilter = <T,>(setter: Dispatch<SetStateAction<T>>, value: T) => {
-    setter(value);
-    setPage(1);
-  };
+  const [appliedCustomStart, setAppliedCustomStart] = useState("");
+  const [appliedCustomEnd, setAppliedCustomEnd] = useState("");
 
-  const handlePageChange = (nextPage: number) => {
-    setPage(nextPage);
-    setSelectedLogId(null);
-  };
+  const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
 
-  const handlePageSizeChange = (value: number) => {
-    setPageSize(value);
-    setPage(1);
-    setSelectedLogId(null);
-  };
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useLogs({
+    search: debouncedQuery || undefined,
+    severity: severity || undefined,
+    service: service || undefined,
+    environment: environment || undefined,
+    sortOrder,
+    timeRange,
+    customStart: appliedCustomStart,
+    customEnd: appliedCustomEnd,
+    refetchInterval: 10000,
+  });
 
-  const { serviceOptions, environmentOptions } = useMemo(
-    () => getLogFilterOptions(data?.items ?? []),
+  const { data: servicesData } = useServices();
+
+  const logs = useMemo(
+    () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
   );
 
-  const filteredLogs = useMemo(
+  const serviceOptions = useMemo(
     () =>
-      filterLogs(data?.items ?? [], {
-        query,
-        severity,
-        service,
-        environment,
-        timeRange,
-        customEnd,
-        customStart,
-      }),
-    [
-      data,
-      query,
-      severity,
-      service,
-      environment,
-      timeRange,
-      customEnd,
-      customStart,
-    ],
+      servicesData?.map((service) => ({
+        value: service.name,
+        label: service.name,
+      })) ?? [],
+    [servicesData],
   );
 
-  const logs = useMemo(
-    () => sortLogs(filteredLogs, sortOrder),
-    [filteredLogs, sortOrder],
+  const environmentOptions = [
+    { value: "production", label: "Production" },
+    { value: "staging", label: "Staging" },
+  ] satisfies FilterOption[];
+
+  const selectedLog = useMemo(
+    () => getSelectedLog(logs, selectedLogId),
+    [logs, selectedLogId],
   );
 
-  const totalPages = getTotalPages(logs.length, pageSize);
+  const updateFilter = <T,>(setter: Dispatch<SetStateAction<T>>, value: T) => {
+    setter(value);
+    setSelectedLogId(null);
+  };
 
-  const currentPage = Math.min(page, totalPages);
+  const handleTimeRangeChange = (value: LogTimeRange) => {
+    updateFilter(setTimeRange, value);
 
-  const paginatedLogs = useMemo(
-    () => paginateLogs(logs, currentPage, pageSize),
-    [logs, currentPage, pageSize],
-  );
+    if (value !== "custom") {
+      setCustomStart("");
+      setCustomEnd("");
+      setAppliedCustomStart("");
+      setAppliedCustomEnd("");
+    }
+  };
 
-  const customTimeRangeValid =
-    timeRange !== "custom" || isValidCustomTimeRange(customStart, customEnd);
+  const handleCustomStartChange = (value: string) => {
+    setCustomStart(value);
+    setSelectedLogId(null);
+  };
 
-  const selectedLog = getSelectedLog(paginatedLogs, selectedLogId);
+  const handleCustomEndChange = (value: string) => {
+    setCustomEnd(value);
+    setSelectedLogId(null);
+  };
 
-  if (isPending) {
+  const handleApplyCustomRange = () => {
+    setAppliedCustomStart(customStart);
+    setAppliedCustomEnd(customEnd);
+    setSelectedLogId(null);
+  };
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    void fetchNextPage();
+  };
+
+  if (isLoading) {
     return <DataTableSkeleton columns={5} />;
   }
 
@@ -124,39 +154,46 @@ export function LogExplorer() {
     <div className="space-y-4">
       <LogMetrics logs={logs} />
 
-      <LogFilters
-        query={query}
-        severity={severity}
-        service={service}
-        environment={environment}
-        serviceOptions={serviceOptions}
-        environmentOptions={environmentOptions}
-        sortOrder={sortOrder}
-        timeRange={timeRange}
-        customStart={customStart}
-        customEnd={customEnd}
-        onQueryChange={(value) => updateFilter(setQuery, value)}
-        onSeverityChange={(value) => updateFilter(setSeverity, value)}
-        onServiceChange={(value) => updateFilter(setService, value)}
-        onEnvironmentChange={(value) => updateFilter(setEnvironment, value)}
-        onSortOrderChange={(value) => updateFilter(setSortOrder, value)}
-        onTimeRangeChange={(value) => {
-          updateFilter(setTimeRange, value);
+      <div className="space-y-2">
+        <LogFilters>
+          <LogSearch
+            value={query}
+            onChange={(value) => updateFilter(setQuery, value)}
+          />
 
-          if (value !== "custom") {
-            setCustomStart("");
-            setCustomEnd("");
-          }
-        }}
-        onCustomStartChange={(value) => {
-          setCustomStart(value);
-          setPage(1);
-        }}
-        onCustomEndChange={(value) => {
-          setCustomEnd(value);
-          setPage(1);
-        }}
-      />
+          <LogSeverityFilter
+            value={severity}
+            onChange={(value) => updateFilter(setSeverity, value)}
+          />
+
+          <LogServiceFilter
+            value={service}
+            options={serviceOptions}
+            onChange={(value) => updateFilter(setService, value)}
+          />
+
+          <LogEnvironmentFilter
+            value={environment}
+            options={environmentOptions}
+            onChange={(value) => updateFilter(setEnvironment, value)}
+          />
+
+          <LogTimeRangeFilter
+            value={timeRange}
+            start={customStart}
+            end={customEnd}
+            onChange={handleTimeRangeChange}
+            onStartChange={handleCustomStartChange}
+            onEndChange={handleCustomEndChange}
+            onApply={handleApplyCustomRange}
+          />
+
+          <LogSortFilter
+            value={sortOrder}
+            onChange={(value) => updateFilter(setSortOrder, value)}
+          />
+        </LogFilters>
+      </div>
 
       <button
         type="button"
@@ -168,17 +205,14 @@ export function LogExplorer() {
         ) : (
           <PanelRightOpen className="h-4 w-4" />
         )}
-
         {detailsOpen ? "Hide Details" : "Show Details"}
       </button>
 
-      {!customTimeRangeValid ? (
-        <div className="rounded-lg border py-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            Select a valid start and end date.
-          </p>
-        </div>
-      ) : logs.length === 0 ? (
+      {isFetching && !isFetchingNextPage && (
+        <span className="text-xs text-muted-foreground">Updating...</span>
+      )}
+
+      {logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
           <p className="text-sm text-muted-foreground">No logs found.</p>
         </div>
@@ -189,20 +223,14 @@ export function LogExplorer() {
             detailsOpen ? "lg:grid-cols-[2fr_1fr]" : "grid-cols-1",
           )}
         >
-          <div className="min-w-0 space-y-4">
+          <div className="min-w-0">
             <LogList
-              logs={paginatedLogs}
+              logs={logs}
               selectedLogId={selectedLog?.id ?? null}
               onSelect={(log) => setSelectedLogId(log.id)}
-            />
-
-            <Pagination
-              page={currentPage}
-              pageSize={pageSize}
-              totalPages={totalPages}
-              totalResults={logs.length}
-              onPageChange={handlePageChange}
-              onPageSizeChange={handlePageSizeChange}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              onLoadMore={handleLoadMore}
             />
           </div>
 

@@ -1,5 +1,3 @@
-import { useRef } from "react";
-
 interface IncidentDateRangeFilterProps {
   from: string;
   to: string;
@@ -17,30 +15,18 @@ export function IncidentDateRangeFilter({
   onFromChange,
   onToChange,
 }: IncidentDateRangeFilterProps) {
-  const fromInputRef = useRef<HTMLInputElement>(null);
-  const toInputRef = useRef<HTMLInputElement>(null);
-
-  function handleFromChange(value: string) {
-    if (value === "" || isValidDateValue(value)) {
-      onFromChange(value);
-    }
-  }
-
-  function handleToChange(value: string) {
-    if (value === "" || isValidDateValue(value)) {
-      onToChange(value);
-    }
-  }
-
   return (
     <div className="flex items-center gap-2">
       <input
-        ref={fromInputRef}
         type="date"
         defaultValue={from}
         max={to || undefined}
-        onChange={(event) => {
-          handleFromChange(event.target.value);
+        onBlur={(event) => {
+          const value = event.target.value;
+
+          if (value === "" || isValidDateValue(value)) {
+            onFromChange(value);
+          }
         }}
         aria-label="Created from"
         className="
@@ -53,19 +39,23 @@ export function IncidentDateRangeFilter({
           dark:scheme-dark
           focus:border-foreground
           focus:ring-2 focus:ring-foreground/10
-          disabled:cursor-not-allowed disabled:opacity-50
+          disabled:cursor-not-allowed
+          disabled:opacity-50
         "
       />
 
       <span className="text-sm text-muted-foreground">to</span>
 
       <input
-        ref={toInputRef}
         type="date"
         defaultValue={to}
         min={from || undefined}
-        onChange={(event) => {
-          handleToChange(event.target.value);
+        onBlur={(event) => {
+          const value = event.target.value;
+
+          if (value === "" || isValidDateValue(value)) {
+            onToChange(value);
+          }
         }}
         aria-label="Created to"
         className="
@@ -78,7 +68,8 @@ export function IncidentDateRangeFilter({
           dark:scheme-dark
           focus:border-foreground
           focus:ring-2 focus:ring-foreground/10
-          disabled:cursor-not-allowed disabled:opacity-50
+          disabled:cursor-not-allowed
+          disabled:opacity-50
         "
       />
     </div>

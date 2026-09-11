@@ -1,9 +1,13 @@
 import { api } from "@/lib/api";
 
-import type { LogsResponse } from "./logs.types";
+import type { LogsQueryParams, LogsResponse } from "./logs.types";
 
-export async function getLogs(): Promise<LogsResponse> {
-  const { data } = await api.get<LogsResponse>("/logs");
+export async function getLogs(
+  params: LogsQueryParams = {},
+): Promise<LogsResponse> {
+  const { data } = await api.get<LogsResponse>("/logs", {
+    params,
+  });
 
   return data;
 }

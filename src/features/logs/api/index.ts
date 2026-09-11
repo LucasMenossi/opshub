@@ -1,2 +1,7 @@
 export { getLogs } from "./logs.api";
-export type { LogEntry, LogSeverity, LogsResponse } from "./logs.types";
+export type {
+  LogEntry,
+  LogSeverity,
+  LogsResponse,
+  LogsQueryParams,
+} from "./logs.types";

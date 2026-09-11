@@ -1,9 +1,9 @@
 import { LogLevelBadge } from "@/components/Badges";
 import { formatEnvironment } from "@/lib/formatters";
+import { formatRelativeTime } from "@/lib/formatters/date";
 import { cn } from "@/lib/utils";
 
 import type { LogEntry } from "../api";
-import { formatRelativeTime } from "@/lib/formatters/date";
 
 interface LogItemProps {
   log: LogEntry;
@@ -13,7 +13,7 @@ interface LogItemProps {
 
 export function LogItem({ log, selected, onSelect }: LogItemProps) {
   return (
-    <li className="border-b last:border-b-0">
+    <div className="border-b last:border-b-0">
       <button
         type="button"
         onClick={() => onSelect(log)}
@@ -44,6 +44,6 @@ export function LogItem({ log, selected, onSelect }: LogItemProps) {
 
         <LogLevelBadge severity={log.severity} />
       </button>
-    </li>
+    </div>
   );
 }

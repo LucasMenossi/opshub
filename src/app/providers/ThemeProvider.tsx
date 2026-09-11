@@ -8,7 +8,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     initializeTheme();
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = matchMedia("(prefers-color-scheme: dark)");
 
     const handleSystemThemeChange = () => {
       const currentTheme = useThemeStore.getState().theme;

@@ -205,6 +205,7 @@ export function IncidentTable() {
       filters={filters}
       toolbar={
         <IncidentDateRangeFilter
+          key={`${search.from ?? ""}-${search.to ?? ""}`}
           from={search.from ?? ""}
           to={search.to ?? ""}
           onFromChange={(from) => {

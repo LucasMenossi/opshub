@@ -1,6 +1,6 @@
 import { Badge } from "@/components/UI";
 
-import type { LogSeverity } from "@/features/logs";
+import type { LogSeverity } from "@/features/logs/api";
 import { formatLogSeverity } from "@/lib/formatters";
 
 interface LogLevelBadgeProps {

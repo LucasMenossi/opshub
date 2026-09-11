@@ -1,4 +1,4 @@
-import type { LogSeverity } from "@/features/logs";
+import type { LogSeverity } from "@/features/logs/api";
 
 export function formatLogSeverity(severity: LogSeverity): string {
   switch (severity) {

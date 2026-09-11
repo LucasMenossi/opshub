@@ -189,7 +189,7 @@ export function SettingsPage() {
 
             <label className="text-sm font-medium">
               Email
-              <Input className="mt-2" {...form.register("profile.team")} />
+              <Input className="mt-2" {...form.register("profile.email")} />
               <FieldError message={errors.profile?.email?.message} />
             </label>
 

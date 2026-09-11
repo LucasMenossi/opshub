@@ -1,3 +1,11 @@
+import type { LogsQueryParams } from "@/features/logs/api";
+
+type LogsQueryKeyParams = LogsQueryParams & {
+  timeRange?: string;
+  customStart?: string;
+  customEnd?: string;
+};
+
 export const queryKeys = {
   dashboard: {
     metrics: ["dashboard", "metrics"] as const,
@@ -17,15 +25,21 @@ export const queryKeys = {
     detail: (incidentId: string) => ["incidents", incidentId] as const,
   },
 
-  users: {
-    all: ["users"] as const,
-  },
-
   logs: {
     all: ["logs"] as const,
+
+    list: (params?: LogsQueryKeyParams) => ["logs", "list", params] as const,
   },
 
   featureFlags: {
     all: ["feature-flags"] as const,
+  },
+
+  users: {
+    all: ["users"] as const,
+  },
+
+  settings: {
+    all: ["settings"] as const,
   },
 } as const;
