@@ -3,11 +3,7 @@ import { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/UI";
 
-import {
-  formatDateTime,
-  formatEnvironment,
-  formatLogSeverity,
-} from "@/lib/formatters";
+import { formatDateTime, formatEnvironment } from "@/lib/formatters";
 
 import type { ReactNode } from "react";
 
@@ -86,8 +82,6 @@ export function LogDetails({ log }: LogDetailsProps) {
           <DetailField label="Severity">
             <div className="space-y-2">
               <LogLevelBadge severity={log.severity} />
-
-              <p className="text-sm">{formatLogSeverity(log.severity)}</p>
             </div>
           </DetailField>
 

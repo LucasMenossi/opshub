@@ -30,12 +30,8 @@ export function LogTimeRangeFilter({
   const showValidationError =
     value === "custom" && customRangeComplete && !customRangeValid;
 
-  const handleChange = (nextValue: LogTimeRange) => {
+  const handleRangeChange = (nextValue: LogTimeRange) => {
     onChange(nextValue);
-
-    if (nextValue !== "custom") {
-      onApply();
-    }
   };
 
   const handleApply = () => {
@@ -50,7 +46,9 @@ export function LogTimeRangeFilter({
     <>
       <Select
         value={value}
-        onChange={(event) => handleChange(event.target.value as LogTimeRange)}
+        onChange={(event) =>
+          handleRangeChange(event.target.value as LogTimeRange)
+        }
       >
         {LOG_TIME_RANGES.map((option) => (
           <option key={option.value} value={option.value}>

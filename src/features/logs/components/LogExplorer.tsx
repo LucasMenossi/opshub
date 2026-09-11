@@ -1,12 +1,13 @@
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 import { DataTableError, DataTableSkeleton } from "@/components/DataTable";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { Environment } from "@/features/services";
 import { useServices } from "@/features/services";
 import type { FilterOption } from "@/lib/types";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { cn } from "@/lib/utils";
 
 import type { LogSeverity } from "../api";
@@ -16,8 +17,8 @@ import { getSelectedLog } from "../utils";
 
 import { LogDetails } from "./LogDetails";
 import {
-  LogFilters,
   LogEnvironmentFilter,
+  LogFilters,
   LogSearch,
   LogServiceFilter,
   LogSeverityFilter,
@@ -30,23 +31,47 @@ import { LogMetrics } from "./LogMetrics";
 const SEARCH_DEBOUNCE_DELAY = 300;
 
 export function LogExplorer() {
-  const [query, setQuery] = useState("");
-  const [severity, setSeverity] = useState<LogSeverity | "">("");
-  const [service, setService] = useState("");
-  const [environment, setEnvironment] = useState<Environment | "">("");
+  const search = useSearch({
+    from: "/logs",
+  });
+
+  const navigate = useNavigate({
+    from: "/logs",
+  });
+
+  const [query, setQuery] = useState(search.search ?? "");
+
+  const [customStart, setCustomStart] = useState(search.customStart ?? "");
+
+  const [customEnd, setCustomEnd] = useState(search.customEnd ?? "");
+
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<LogSortOrder>("desc");
+
   const [detailsOpen, setDetailsOpen] = useState(true);
 
-  const [timeRange, setTimeRange] = useState<LogTimeRange>("");
-
-  const [customStart, setCustomStart] = useState("");
-  const [customEnd, setCustomEnd] = useState("");
-
-  const [appliedCustomStart, setAppliedCustomStart] = useState("");
-  const [appliedCustomEnd, setAppliedCustomEnd] = useState("");
-
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
+
+  const timeRange = search.timeRange ?? "";
+  const severity = search.severity ?? "";
+  const service = search.service ?? "";
+  const environment = search.environment ?? "";
+  const sortOrder = search.sortOrder ?? "desc";
+
+  useEffect(() => {
+    const currentSearch = search.search ?? "";
+
+    if (debouncedQuery === currentSearch) {
+      return;
+    }
+
+    void navigate({
+      search: {
+        ...search,
+        search: debouncedQuery || undefined,
+      },
+      replace: true,
+    });
+  }, [debouncedQuery, navigate, search]);
 
   const {
     data,
@@ -58,14 +83,14 @@ export function LogExplorer() {
     hasNextPage,
     isFetchingNextPage,
   } = useLogs({
-    search: debouncedQuery || undefined,
+    search: search.search || undefined,
     severity: severity || undefined,
     service: service || undefined,
     environment: environment || undefined,
     sortOrder,
     timeRange,
-    customStart: appliedCustomStart,
-    customEnd: appliedCustomEnd,
+    customStart: search.customStart ?? "",
+    customEnd: search.customEnd ?? "",
     refetchInterval: 10000,
   });
 
@@ -95,20 +120,35 @@ export function LogExplorer() {
     [logs, selectedLogId],
   );
 
-  const updateFilter = <T,>(setter: Dispatch<SetStateAction<T>>, value: T) => {
-    setter(value);
+  const updateSearch = (values: Partial<typeof search>) => {
+    void navigate({
+      search: {
+        ...search,
+        ...values,
+      },
+      replace: true,
+    });
+
     setSelectedLogId(null);
   };
 
   const handleTimeRangeChange = (value: LogTimeRange) => {
-    updateFilter(setTimeRange, value);
+    if (value === "custom") {
+      updateSearch({
+        timeRange: "custom",
+      });
 
-    if (value !== "custom") {
-      setCustomStart("");
-      setCustomEnd("");
-      setAppliedCustomStart("");
-      setAppliedCustomEnd("");
+      return;
     }
+
+    updateSearch({
+      timeRange: value || undefined,
+      customStart: undefined,
+      customEnd: undefined,
+    });
+
+    setCustomStart("");
+    setCustomEnd("");
   };
 
   const handleCustomStartChange = (value: string) => {
@@ -122,9 +162,11 @@ export function LogExplorer() {
   };
 
   const handleApplyCustomRange = () => {
-    setAppliedCustomStart(customStart);
-    setAppliedCustomEnd(customEnd);
-    setSelectedLogId(null);
+    updateSearch({
+      timeRange: "custom",
+      customStart: customStart || undefined,
+      customEnd: customEnd || undefined,
+    });
   };
 
   const handleLoadMore = () => {
@@ -158,28 +200,43 @@ export function LogExplorer() {
         <LogFilters>
           <LogSearch
             value={query}
-            onChange={(value) => updateFilter(setQuery, value)}
+            onChange={(value) => {
+              setQuery(value);
+              setSelectedLogId(null);
+            }}
           />
 
           <LogSeverityFilter
-            value={severity}
-            onChange={(value) => updateFilter(setSeverity, value)}
+            value={severity as LogSeverity | ""}
+            onChange={(value) =>
+              updateSearch({
+                severity: value || undefined,
+              })
+            }
           />
 
           <LogServiceFilter
             value={service}
             options={serviceOptions}
-            onChange={(value) => updateFilter(setService, value)}
+            onChange={(value) =>
+              updateSearch({
+                service: value || undefined,
+              })
+            }
           />
 
           <LogEnvironmentFilter
-            value={environment}
+            value={environment as Environment | ""}
             options={environmentOptions}
-            onChange={(value) => updateFilter(setEnvironment, value)}
+            onChange={(value) =>
+              updateSearch({
+                environment: value || undefined,
+              })
+            }
           />
 
           <LogTimeRangeFilter
-            value={timeRange}
+            value={timeRange as LogTimeRange}
             start={customStart}
             end={customEnd}
             onChange={handleTimeRangeChange}
@@ -189,10 +246,18 @@ export function LogExplorer() {
           />
 
           <LogSortFilter
-            value={sortOrder}
-            onChange={(value) => updateFilter(setSortOrder, value)}
+            value={sortOrder as LogSortOrder}
+            onChange={(value) =>
+              updateSearch({
+                sortOrder: value === "desc" ? undefined : value,
+              })
+            }
           />
         </LogFilters>
+
+        {isFetching && !isFetchingNextPage && (
+          <span className="text-xs text-muted-foreground">Updating...</span>
+        )}
       </div>
 
       <button
@@ -205,12 +270,9 @@ export function LogExplorer() {
         ) : (
           <PanelRightOpen className="h-4 w-4" />
         )}
+
         {detailsOpen ? "Hide Details" : "Show Details"}
       </button>
-
-      {isFetching && !isFetchingNextPage && (
-        <span className="text-xs text-muted-foreground">Updating...</span>
-      )}
 
       {logs.length === 0 ? (
         <div className="rounded-lg border py-12 text-center">
