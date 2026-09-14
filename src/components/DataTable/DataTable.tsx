@@ -34,8 +34,8 @@ export function DataTable<TData>({
         toolbar={toolbar}
       />
 
-      <div className="overflow-hidden rounded-lg border">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-lg border py-1">
+        <table className="w-full min-w-175">
           <thead className="border-b bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

@@ -11,7 +11,7 @@ export function LogSearch({ value, onChange }: LogSearchProps) {
       value={value}
       onChange={onChange}
       placeholder="Search logs..."
-      className="max-w-md flex-1"
+      className="w-full sm:max-w-md sm:flex-1"
     />
   );
 }

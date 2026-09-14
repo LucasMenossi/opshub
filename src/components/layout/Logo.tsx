@@ -1,8 +1,12 @@
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 
 import { useSidebarStore } from "@/stores/sidebar.store";
 
-export function Logo() {
+interface LogoProps {
+  onMobileClose: () => void;
+}
+
+export function Logo({ onMobileClose }: LogoProps) {
   const { isCollapsed, toggle } = useSidebarStore();
 
   return (
@@ -15,8 +19,17 @@ export function Logo() {
 
       <button
         type="button"
+        onClick={onMobileClose}
+        className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:hidden"
+        aria-label="Close navigation"
+      >
+        <X size={18} />
+      </button>
+
+      <button
+        type="button"
         onClick={toggle}
-        className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
+        className="hidden rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:block"
         aria-label="Toggle sidebar"
       >
         {isCollapsed ? (

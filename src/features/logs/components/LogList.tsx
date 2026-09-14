@@ -61,7 +61,10 @@ export function LogList({
 
   return (
     <div className="overflow-hidden rounded-lg border bg-card">
-      <div ref={parentRef} className="h-[min(450px,60vh)] overflow-auto">
+      <div
+        ref={parentRef}
+        className="h-[min(450px,60vh)] overflow-auto px-2 py-2"
+      >
         <ul
           className="relative w-full"
           style={{
