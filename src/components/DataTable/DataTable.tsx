@@ -10,6 +10,11 @@ interface DataTableProps<TData> {
   emptyMessage?: string;
   searchPlaceholder?: string;
   filters?: DataTableFilter[];
+
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  onClearFilters?: () => void;
+
   toolbar?: ReactNode;
 }
 
@@ -18,7 +23,10 @@ export function DataTable<TData>({
   emptyMessage = "No results found.",
   searchPlaceholder = "Search...",
   filters = [],
+  searchValue,
+  onSearchChange,
   toolbar,
+  onClearFilters,
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
   const filteredRows = table.getFilteredRowModel().rows;
@@ -32,6 +40,8 @@ export function DataTable<TData>({
         searchPlaceholder={searchPlaceholder}
         filters={filters}
         toolbar={toolbar}
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
       />
 
       <div className="overflow-x-auto rounded-lg border py-1">
@@ -101,15 +111,32 @@ export function DataTable<TData>({
               <tr>
                 <td
                   colSpan={table.getVisibleLeafColumns().length}
-                  className="px-6 py-12 text-center text-sm text-muted-foreground"
+                  className="px-6 py-12"
                 >
-                  {hasData ? "No results match your filters." : emptyMessage}
+                  <div className="flex flex-col items-center justify-center text-center">
+                    <p className="text-sm text-muted-foreground">
+                      {hasData
+                        ? "No results match your filters."
+                        : emptyMessage}
+                    </p>
+
+                    {hasData && onClearFilters && (
+                      <button
+                        type="button"
+                        onClick={onClearFilters}
+                        className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+                      >
+                        Clear filters
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
       <Pagination
         page={pagination.pageIndex + 1}
         pageSize={pagination.pageSize}

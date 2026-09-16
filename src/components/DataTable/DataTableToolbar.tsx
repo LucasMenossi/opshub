@@ -1,5 +1,6 @@
-import type { Table } from "@tanstack/react-table";
 import type { ReactNode } from "react";
+
+import type { Table } from "@tanstack/react-table";
 
 import { SearchInput } from "../SearchInput";
 import { Select } from "../UI";
@@ -11,6 +12,8 @@ interface DataTableToolbarProps<TData> {
   searchPlaceholder: string;
   filters: DataTableFilter[];
   toolbar?: ReactNode;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 export function DataTableToolbar<TData>({
@@ -18,13 +21,21 @@ export function DataTableToolbar<TData>({
   searchPlaceholder,
   filters,
   toolbar,
+  searchValue,
+  onSearchChange,
 }: DataTableToolbarProps<TData>) {
+  const isControlledSearch = onSearchChange !== undefined;
+
   return (
     <div className="flex flex-wrap items-center gap-3">
       <SearchInput
         className="w-full max-w-sm"
-        value={table.getState().globalFilter ?? ""}
-        onChange={table.setGlobalFilter}
+        value={
+          isControlledSearch
+            ? (searchValue ?? "")
+            : (table.getState().globalFilter ?? "")
+        }
+        onChange={isControlledSearch ? onSearchChange : table.setGlobalFilter}
         placeholder={searchPlaceholder}
       />
 
