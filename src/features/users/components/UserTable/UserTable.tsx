@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 import {
   type ColumnFiltersState,
@@ -10,8 +12,10 @@ import {
   DataTableError,
   DataTableSkeleton,
 } from "@/components/DataTable";
+
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 import { useUsers } from "../../hooks";
 import { getUserTableFilters } from "./userTableFilters";
@@ -21,12 +25,91 @@ interface UserTableProps {
   onSummaryChange?: (summary: { users: number; teams: number }) => void;
 }
 
+const SEARCH_DEBOUNCE_DELAY = 300;
+
+function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
+  return filters.find((filter) => filter.id === id)?.value;
+}
+
 export function UserTable({ onSummaryChange }: UserTableProps) {
   const { data = [], isPending, isError, refetch, isFetching } = useUsers();
 
+  const search = useSearch({
+    from: "/users",
+  });
+
+  const navigate = useNavigate({
+    from: "/users",
+  });
+
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const [query, setQuery] = useState(search.q ?? "");
+
+  const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
+
+  useEffect(() => {
+    const currentQuery = search.q ?? "";
+
+    if (debouncedQuery === currentQuery) {
+      return;
+    }
+
+    void navigate({
+      search: {
+        ...search,
+        q: debouncedQuery || undefined,
+      },
+      replace: true,
+    });
+  }, [debouncedQuery, navigate, search]);
+
+  const columnFilters = useMemo<ColumnFiltersState>(
+    () => [
+      ...(search.role
+        ? [
+            {
+              id: "role",
+              value: search.role,
+            },
+          ]
+        : []),
+
+      ...(search.team
+        ? [
+            {
+              id: "team",
+              value: search.team,
+            },
+          ]
+        : []),
+
+      ...(search.status
+        ? [
+            {
+              id: "status",
+              value: search.status,
+            },
+          ]
+        : []),
+    ],
+    [search.role, search.team, search.status],
+  );
+
+  const hasActiveFilters =
+    Boolean(search.q) ||
+    Boolean(search.role) ||
+    Boolean(search.team) ||
+    Boolean(search.status);
+
+  const handleClearFilters = () => {
+    setQuery("");
+
+    void navigate({
+      search: {},
+      replace: true,
+    });
+  };
 
   const table = useDataTable({
     data,
@@ -34,13 +117,45 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
 
     state: {
       sorting,
-      globalFilter,
+      globalFilter: search.q ?? "",
       columnFilters,
     },
 
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
+
+    onGlobalFilterChange: (updater) => {
+      const currentValue = query;
+
+      const nextValue =
+        typeof updater === "function" ? updater(currentValue) : updater;
+
+      setQuery(nextValue);
+    },
+
+    onColumnFiltersChange: (updater) => {
+      const nextFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+
+      const roleValue = getFilterValue(nextFilters, "role");
+
+      const teamValue = getFilterValue(nextFilters, "team");
+
+      const statusValue = getFilterValue(nextFilters, "status");
+
+      void navigate({
+        search: {
+          ...search,
+
+          role: typeof roleValue === "string" ? roleValue : undefined,
+
+          team: typeof teamValue === "string" ? teamValue : undefined,
+
+          status: typeof statusValue === "string" ? statusValue : undefined,
+        },
+
+        replace: true,
+      });
+    },
 
     globalFilterFn: createGlobalFilter((user) => [
       user.name,
@@ -83,9 +198,16 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
   return (
     <DataTable
       table={table}
-      emptyMessage="No users found."
+      emptyMessage={
+        hasActiveFilters
+          ? "No users match the current filters."
+          : "No users found."
+      }
       searchPlaceholder="Search users..."
       filters={getUserTableFilters(data)}
+      searchValue={query}
+      onSearchChange={setQuery}
+      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
     />
   );
 }
