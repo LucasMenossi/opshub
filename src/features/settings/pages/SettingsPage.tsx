@@ -21,6 +21,7 @@ import {
 } from "../api/settings.types";
 
 import { SettingsPageSkeleton, SettingsSection } from "../components";
+
 import { useThemeStore } from "@/stores/theme.store";
 
 function FieldError({ message }: { message?: string }) {
@@ -77,6 +78,8 @@ export function SettingsPage() {
 
   const updateSettings = useUpdateSettings();
 
+  const theme = useThemeStore((state) => state.theme);
+
   const setTheme = useThemeStore((state) => state.setTheme);
 
   const form = useForm<Settings>({
@@ -84,16 +87,18 @@ export function SettingsPage() {
     defaultValues: data,
   });
 
-  const theme = form.watch("theme");
-
   useEffect(() => {
     if (data) {
+      setTheme(data.theme);
       form.reset(data);
     }
-  }, [data, form]);
+  }, [data, form, setTheme]);
 
   const onSubmit = (values: Settings) => {
-    updateSettings.mutate(values);
+    updateSettings.mutate({
+      ...values,
+      theme,
+    });
   };
 
   if (isPending) {
@@ -136,11 +141,11 @@ export function SettingsPage() {
               description="Use the light interface."
               icon={Sun}
               onSelect={(value) => {
+                setTheme(value);
+
                 form.setValue("theme", value, {
                   shouldDirty: true,
                 });
-
-                setTheme(value);
               }}
             />
 
@@ -151,11 +156,11 @@ export function SettingsPage() {
               description="Use the dark interface."
               icon={Moon}
               onSelect={(value) => {
+                setTheme(value);
+
                 form.setValue("theme", value, {
                   shouldDirty: true,
                 });
-
-                setTheme(value);
               }}
             />
 
@@ -166,11 +171,11 @@ export function SettingsPage() {
               description="Follow your device preference."
               icon={Monitor}
               onSelect={(value) => {
+                setTheme(value);
+
                 form.setValue("theme", value, {
                   shouldDirty: true,
                 });
-
-                setTheme(value);
               }}
             />
           </div>

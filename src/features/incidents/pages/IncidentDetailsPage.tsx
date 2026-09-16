@@ -42,10 +42,8 @@ export function IncidentDetailsPage() {
     );
   }
 
-  const relatedDeploymentIds = incident.relatedDeploymentIds ?? [];
-
-  const relatedDeployments = deployments.filter((deployment) =>
-    relatedDeploymentIds.includes(deployment.id),
+  const relatedDeployments = deployments.filter(
+    (deployment) => deployment.serviceId === incident.serviceId,
   );
 
   return (
