@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useNavigate, useSearch } from "@tanstack/react-router";
+
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -12,12 +13,19 @@ import {
   DataTableSkeleton,
 } from "@/components/DataTable";
 
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+
 import type { IncidentSeverity, IncidentStatus } from "../../api";
+
 import { useIncidents } from "../../hooks";
+
 import { incidentColumns } from "./incidentColumns";
 import { IncidentDateRangeFilter } from "../IncidentDateRangeFilter";
 import { getIncidentTableFilters } from "./incidentTableFilters";
+
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
   return filters.find((filter) => filter.id === id)?.value;
@@ -48,6 +56,26 @@ export function IncidentTable() {
   });
 
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const [query, setQuery] = useState(search.q ?? "");
+
+  const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
+
+  useEffect(() => {
+    const currentQuery = search.q ?? "";
+
+    if (debouncedQuery === currentQuery) {
+      return;
+    }
+
+    void navigate({
+      search: {
+        ...search,
+        q: debouncedQuery || undefined,
+      },
+      replace: true,
+    });
+  }, [debouncedQuery, navigate, search]);
 
   const filters = useMemo(() => getIncidentTableFilters(data), [data]);
 
@@ -111,6 +139,24 @@ export function IncidentTable() {
     ],
   );
 
+  const hasActiveFilters =
+    Boolean(search.q) ||
+    Boolean(search.severity) ||
+    Boolean(search.status) ||
+    Boolean(search.service) ||
+    Boolean(search.owner) ||
+    Boolean(search.from) ||
+    Boolean(search.to);
+
+  const handleClearFilters = () => {
+    setQuery("");
+
+    void navigate({
+      search: {},
+      replace: true,
+    });
+  };
+
   const table = useDataTable({
     data,
     columns: incidentColumns,
@@ -124,18 +170,12 @@ export function IncidentTable() {
     onSortingChange: setSorting,
 
     onGlobalFilterChange: (updater) => {
-      const currentValue = search.q ?? "";
+      const currentValue = query;
 
       const nextValue =
         typeof updater === "function" ? updater(currentValue) : updater;
 
-      void navigate({
-        search: {
-          ...search,
-          q: nextValue || undefined,
-        },
-        replace: true,
-      });
+      setQuery(nextValue);
     },
 
     onColumnFiltersChange: (updater) => {
@@ -164,6 +204,7 @@ export function IncidentTable() {
 
           owner: typeof ownerValue === "string" ? ownerValue : undefined,
         },
+
         replace: true,
       });
     },
@@ -200,9 +241,16 @@ export function IncidentTable() {
   return (
     <DataTable
       table={table}
-      emptyMessage="No incidents found."
+      emptyMessage={
+        hasActiveFilters
+          ? "No incidents match the current filters."
+          : "No incidents found."
+      }
       searchPlaceholder="Search incidents..."
       filters={filters}
+      searchValue={query}
+      onSearchChange={setQuery}
+      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
       toolbar={
         <IncidentDateRangeFilter
           key={`${search.from ?? ""}-${search.to ?? ""}`}
