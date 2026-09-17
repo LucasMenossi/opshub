@@ -14,7 +14,7 @@ const logSearchSchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
-export const Route = createFileRoute("/logs")({
+export const Route = createFileRoute("/_authenticated/logs")({
   validateSearch: logSearchSchema,
   component: Outlet,
 });

@@ -43,7 +43,7 @@ export function FeatureFlagTable() {
   } = useUsers();
 
   const search = useSearch({
-    from: "/feature-flags",
+    from: "/_authenticated/feature-flags",
   });
 
   const navigate = useNavigate({
@@ -170,7 +170,6 @@ export function FeatureFlagTable() {
       featureFlag.description,
       featureFlag.ownerName,
     ]),
-
   });
 
   const isPending = isFeatureFlagsPending || isUsersPending;

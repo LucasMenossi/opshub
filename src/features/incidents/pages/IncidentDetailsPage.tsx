@@ -14,7 +14,7 @@ import { PageErrorState, PageLoadingState } from "@/components/PageState";
 
 export function IncidentDetailsPage() {
   const { incidentId } = useParams({
-    from: "/incidents/$incidentId",
+    from: "/_authenticated/incidents/$incidentId",
   });
 
   const {

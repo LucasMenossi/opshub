@@ -47,11 +47,11 @@ export function ServiceTable() {
   const { data = [], isPending, isError, refetch, isFetching } = useServices();
 
   const search = useSearch({
-    from: "/services/",
+    from: "/_authenticated/services/",
   });
 
   const navigate = useNavigate({
-    from: "/services/",
+    from: "/services",
   });
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -155,7 +155,6 @@ export function ServiceTable() {
       formatEnvironment(service.environment),
       formatServiceStatus(service.status),
     ]),
-
   });
 
   if (isPending) {

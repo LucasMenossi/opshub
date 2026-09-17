@@ -9,7 +9,7 @@ const featureFlagSearchSchema = z.object({
   owner: z.string().optional(),
 });
 
-export const Route = createFileRoute("/feature-flags")({
+export const Route = createFileRoute("/_authenticated/feature-flags")({
   validateSearch: featureFlagSearchSchema,
   component: FeatureFlagsPage,
 });

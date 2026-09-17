@@ -11,7 +11,7 @@ const incidentSearchSchema = z.object({
   to: z.string().optional(),
 });
 
-export const Route = createFileRoute("/incidents")({
+export const Route = createFileRoute("/_authenticated/incidents")({
   validateSearch: incidentSearchSchema,
   component: Outlet,
 });

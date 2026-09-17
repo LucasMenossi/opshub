@@ -13,7 +13,7 @@ const deploymentSearchSchema = z.object({
   environment: z.enum(["production", "staging"]).optional(),
 });
 
-export const Route = createFileRoute("/deployments")({
+export const Route = createFileRoute("/_authenticated/deployments")({
   validateSearch: deploymentSearchSchema,
   component: DeploymentsPage,
 });

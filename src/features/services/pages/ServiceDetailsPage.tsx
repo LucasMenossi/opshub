@@ -9,7 +9,7 @@ import { PageErrorState, PageLoadingState } from "@/components/PageState";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({
-    from: "/services/$serviceId",
+    from: "/_authenticated/services/$serviceId",
   });
 
   const { data = [], isError, isPending, isFetching, refetch } = useServices();

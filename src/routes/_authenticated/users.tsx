@@ -8,7 +8,7 @@ const userSearchSchema = z.object({
   status: z.string().optional(),
 });
 
-export const Route = createFileRoute("/users")({
+export const Route = createFileRoute("/_authenticated/users")({
   validateSearch: userSearchSchema,
   component: Outlet,
 });

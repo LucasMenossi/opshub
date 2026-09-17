@@ -38,7 +38,7 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
   const { data = [], isPending, isError, refetch, isFetching } = useUsers();
 
   const search = useSearch({
-    from: "/users",
+    from: "/_authenticated/users",
   });
 
   const navigate = useNavigate({

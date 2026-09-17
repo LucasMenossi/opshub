@@ -9,141 +9,163 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DeploymentsRouteImport } from './routes/deployments'
-import { Route as FeatureFlagsRouteImport } from './routes/feature-flags'
-import { Route as IncidentsRouteImport } from './routes/incidents'
-import { Route as LogsRouteImport } from './routes/logs'
-import { Route as ServicesRouteImport } from './routes/services'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as UsersRouteImport } from './routes/users'
-import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
-import { Route as IncidentsIncidentIdRouteImport } from './routes/incidents.$incidentId'
-import { Route as LogsIndexRouteImport } from './routes/logs.index'
-import { Route as ServicesIndexRouteImport } from './routes/services.index'
-import { Route as ServicesServiceIdRouteImport } from './routes/services.$serviceId'
-import { Route as UsersIndexRouteImport } from './routes/users.index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedDeploymentsRouteImport } from './routes/_authenticated/deployments'
+import { Route as AuthenticatedFeatureFlagsRouteImport } from './routes/_authenticated/feature-flags'
+import { Route as AuthenticatedIncidentsRouteImport } from './routes/_authenticated/incidents'
+import { Route as AuthenticatedLogsRouteImport } from './routes/_authenticated/logs'
+import { Route as AuthenticatedServicesRouteImport } from './routes/_authenticated/services'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
+import { Route as AuthenticatedIncidentsIndexRouteImport } from './routes/_authenticated/incidents.index'
+import { Route as AuthenticatedIncidentsIncidentIdRouteImport } from './routes/_authenticated/incidents.$incidentId'
+import { Route as AuthenticatedLogsIndexRouteImport } from './routes/_authenticated/logs.index'
+import { Route as AuthenticatedServicesIndexRouteImport } from './routes/_authenticated/services.index'
+import { Route as AuthenticatedServicesServiceIdRouteImport } from './routes/_authenticated/services.$serviceId'
+import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users.index'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const DeploymentsRoute = DeploymentsRouteImport.update({
-  id: '/deployments',
-  path: '/deployments',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeatureFlagsRoute = FeatureFlagsRouteImport.update({
-  id: '/feature-flags',
-  path: '/feature-flags',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IncidentsRoute = IncidentsRouteImport.update({
+const AuthenticatedDeploymentsRoute =
+  AuthenticatedDeploymentsRouteImport.update({
+    id: '/deployments',
+    path: '/deployments',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedFeatureFlagsRoute =
+  AuthenticatedFeatureFlagsRouteImport.update({
+    id: '/feature-flags',
+    path: '/feature-flags',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedIncidentsRoute = AuthenticatedIncidentsRouteImport.update({
   id: '/incidents',
   path: '/incidents',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const LogsRoute = LogsRouteImport.update({
+const AuthenticatedLogsRoute = AuthenticatedLogsRouteImport.update({
   id: '/logs',
   path: '/logs',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const ServicesRoute = ServicesRouteImport.update({
+const AuthenticatedServicesRoute = AuthenticatedServicesRouteImport.update({
   id: '/services',
   path: '/services',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const SettingsRoute = SettingsRouteImport.update({
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const UsersRoute = UsersRouteImport.update({
+const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
   id: '/users',
   path: '/users',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
+const AuthenticatedIncidentsIndexRoute =
+  AuthenticatedIncidentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedIncidentsRoute,
+  } as any)
+const AuthenticatedIncidentsIncidentIdRoute =
+  AuthenticatedIncidentsIncidentIdRouteImport.update({
+    id: '/$incidentId',
+    path: '/$incidentId',
+    getParentRoute: () => AuthenticatedIncidentsRoute,
+  } as any)
+const AuthenticatedLogsIndexRoute = AuthenticatedLogsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => IncidentsRoute,
+  getParentRoute: () => AuthenticatedLogsRoute,
 } as any)
-const IncidentsIncidentIdRoute = IncidentsIncidentIdRouteImport.update({
-  id: '/$incidentId',
-  path: '/$incidentId',
-  getParentRoute: () => IncidentsRoute,
-} as any)
-const LogsIndexRoute = LogsIndexRouteImport.update({
+const AuthenticatedServicesIndexRoute =
+  AuthenticatedServicesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedServicesRoute,
+  } as any)
+const AuthenticatedServicesServiceIdRoute =
+  AuthenticatedServicesServiceIdRouteImport.update({
+    id: '/$serviceId',
+    path: '/$serviceId',
+    getParentRoute: () => AuthenticatedServicesRoute,
+  } as any)
+const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LogsRoute,
-} as any)
-const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
-  id: '/$serviceId',
-  path: '/$serviceId',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const UsersIndexRoute = UsersIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => UsersRoute,
+  getParentRoute: () => AuthenticatedUsersRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/deployments': typeof DeploymentsRoute
-  '/feature-flags': typeof FeatureFlagsRoute
-  '/incidents': typeof IncidentsRouteWithChildren
-  '/logs': typeof LogsRouteWithChildren
-  '/services': typeof ServicesRouteWithChildren
-  '/settings': typeof SettingsRoute
-  '/users': typeof UsersRouteWithChildren
-  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/incidents/': typeof IncidentsIndexRoute
-  '/logs/': typeof LogsIndexRoute
-  '/services/': typeof ServicesIndexRoute
-  '/users/': typeof UsersIndexRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/login': typeof LoginRoute
+  '/deployments': typeof AuthenticatedDeploymentsRoute
+  '/feature-flags': typeof AuthenticatedFeatureFlagsRoute
+  '/incidents': typeof AuthenticatedIncidentsRouteWithChildren
+  '/logs': typeof AuthenticatedLogsRouteWithChildren
+  '/services': typeof AuthenticatedServicesRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/users': typeof AuthenticatedUsersRouteWithChildren
+  '/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
+  '/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/incidents/': typeof AuthenticatedIncidentsIndexRoute
+  '/logs/': typeof AuthenticatedLogsIndexRoute
+  '/services/': typeof AuthenticatedServicesIndexRoute
+  '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/deployments': typeof DeploymentsRoute
-  '/feature-flags': typeof FeatureFlagsRoute
-  '/settings': typeof SettingsRoute
-  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/incidents': typeof IncidentsIndexRoute
-  '/logs': typeof LogsIndexRoute
-  '/services': typeof ServicesIndexRoute
-  '/users': typeof UsersIndexRoute
+  '/login': typeof LoginRoute
+  '/deployments': typeof AuthenticatedDeploymentsRoute
+  '/feature-flags': typeof AuthenticatedFeatureFlagsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
+  '/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/incidents': typeof AuthenticatedIncidentsIndexRoute
+  '/logs': typeof AuthenticatedLogsIndexRoute
+  '/services': typeof AuthenticatedServicesIndexRoute
+  '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/deployments': typeof DeploymentsRoute
-  '/feature-flags': typeof FeatureFlagsRoute
-  '/incidents': typeof IncidentsRouteWithChildren
-  '/logs': typeof LogsRouteWithChildren
-  '/services': typeof ServicesRouteWithChildren
-  '/settings': typeof SettingsRoute
-  '/users': typeof UsersRouteWithChildren
-  '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/incidents/': typeof IncidentsIndexRoute
-  '/logs/': typeof LogsIndexRoute
-  '/services/': typeof ServicesIndexRoute
-  '/users/': typeof UsersIndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authenticated/deployments': typeof AuthenticatedDeploymentsRoute
+  '/_authenticated/feature-flags': typeof AuthenticatedFeatureFlagsRoute
+  '/_authenticated/incidents': typeof AuthenticatedIncidentsRouteWithChildren
+  '/_authenticated/logs': typeof AuthenticatedLogsRouteWithChildren
+  '/_authenticated/services': typeof AuthenticatedServicesRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/users': typeof AuthenticatedUsersRouteWithChildren
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
+  '/_authenticated/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/_authenticated/incidents/': typeof AuthenticatedIncidentsIndexRoute
+  '/_authenticated/logs/': typeof AuthenticatedLogsIndexRoute
+  '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
+  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/deployments'
     | '/feature-flags'
     | '/incidents'
@@ -159,10 +181,11 @@ export interface FileRouteTypes {
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/login'
     | '/deployments'
     | '/feature-flags'
     | '/settings'
+    | '/'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
     | '/incidents'
@@ -171,193 +194,229 @@ export interface FileRouteTypes {
     | '/users'
   id:
     | '__root__'
-    | '/'
-    | '/deployments'
-    | '/feature-flags'
-    | '/incidents'
-    | '/logs'
-    | '/services'
-    | '/settings'
-    | '/users'
-    | '/incidents/$incidentId'
-    | '/services/$serviceId'
-    | '/incidents/'
-    | '/logs/'
-    | '/services/'
-    | '/users/'
+    | '/_authenticated'
+    | '/login'
+    | '/_authenticated/deployments'
+    | '/_authenticated/feature-flags'
+    | '/_authenticated/incidents'
+    | '/_authenticated/logs'
+    | '/_authenticated/services'
+    | '/_authenticated/settings'
+    | '/_authenticated/users'
+    | '/_authenticated/'
+    | '/_authenticated/incidents/$incidentId'
+    | '/_authenticated/services/$serviceId'
+    | '/_authenticated/incidents/'
+    | '/_authenticated/logs/'
+    | '/_authenticated/services/'
+    | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DeploymentsRoute: typeof DeploymentsRoute
-  FeatureFlagsRoute: typeof FeatureFlagsRoute
-  IncidentsRoute: typeof IncidentsRouteWithChildren
-  LogsRoute: typeof LogsRouteWithChildren
-  ServicesRoute: typeof ServicesRouteWithChildren
-  SettingsRoute: typeof SettingsRoute
-  UsersRoute: typeof UsersRouteWithChildren
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/deployments': {
-      id: '/deployments'
+    '/_authenticated/deployments': {
+      id: '/_authenticated/deployments'
       path: '/deployments'
       fullPath: '/deployments'
-      preLoaderRoute: typeof DeploymentsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDeploymentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/feature-flags': {
-      id: '/feature-flags'
+    '/_authenticated/feature-flags': {
+      id: '/_authenticated/feature-flags'
       path: '/feature-flags'
       fullPath: '/feature-flags'
-      preLoaderRoute: typeof FeatureFlagsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedFeatureFlagsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/incidents': {
-      id: '/incidents'
+    '/_authenticated/incidents': {
+      id: '/_authenticated/incidents'
       path: '/incidents'
       fullPath: '/incidents'
-      preLoaderRoute: typeof IncidentsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIncidentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/logs': {
-      id: '/logs'
+    '/_authenticated/logs': {
+      id: '/_authenticated/logs'
       path: '/logs'
       fullPath: '/logs'
-      preLoaderRoute: typeof LogsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedLogsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/services': {
-      id: '/services'
+    '/_authenticated/services': {
+      id: '/_authenticated/services'
       path: '/services'
       fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedServicesRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/settings': {
-      id: '/settings'
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/users': {
-      id: '/users'
+    '/_authenticated/users': {
+      id: '/_authenticated/users'
       path: '/users'
       fullPath: '/users'
-      preLoaderRoute: typeof UsersRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedUsersRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/incidents/': {
-      id: '/incidents/'
+    '/_authenticated/incidents/': {
+      id: '/_authenticated/incidents/'
       path: '/'
       fullPath: '/incidents/'
-      preLoaderRoute: typeof IncidentsIndexRouteImport
-      parentRoute: typeof IncidentsRoute
+      preLoaderRoute: typeof AuthenticatedIncidentsIndexRouteImport
+      parentRoute: typeof AuthenticatedIncidentsRoute
     }
-    '/incidents/$incidentId': {
-      id: '/incidents/$incidentId'
+    '/_authenticated/incidents/$incidentId': {
+      id: '/_authenticated/incidents/$incidentId'
       path: '/$incidentId'
       fullPath: '/incidents/$incidentId'
-      preLoaderRoute: typeof IncidentsIncidentIdRouteImport
-      parentRoute: typeof IncidentsRoute
+      preLoaderRoute: typeof AuthenticatedIncidentsIncidentIdRouteImport
+      parentRoute: typeof AuthenticatedIncidentsRoute
     }
-    '/logs/': {
-      id: '/logs/'
+    '/_authenticated/logs/': {
+      id: '/_authenticated/logs/'
       path: '/'
       fullPath: '/logs/'
-      preLoaderRoute: typeof LogsIndexRouteImport
-      parentRoute: typeof LogsRoute
+      preLoaderRoute: typeof AuthenticatedLogsIndexRouteImport
+      parentRoute: typeof AuthenticatedLogsRoute
     }
-    '/services/': {
-      id: '/services/'
+    '/_authenticated/services/': {
+      id: '/_authenticated/services/'
       path: '/'
       fullPath: '/services/'
-      preLoaderRoute: typeof ServicesIndexRouteImport
-      parentRoute: typeof ServicesRoute
+      preLoaderRoute: typeof AuthenticatedServicesIndexRouteImport
+      parentRoute: typeof AuthenticatedServicesRoute
     }
-    '/services/$serviceId': {
-      id: '/services/$serviceId'
+    '/_authenticated/services/$serviceId': {
+      id: '/_authenticated/services/$serviceId'
       path: '/$serviceId'
       fullPath: '/services/$serviceId'
-      preLoaderRoute: typeof ServicesServiceIdRouteImport
-      parentRoute: typeof ServicesRoute
+      preLoaderRoute: typeof AuthenticatedServicesServiceIdRouteImport
+      parentRoute: typeof AuthenticatedServicesRoute
     }
-    '/users/': {
-      id: '/users/'
+    '/_authenticated/users/': {
+      id: '/_authenticated/users/'
       path: '/'
       fullPath: '/users/'
-      preLoaderRoute: typeof UsersIndexRouteImport
-      parentRoute: typeof UsersRoute
+      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedUsersRoute
     }
   }
 }
 
-interface IncidentsRouteChildren {
-  IncidentsIncidentIdRoute: typeof IncidentsIncidentIdRoute
-  IncidentsIndexRoute: typeof IncidentsIndexRoute
+interface AuthenticatedIncidentsRouteChildren {
+  AuthenticatedIncidentsIncidentIdRoute: typeof AuthenticatedIncidentsIncidentIdRoute
+  AuthenticatedIncidentsIndexRoute: typeof AuthenticatedIncidentsIndexRoute
 }
 
-const IncidentsRouteChildren: IncidentsRouteChildren = {
-  IncidentsIncidentIdRoute: IncidentsIncidentIdRoute,
-  IncidentsIndexRoute: IncidentsIndexRoute,
+const AuthenticatedIncidentsRouteChildren: AuthenticatedIncidentsRouteChildren =
+  {
+    AuthenticatedIncidentsIncidentIdRoute:
+      AuthenticatedIncidentsIncidentIdRoute,
+    AuthenticatedIncidentsIndexRoute: AuthenticatedIncidentsIndexRoute,
+  }
+
+const AuthenticatedIncidentsRouteWithChildren =
+  AuthenticatedIncidentsRoute._addFileChildren(
+    AuthenticatedIncidentsRouteChildren,
+  )
+
+interface AuthenticatedLogsRouteChildren {
+  AuthenticatedLogsIndexRoute: typeof AuthenticatedLogsIndexRoute
 }
 
-const IncidentsRouteWithChildren = IncidentsRoute._addFileChildren(
-  IncidentsRouteChildren,
+const AuthenticatedLogsRouteChildren: AuthenticatedLogsRouteChildren = {
+  AuthenticatedLogsIndexRoute: AuthenticatedLogsIndexRoute,
+}
+
+const AuthenticatedLogsRouteWithChildren =
+  AuthenticatedLogsRoute._addFileChildren(AuthenticatedLogsRouteChildren)
+
+interface AuthenticatedServicesRouteChildren {
+  AuthenticatedServicesServiceIdRoute: typeof AuthenticatedServicesServiceIdRoute
+  AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
+}
+
+const AuthenticatedServicesRouteChildren: AuthenticatedServicesRouteChildren = {
+  AuthenticatedServicesServiceIdRoute: AuthenticatedServicesServiceIdRoute,
+  AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
+}
+
+const AuthenticatedServicesRouteWithChildren =
+  AuthenticatedServicesRoute._addFileChildren(
+    AuthenticatedServicesRouteChildren,
+  )
+
+interface AuthenticatedUsersRouteChildren {
+  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+}
+
+const AuthenticatedUsersRouteChildren: AuthenticatedUsersRouteChildren = {
+  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+}
+
+const AuthenticatedUsersRouteWithChildren =
+  AuthenticatedUsersRoute._addFileChildren(AuthenticatedUsersRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedDeploymentsRoute: typeof AuthenticatedDeploymentsRoute
+  AuthenticatedFeatureFlagsRoute: typeof AuthenticatedFeatureFlagsRoute
+  AuthenticatedIncidentsRoute: typeof AuthenticatedIncidentsRouteWithChildren
+  AuthenticatedLogsRoute: typeof AuthenticatedLogsRouteWithChildren
+  AuthenticatedServicesRoute: typeof AuthenticatedServicesRouteWithChildren
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedUsersRoute: typeof AuthenticatedUsersRouteWithChildren
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDeploymentsRoute: AuthenticatedDeploymentsRoute,
+  AuthenticatedFeatureFlagsRoute: AuthenticatedFeatureFlagsRoute,
+  AuthenticatedIncidentsRoute: AuthenticatedIncidentsRouteWithChildren,
+  AuthenticatedLogsRoute: AuthenticatedLogsRouteWithChildren,
+  AuthenticatedServicesRoute: AuthenticatedServicesRouteWithChildren,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedUsersRoute: AuthenticatedUsersRouteWithChildren,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
 )
-
-interface LogsRouteChildren {
-  LogsIndexRoute: typeof LogsIndexRoute
-}
-
-const LogsRouteChildren: LogsRouteChildren = {
-  LogsIndexRoute: LogsIndexRoute,
-}
-
-const LogsRouteWithChildren = LogsRoute._addFileChildren(LogsRouteChildren)
-
-interface ServicesRouteChildren {
-  ServicesServiceIdRoute: typeof ServicesServiceIdRoute
-  ServicesIndexRoute: typeof ServicesIndexRoute
-}
-
-const ServicesRouteChildren: ServicesRouteChildren = {
-  ServicesServiceIdRoute: ServicesServiceIdRoute,
-  ServicesIndexRoute: ServicesIndexRoute,
-}
-
-const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
-  ServicesRouteChildren,
-)
-
-interface UsersRouteChildren {
-  UsersIndexRoute: typeof UsersIndexRoute
-}
-
-const UsersRouteChildren: UsersRouteChildren = {
-  UsersIndexRoute: UsersIndexRoute,
-}
-
-const UsersRouteWithChildren = UsersRoute._addFileChildren(UsersRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DeploymentsRoute: DeploymentsRoute,
-  FeatureFlagsRoute: FeatureFlagsRoute,
-  IncidentsRoute: IncidentsRouteWithChildren,
-  LogsRoute: LogsRouteWithChildren,
-  ServicesRoute: ServicesRouteWithChildren,
-  SettingsRoute: SettingsRoute,
-  UsersRoute: UsersRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

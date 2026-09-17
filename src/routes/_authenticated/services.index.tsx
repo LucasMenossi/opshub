@@ -1,15 +1,15 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+
+import { ServicesPage } from "@/features/services";
 
 const serviceSearchSchema = z.object({
   q: z.string().optional(),
-
   status: z.enum(["healthy", "degraded", "down"]).optional(),
-
   environment: z.enum(["production", "staging"]).optional(),
 });
 
-export const Route = createFileRoute("/services")({
+export const Route = createFileRoute("/_authenticated/services/")({
   validateSearch: serviceSearchSchema,
-  component: Outlet,
+  component: ServicesPage,
 });

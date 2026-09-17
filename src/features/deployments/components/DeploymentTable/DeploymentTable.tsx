@@ -61,7 +61,7 @@ export function DeploymentTable() {
   } = useDeployments();
 
   const search = useSearch({
-    from: "/deployments",
+    from: "/_authenticated/deployments",
   });
 
   const navigate = useNavigate({
@@ -169,7 +169,6 @@ export function DeploymentTable() {
       formatEnvironment(deployment.environment),
       formatDeploymentStatus(deployment.status),
     ]),
-
   });
 
   if (isPending) {
@@ -227,9 +226,7 @@ export function DeploymentTable() {
             void navigate({
               search: {
                 ...search,
-                environment: isDeploymentEnvironment(value)
-                  ? value
-                  : undefined,
+                environment: isDeploymentEnvironment(value) ? value : undefined,
               },
               replace: true,
             });
