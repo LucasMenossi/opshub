@@ -23,7 +23,6 @@ import {
   LogTimeRangeFilter,
 } from "./LogFilters";
 import { LogList } from "./LogList";
-import { LogMetrics } from "./LogMetrics";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -84,7 +83,6 @@ export function LogExplorer() {
     timeRange,
     customStart: search.customStart ?? "",
     customEnd: search.customEnd ?? "",
-    refetchInterval: 10000,
   });
 
   const { data: servicesData } = useServices();
@@ -193,8 +191,6 @@ export function LogExplorer() {
 
   return (
     <div className="space-y-4">
-      <LogMetrics logs={logs} />
-
       <div className="space-y-2">
         <LogFilters>
           <LogSearch
