@@ -8,11 +8,14 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
+  DataTableToolbar,
 } from "@/components/DataTable";
 
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 
 import { formatDeploymentStatus, formatEnvironment } from "@/lib/formatters";
 
@@ -21,7 +24,10 @@ import type { DeploymentEnvironment, DeploymentStatus } from "../../api";
 import { useDeployments } from "../../hooks";
 
 import { deploymentColumns } from "./deploymentColumns";
-import { deploymentTableFilters } from "./deploymentTableFilters";
+import {
+  deploymentEnvironmentOptions,
+  deploymentStatusOptions,
+} from "./deploymentTableFilters";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -164,12 +170,6 @@ export function DeploymentTable() {
       formatDeploymentStatus(deployment.status),
     ]),
 
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
   });
 
   if (isPending) {
@@ -188,18 +188,71 @@ export function DeploymentTable() {
   }
 
   return (
-    <DataTable
-      table={table}
-      emptyMessage={
-        hasActiveFilters
-          ? "No deployments match the current filters."
-          : "No deployments found."
-      }
-      searchPlaceholder="Search deployments..."
-      filters={deploymentTableFilters}
-      searchValue={query}
-      onSearchChange={setQuery}
-      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
-    />
+    <div className="space-y-4">
+      <DataTableToolbar>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={query}
+          onChange={setQuery}
+          placeholder="Search deployments..."
+        />
+
+        <Select
+          value={search.status ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                status: isDeploymentStatus(value) ? value : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Statuses</option>
+          {deploymentStatusOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.environment ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                environment: isDeploymentEnvironment(value)
+                  ? value
+                  : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Environments</option>
+          {deploymentEnvironmentOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      </DataTableToolbar>
+
+      <DataTable
+        table={table}
+        emptyMessage={
+          hasActiveFilters
+            ? "No deployments match the current filters."
+            : "No deployments found."
+        }
+        onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
+      />
+    </div>
   );
 }

@@ -2,6 +2,8 @@ import { featureFlags } from "@/features/feature-flags/data/feature-flags";
 
 import { http, HttpResponse } from "msw";
 
+const FAILURE_RATE = 0.2;
+
 export const featureFlagHandlers = [
   http.get("/api/feature-flags", async () => {
     await new Promise((resolve) => {
@@ -15,6 +17,17 @@ export const featureFlagHandlers = [
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
     });
+
+    if (Math.random() < FAILURE_RATE) {
+      return HttpResponse.json(
+        {
+          message: "Failed to update feature flag",
+        },
+        {
+          status: 500,
+        },
+      );
+    }
 
     const featureFlag = featureFlags.find((flag) => flag.id === params.id);
 

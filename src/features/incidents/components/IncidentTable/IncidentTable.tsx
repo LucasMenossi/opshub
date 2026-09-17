@@ -11,6 +11,7 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
+  DataTableToolbar,
 } from "@/components/DataTable";
 
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
@@ -21,9 +22,11 @@ import { useIncidents } from "../../hooks";
 
 import { incidentColumns } from "./incidentColumns";
 import { IncidentDateRangeFilter } from "../IncidentDateRangeFilter";
-import { getIncidentTableFilters } from "./incidentTableFilters";
+import { getIncidentFilterOptions } from "./incidentTableFilters";
 
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -77,7 +80,7 @@ export function IncidentTable() {
     });
   }, [debouncedQuery, navigate, search]);
 
-  const filters = useMemo(() => getIncidentTableFilters(data), [data]);
+  const filterOptions = useMemo(() => getIncidentFilterOptions(data), [data]);
 
   const columnFilters = useMemo<ColumnFiltersState>(
     () => [
@@ -215,12 +218,6 @@ export function IncidentTable() {
       incident.owner,
     ]),
 
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
   });
 
   if (isPending) {
@@ -239,19 +236,103 @@ export function IncidentTable() {
   }
 
   return (
-    <DataTable
-      table={table}
-      emptyMessage={
-        hasActiveFilters
-          ? "No incidents match the current filters."
-          : "No incidents found."
-      }
-      searchPlaceholder="Search incidents..."
-      filters={filters}
-      searchValue={query}
-      onSearchChange={setQuery}
-      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
-      toolbar={
+    <div className="space-y-4">
+      <DataTableToolbar>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={query}
+          onChange={setQuery}
+          placeholder="Search incidents..."
+        />
+
+        <Select
+          value={search.severity ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                severity: isIncidentSeverity(value) ? value : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Severity</option>
+          {filterOptions.severity.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.status ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                status: isIncidentStatus(value) ? value : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Statuses</option>
+          {filterOptions.status.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.service ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                service: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Services</option>
+          {filterOptions.service.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.owner ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                owner: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Owners</option>
+          {filterOptions.owner.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
         <IncidentDateRangeFilter
           key={`${search.from ?? ""}-${search.to ?? ""}`}
           from={search.from ?? ""}
@@ -275,7 +356,17 @@ export function IncidentTable() {
             });
           }}
         />
-      }
-    />
+      </DataTableToolbar>
+
+      <DataTable
+        table={table}
+        emptyMessage={
+          hasActiveFilters
+            ? "No incidents match the current filters."
+            : "No incidents found."
+        }
+        onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
+      />
+    </div>
   );
 }

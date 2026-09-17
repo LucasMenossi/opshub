@@ -1,5 +1,5 @@
-import type { DataTableFilter } from "@/components/DataTable";
 import { formatIncidentSeverity, formatIncidentStatus } from "@/lib/formatters";
+import type { FilterOption } from "@/lib/types/filterOption";
 
 import type { Incident, IncidentSeverity, IncidentStatus } from "../../api";
 import {
@@ -11,35 +11,16 @@ const severities: IncidentSeverity[] = ["low", "medium", "high", "critical"];
 
 const statuses: IncidentStatus[] = ["open", "investigating", "resolved"];
 
-export function getIncidentTableFilters(
-  incidents: Incident[],
-): DataTableFilter[] {
-  return [
-    {
-      columnId: "severity",
-      label: "Severity",
-      options: createStaticFilterOptions(severities, formatIncidentSeverity),
-    },
-    {
-      columnId: "status",
-      label: "Status",
-      options: createStaticFilterOptions(statuses, formatIncidentStatus),
-    },
-    {
-      columnId: "service",
-      label: "Service",
-      options: createUniqueFilterOptions(
-        incidents,
-        (incident) => incident.service,
-      ),
-    },
-    {
-      columnId: "owner",
-      label: "Owner",
-      options: createUniqueFilterOptions(
-        incidents,
-        (incident) => incident.owner,
-      ),
-    },
-  ];
+export function getIncidentFilterOptions(incidents: Incident[]): {
+  severity: FilterOption[];
+  status: FilterOption[];
+  service: FilterOption[];
+  owner: FilterOption[];
+} {
+  return {
+    severity: createStaticFilterOptions(severities, formatIncidentSeverity),
+    status: createStaticFilterOptions(statuses, formatIncidentStatus),
+    service: createUniqueFilterOptions(incidents, (incident) => incident.service),
+    owner: createUniqueFilterOptions(incidents, (incident) => incident.owner),
+  };
 }

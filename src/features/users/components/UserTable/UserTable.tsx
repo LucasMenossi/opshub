@@ -11,14 +11,17 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
+  DataTableToolbar,
 } from "@/components/DataTable";
 
 import { formatUserRole, formatUserStatus } from "@/lib/formatters";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 import { useUsers } from "../../hooks";
-import { getUserTableFilters } from "./userTableFilters";
+import { getUserFilterOptions } from "./userTableFilters";
 import { userColumns } from "./userColumns";
 
 interface UserTableProps {
@@ -45,6 +48,8 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [query, setQuery] = useState(search.q ?? "");
+
+  const filterOptions = useMemo(() => getUserFilterOptions(data), [data]);
 
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY);
 
@@ -164,13 +169,6 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
       formatUserRole(user.role),
       formatUserStatus(user.status),
     ]),
-
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
   });
 
   useEffect(() => {
@@ -196,18 +194,91 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
   }
 
   return (
-    <DataTable
-      table={table}
-      emptyMessage={
-        hasActiveFilters
-          ? "No users match the current filters."
-          : "No users found."
-      }
-      searchPlaceholder="Search users..."
-      filters={getUserTableFilters(data)}
-      searchValue={query}
-      onSearchChange={setQuery}
-      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
-    />
+    <div className="space-y-4">
+      <DataTableToolbar>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={query}
+          onChange={setQuery}
+          placeholder="Search users..."
+        />
+
+        <Select
+          value={search.role ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                role: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Roles</option>
+          {filterOptions.role.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.team ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                team: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Teams</option>
+          {filterOptions.team.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.status ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                status: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Statuses</option>
+          {filterOptions.status.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      </DataTableToolbar>
+
+      <DataTable
+        table={table}
+        emptyMessage={
+          hasActiveFilters
+            ? "No users match the current filters."
+            : "No users found."
+        }
+        onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
+      />
+    </div>
   );
 }

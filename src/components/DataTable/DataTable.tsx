@@ -1,31 +1,17 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { flexRender, type Table } from "@tanstack/react-table";
-import type { ReactNode } from "react";
-import type { DataTableFilter } from "./types";
+
 import { Pagination } from "../Pagination";
-import { DataTableToolbar } from "./DataTableToolbar";
 
 interface DataTableProps<TData> {
   table: Table<TData>;
   emptyMessage?: string;
-  searchPlaceholder?: string;
-  filters?: DataTableFilter[];
-
-  searchValue?: string;
-  onSearchChange?: (value: string) => void;
   onClearFilters?: () => void;
-
-  toolbar?: ReactNode;
 }
 
 export function DataTable<TData>({
   table,
   emptyMessage = "No results found.",
-  searchPlaceholder = "Search...",
-  filters = [],
-  searchValue,
-  onSearchChange,
-  toolbar,
   onClearFilters,
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
@@ -35,15 +21,6 @@ export function DataTable<TData>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder={searchPlaceholder}
-        filters={filters}
-        toolbar={toolbar}
-        searchValue={searchValue}
-        onSearchChange={onSearchChange}
-      />
-
       <div className="overflow-x-auto rounded-lg border py-1">
         <table className="w-full min-w-175">
           <thead className="border-b bg-muted/50">

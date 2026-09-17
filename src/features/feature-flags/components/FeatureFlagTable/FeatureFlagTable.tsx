@@ -8,15 +8,18 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
+  DataTableToolbar,
 } from "@/components/DataTable";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useUsers } from "@/features/users";
 
 import { useFeatureFlags } from "../../hooks";
 import type { FeatureFlagTableRow } from "../../types";
 import { featureFlagColumns } from "./featureFlagColumns";
-import { getFeatureFlagTableFilters } from "./featureFlagTableFilters";
+import { getFeatureFlagFilterOptions } from "./featureFlagTableFilters";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -168,17 +171,16 @@ export function FeatureFlagTable() {
       featureFlag.ownerName,
     ]),
 
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
   });
 
   const isPending = isFeatureFlagsPending || isUsersPending;
 
   const isError = isFeatureFlagsError || isUsersError;
+
+  const filterOptions = useMemo(
+    () => getFeatureFlagFilterOptions(data),
+    [data],
+  );
 
   if (isPending) {
     return <DataTableSkeleton columns={5} />;
@@ -196,18 +198,74 @@ export function FeatureFlagTable() {
   }
 
   return (
-    <DataTable
-      table={table}
-      filters={getFeatureFlagTableFilters(data)}
-      searchPlaceholder="Search feature flags..."
-      emptyMessage={
-        hasActiveFilters
-          ? "No feature flags match the current filters."
-          : "No feature flags found."
-      }
-      searchValue={query}
-      onSearchChange={setQuery}
-      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
-    />
+    <div className="space-y-4">
+      <DataTableToolbar>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={query}
+          onChange={setQuery}
+          placeholder="Search feature flags..."
+        />
+
+        <Select
+          value={search.enabled === undefined ? "" : String(search.enabled)}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                enabled:
+                  value === "true"
+                    ? true
+                    : value === "false"
+                      ? false
+                      : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Statuses</option>
+          {filterOptions.enabled.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.owner ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                owner: value || undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Owners</option>
+          {filterOptions.owner.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      </DataTableToolbar>
+
+      <DataTable
+        table={table}
+        emptyMessage={
+          hasActiveFilters
+            ? "No feature flags match the current filters."
+            : "No feature flags found."
+        }
+        onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
+      />
+    </div>
   );
 }

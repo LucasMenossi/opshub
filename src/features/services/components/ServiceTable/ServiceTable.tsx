@@ -8,9 +8,12 @@ import {
   DataTable,
   DataTableError,
   DataTableSkeleton,
+  DataTableToolbar,
 } from "@/components/DataTable";
 
 import { createGlobalFilter, useDataTable } from "@/lib/table";
+import { SearchInput } from "@/components/SearchInput";
+import { Select } from "@/components/UI";
 
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
@@ -21,7 +24,10 @@ import type { Environment, ServiceStatus } from "../../api";
 import { useServices } from "../../hooks";
 
 import { serviceColumns } from "./serviceColumns";
-import { serviceTableFilters } from "./serviceTableFilters";
+import {
+  serviceEnvironmentOptions,
+  serviceStatusOptions,
+} from "./serviceTableFilters";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -150,12 +156,6 @@ export function ServiceTable() {
       formatServiceStatus(service.status),
     ]),
 
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
   });
 
   if (isPending) {
@@ -174,18 +174,69 @@ export function ServiceTable() {
   }
 
   return (
-    <DataTable
-      table={table}
-      emptyMessage={
-        hasActiveFilters
-          ? "No services match the current filters."
-          : "No services found."
-      }
-      searchPlaceholder="Search services..."
-      filters={serviceTableFilters}
-      searchValue={query}
-      onSearchChange={setQuery}
-      onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
-    />
+    <div className="space-y-4">
+      <DataTableToolbar>
+        <SearchInput
+          className="w-full max-w-sm"
+          value={query}
+          onChange={setQuery}
+          placeholder="Search services..."
+        />
+
+        <Select
+          value={search.status ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                status: isServiceStatus(value) ? value : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Statuses</option>
+          {serviceStatusOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          value={search.environment ?? ""}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            void navigate({
+              search: {
+                ...search,
+                environment: isEnvironment(value) ? value : undefined,
+              },
+              replace: true,
+            });
+          }}
+        >
+          <option value="">All Environments</option>
+          {serviceEnvironmentOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      </DataTableToolbar>
+
+      <DataTable
+        table={table}
+        emptyMessage={
+          hasActiveFilters
+            ? "No services match the current filters."
+            : "No services found."
+        }
+        onClearFilters={hasActiveFilters ? handleClearFilters : undefined}
+      />
+    </div>
   );
 }

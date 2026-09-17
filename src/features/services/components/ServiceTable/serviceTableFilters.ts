@@ -1,26 +1,20 @@
-import type { DataTableFilter } from "@/components/DataTable";
 import { formatEnvironment, formatServiceStatus } from "@/lib/formatters";
+import type { FilterOption } from "@/lib/types/filterOption";
 import type { Environment, ServiceStatus } from "../../api";
 
 export const serviceStatuses: ServiceStatus[] = ["healthy", "degraded", "down"];
 
 const serviceEnvironments: Environment[] = ["production", "staging"];
 
-export const serviceTableFilters: DataTableFilter[] = [
-  {
-    columnId: "status",
-    label: "Statuses",
-    options: serviceStatuses.map((status) => ({
-      value: status,
-      label: formatServiceStatus(status),
-    })),
-  },
-  {
-    columnId: "environment",
-    label: "Environments",
-    options: serviceEnvironments.map((environment) => ({
-      value: environment,
-      label: formatEnvironment(environment),
-    })),
-  },
-];
+export const serviceStatusOptions: FilterOption[] = serviceStatuses.map(
+  (status) => ({
+    value: status,
+    label: formatServiceStatus(status),
+  }),
+);
+
+export const serviceEnvironmentOptions: FilterOption[] =
+  serviceEnvironments.map((environment) => ({
+    value: environment,
+    label: formatEnvironment(environment),
+  }));
