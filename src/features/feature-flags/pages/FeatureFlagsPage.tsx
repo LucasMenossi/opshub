@@ -5,7 +5,7 @@ import { FeatureFlagTable } from "../components";
 
 export function FeatureFlagsPage() {
   return (
-    <Container size="xl">
+    <Container>
       <div className="space-y-8">
         <PageHeader
           title="Feature Flags"

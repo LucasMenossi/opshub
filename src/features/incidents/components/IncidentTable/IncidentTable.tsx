@@ -51,7 +51,7 @@ export function IncidentTable() {
   const { data = [], isPending, isError, refetch, isFetching } = useIncidents();
 
   const search = useSearch({
-    from: "/_authenticated/incidents",
+    from: "/_authenticated/incidents/",
   });
 
   const navigate = useNavigate({

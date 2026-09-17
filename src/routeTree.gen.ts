@@ -19,6 +19,8 @@ import { Route as AuthenticatedLogsRouteImport } from './routes/_authenticated/l
 import { Route as AuthenticatedServicesRouteImport } from './routes/_authenticated/services'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
+import { Route as AuthenticatedDeploymentsIndexRouteImport } from './routes/_authenticated/deployments.index'
+import { Route as AuthenticatedFeatureFlagsIndexRouteImport } from './routes/_authenticated/feature-flags.index'
 import { Route as AuthenticatedIncidentsIndexRouteImport } from './routes/_authenticated/incidents.index'
 import { Route as AuthenticatedIncidentsIncidentIdRouteImport } from './routes/_authenticated/incidents.$incidentId'
 import { Route as AuthenticatedLogsIndexRouteImport } from './routes/_authenticated/logs.index'
@@ -77,6 +79,18 @@ const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDeploymentsIndexRoute =
+  AuthenticatedDeploymentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDeploymentsRoute,
+  } as any)
+const AuthenticatedFeatureFlagsIndexRoute =
+  AuthenticatedFeatureFlagsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedFeatureFlagsRoute,
+  } as any)
 const AuthenticatedIncidentsIndexRoute =
   AuthenticatedIncidentsIndexRouteImport.update({
     id: '/',
@@ -115,8 +129,8 @@ const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
-  '/deployments': typeof AuthenticatedDeploymentsRoute
-  '/feature-flags': typeof AuthenticatedFeatureFlagsRoute
+  '/deployments': typeof AuthenticatedDeploymentsRouteWithChildren
+  '/feature-flags': typeof AuthenticatedFeatureFlagsRouteWithChildren
   '/incidents': typeof AuthenticatedIncidentsRouteWithChildren
   '/logs': typeof AuthenticatedLogsRouteWithChildren
   '/services': typeof AuthenticatedServicesRouteWithChildren
@@ -124,6 +138,8 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersRouteWithChildren
   '/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
   '/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/deployments/': typeof AuthenticatedDeploymentsIndexRoute
+  '/feature-flags/': typeof AuthenticatedFeatureFlagsIndexRoute
   '/incidents/': typeof AuthenticatedIncidentsIndexRoute
   '/logs/': typeof AuthenticatedLogsIndexRoute
   '/services/': typeof AuthenticatedServicesIndexRoute
@@ -131,12 +147,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/deployments': typeof AuthenticatedDeploymentsRoute
-  '/feature-flags': typeof AuthenticatedFeatureFlagsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/': typeof AuthenticatedIndexRoute
   '/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
   '/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/deployments': typeof AuthenticatedDeploymentsIndexRoute
+  '/feature-flags': typeof AuthenticatedFeatureFlagsIndexRoute
   '/incidents': typeof AuthenticatedIncidentsIndexRoute
   '/logs': typeof AuthenticatedLogsIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
@@ -146,8 +162,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authenticated/deployments': typeof AuthenticatedDeploymentsRoute
-  '/_authenticated/feature-flags': typeof AuthenticatedFeatureFlagsRoute
+  '/_authenticated/deployments': typeof AuthenticatedDeploymentsRouteWithChildren
+  '/_authenticated/feature-flags': typeof AuthenticatedFeatureFlagsRouteWithChildren
   '/_authenticated/incidents': typeof AuthenticatedIncidentsRouteWithChildren
   '/_authenticated/logs': typeof AuthenticatedLogsRouteWithChildren
   '/_authenticated/services': typeof AuthenticatedServicesRouteWithChildren
@@ -156,6 +172,8 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/incidents/$incidentId': typeof AuthenticatedIncidentsIncidentIdRoute
   '/_authenticated/services/$serviceId': typeof AuthenticatedServicesServiceIdRoute
+  '/_authenticated/deployments/': typeof AuthenticatedDeploymentsIndexRoute
+  '/_authenticated/feature-flags/': typeof AuthenticatedFeatureFlagsIndexRoute
   '/_authenticated/incidents/': typeof AuthenticatedIncidentsIndexRoute
   '/_authenticated/logs/': typeof AuthenticatedLogsIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
@@ -175,6 +193,8 @@ export interface FileRouteTypes {
     | '/users'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
+    | '/deployments/'
+    | '/feature-flags/'
     | '/incidents/'
     | '/logs/'
     | '/services/'
@@ -182,12 +202,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
-    | '/deployments'
-    | '/feature-flags'
     | '/settings'
     | '/'
     | '/incidents/$incidentId'
     | '/services/$serviceId'
+    | '/deployments'
+    | '/feature-flags'
     | '/incidents'
     | '/logs'
     | '/services'
@@ -206,6 +226,8 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/incidents/$incidentId'
     | '/_authenticated/services/$serviceId'
+    | '/_authenticated/deployments/'
+    | '/_authenticated/feature-flags/'
     | '/_authenticated/incidents/'
     | '/_authenticated/logs/'
     | '/_authenticated/services/'
@@ -289,6 +311,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/deployments/': {
+      id: '/_authenticated/deployments/'
+      path: '/'
+      fullPath: '/deployments/'
+      preLoaderRoute: typeof AuthenticatedDeploymentsIndexRouteImport
+      parentRoute: typeof AuthenticatedDeploymentsRoute
+    }
+    '/_authenticated/feature-flags/': {
+      id: '/_authenticated/feature-flags/'
+      path: '/'
+      fullPath: '/feature-flags/'
+      preLoaderRoute: typeof AuthenticatedFeatureFlagsIndexRouteImport
+      parentRoute: typeof AuthenticatedFeatureFlagsRoute
+    }
     '/_authenticated/incidents/': {
       id: '/_authenticated/incidents/'
       path: '/'
@@ -333,6 +369,34 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedDeploymentsRouteChildren {
+  AuthenticatedDeploymentsIndexRoute: typeof AuthenticatedDeploymentsIndexRoute
+}
+
+const AuthenticatedDeploymentsRouteChildren: AuthenticatedDeploymentsRouteChildren =
+  {
+    AuthenticatedDeploymentsIndexRoute: AuthenticatedDeploymentsIndexRoute,
+  }
+
+const AuthenticatedDeploymentsRouteWithChildren =
+  AuthenticatedDeploymentsRoute._addFileChildren(
+    AuthenticatedDeploymentsRouteChildren,
+  )
+
+interface AuthenticatedFeatureFlagsRouteChildren {
+  AuthenticatedFeatureFlagsIndexRoute: typeof AuthenticatedFeatureFlagsIndexRoute
+}
+
+const AuthenticatedFeatureFlagsRouteChildren: AuthenticatedFeatureFlagsRouteChildren =
+  {
+    AuthenticatedFeatureFlagsIndexRoute: AuthenticatedFeatureFlagsIndexRoute,
+  }
+
+const AuthenticatedFeatureFlagsRouteWithChildren =
+  AuthenticatedFeatureFlagsRoute._addFileChildren(
+    AuthenticatedFeatureFlagsRouteChildren,
+  )
 
 interface AuthenticatedIncidentsRouteChildren {
   AuthenticatedIncidentsIncidentIdRoute: typeof AuthenticatedIncidentsIncidentIdRoute
@@ -389,8 +453,8 @@ const AuthenticatedUsersRouteWithChildren =
   AuthenticatedUsersRoute._addFileChildren(AuthenticatedUsersRouteChildren)
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedDeploymentsRoute: typeof AuthenticatedDeploymentsRoute
-  AuthenticatedFeatureFlagsRoute: typeof AuthenticatedFeatureFlagsRoute
+  AuthenticatedDeploymentsRoute: typeof AuthenticatedDeploymentsRouteWithChildren
+  AuthenticatedFeatureFlagsRoute: typeof AuthenticatedFeatureFlagsRouteWithChildren
   AuthenticatedIncidentsRoute: typeof AuthenticatedIncidentsRouteWithChildren
   AuthenticatedLogsRoute: typeof AuthenticatedLogsRouteWithChildren
   AuthenticatedServicesRoute: typeof AuthenticatedServicesRouteWithChildren
@@ -400,8 +464,8 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedDeploymentsRoute: AuthenticatedDeploymentsRoute,
-  AuthenticatedFeatureFlagsRoute: AuthenticatedFeatureFlagsRoute,
+  AuthenticatedDeploymentsRoute: AuthenticatedDeploymentsRouteWithChildren,
+  AuthenticatedFeatureFlagsRoute: AuthenticatedFeatureFlagsRouteWithChildren,
   AuthenticatedIncidentsRoute: AuthenticatedIncidentsRouteWithChildren,
   AuthenticatedLogsRoute: AuthenticatedLogsRouteWithChildren,
   AuthenticatedServicesRoute: AuthenticatedServicesRouteWithChildren,

@@ -43,7 +43,7 @@ export function FeatureFlagTable() {
   } = useUsers();
 
   const search = useSearch({
-    from: "/_authenticated/feature-flags",
+    from: "/_authenticated/feature-flags/",
   });
 
   const navigate = useNavigate({

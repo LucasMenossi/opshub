@@ -1,14 +1,5 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-
-const userSearchSchema = z.object({
-  q: z.string().optional(),
-  role: z.string().optional(),
-  team: z.string().optional(),
-  status: z.string().optional(),
-});
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/users")({
-  validateSearch: userSearchSchema,
   component: Outlet,
 });

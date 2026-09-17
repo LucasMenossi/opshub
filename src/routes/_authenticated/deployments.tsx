@@ -1,19 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-
-import { DeploymentsPage } from "@/features/deployments";
-
-const deploymentSearchSchema = z.object({
-  q: z.string().optional(),
-
-  status: z
-    .enum(["pending", "running", "successful", "failed", "cancelled"])
-    .optional(),
-
-  environment: z.enum(["production", "staging"]).optional(),
-});
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/deployments")({
-  validateSearch: deploymentSearchSchema,
-  component: DeploymentsPage,
+  component: Outlet,
 });

@@ -61,7 +61,7 @@ export function DeploymentTable() {
   } = useDeployments();
 
   const search = useSearch({
-    from: "/_authenticated/deployments",
+    from: "/_authenticated/deployments/",
   });
 
   const navigate = useNavigate({

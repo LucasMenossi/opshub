@@ -28,7 +28,7 @@ const SEARCH_DEBOUNCE_DELAY = 300;
 
 export function LogExplorer() {
   const search = useSearch({
-    from: "/_authenticated/logs",
+    from: "/_authenticated/logs/",
   });
 
   const navigate = useNavigate({
