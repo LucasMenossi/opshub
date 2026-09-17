@@ -45,7 +45,18 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
     from: "/users",
   });
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const sorting = useMemo<SortingState>(
+    () =>
+      search.sortBy
+        ? [
+            {
+              id: search.sortBy,
+              desc: search.sortOrder === "desc",
+            },
+          ]
+        : [],
+    [search.sortBy, search.sortOrder],
+  );
 
   const [query, setQuery] = useState(search.q ?? "");
 
@@ -126,7 +137,21 @@ export function UserTable({ onSummaryChange }: UserTableProps) {
       columnFilters,
     },
 
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === "function" ? updater(sorting) : updater;
+
+      const nextSort = nextSorting[0];
+
+      void navigate({
+        search: {
+          ...search,
+          sortBy: nextSort?.id,
+          sortOrder: nextSort ? (nextSort.desc ? "desc" : "asc") : undefined,
+        },
+        replace: true,
+      });
+    },
 
     onGlobalFilterChange: (updater) => {
       const currentValue = query;

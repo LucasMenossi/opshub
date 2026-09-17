@@ -29,7 +29,7 @@ export function Logo({ onMobileClose }: LogoProps) {
       <button
         type="button"
         onClick={toggle}
-        className="hidden rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:block"
+        className="hidden rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:block cursor-pointer"
         aria-label="Toggle sidebar"
       >
         {isCollapsed ? (

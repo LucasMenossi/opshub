@@ -21,7 +21,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
       <button
         type="button"
         onClick={onMenuClick}
-        className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:hidden"
+        className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 lg:hidden cursor-pointer"
         aria-label="Open navigation"
       >
         <Menu size={20} />
@@ -35,7 +35,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
         <button
           type="button"
           onClick={handleLogout}
-          className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
+          className="rounded-md p-2 text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 cursor-pointer"
           aria-label="Logout"
           title="Logout"
         >

@@ -11,6 +11,8 @@ const deploymentSearchSchema = z.object({
     .optional(),
 
   environment: z.enum(["production", "staging"]).optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/deployments/")({

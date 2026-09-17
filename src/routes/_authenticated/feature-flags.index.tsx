@@ -7,6 +7,8 @@ const featureFlagSearchSchema = z.object({
   q: z.string().optional(),
   enabled: z.boolean().optional(),
   owner: z.string().optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/feature-flags/")({

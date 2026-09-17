@@ -259,7 +259,7 @@ export function LogExplorer() {
       <button
         type="button"
         onClick={() => setDetailsOpen((previous) => !previous)}
-        className="inline-flex h-10 items-center gap-2 rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+        className="inline-flex h-10 items-center gap-2 rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
       >
         {detailsOpen ? (
           <PanelRightClose className="h-4 w-4" />
@@ -281,7 +281,7 @@ export function LogExplorer() {
           <button
             type="button"
             onClick={handleClearFilters}
-            className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+            className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
           >
             Clear filters
           </button>

@@ -11,6 +11,8 @@ const incidentSearchSchema = z.object({
   owner: z.string().optional(),
   from: z.string().optional(),
   to: z.string().optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/incidents/")({

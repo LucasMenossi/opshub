@@ -52,7 +52,7 @@ function ThemeOption({
       type="button"
       onClick={() => onSelect(value)}
       aria-pressed={selected}
-      className={`flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition-colors ${
+      className={`flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition-colors cursor-pointer ${
         selected
           ? "border-foreground bg-muted text-foreground"
           : "border-border bg-background text-foreground hover:border-foreground/40 hover:bg-muted/50"

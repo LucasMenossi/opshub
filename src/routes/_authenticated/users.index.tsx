@@ -8,6 +8,8 @@ const userSearchSchema = z.object({
   role: z.string().optional(),
   team: z.string().optional(),
   status: z.string().optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/users/")({

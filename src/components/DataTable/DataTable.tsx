@@ -39,7 +39,7 @@ export function DataTable<TData>({
                         <button
                           type="button"
                           onClick={header.column.getToggleSortingHandler()}
-                          className="flex items-center gap-2 transition-colors hover:text-foreground"
+                          className="flex items-center gap-2 transition-colors hover:text-foreground cursor-pointer"
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -101,7 +101,7 @@ export function DataTable<TData>({
                       <button
                         type="button"
                         onClick={onClearFilters}
-                        className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted"
+                        className="mt-4 inline-flex h-10 items-center rounded-lg border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
                       >
                         Clear filters
                       </button>
