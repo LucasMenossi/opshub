@@ -1,4 +1,5 @@
 import type { LogSeverity } from "@/features/logs/api";
+import { assertNever } from "@/utils";
 
 export function formatLogSeverity(severity: LogSeverity): string {
   switch (severity) {
@@ -14,5 +15,7 @@ export function formatLogSeverity(severity: LogSeverity): string {
       return "Error";
     case "fatal":
       return "Fatal";
+    default:
+      return assertNever(severity);
   }
 }

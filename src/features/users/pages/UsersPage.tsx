@@ -16,11 +16,13 @@ export function UsersPage() {
 
   return (
     <Container>
-      <PageHeader
-        title="Users"
-        description={`${summary.users} ${userLabel} across ${summary.teams} ${teamLabel}.`}
-      />
-      <UserTable onSummaryChange={setSummary} />
+      <div className="space-y-8">
+        <PageHeader
+          title="Users"
+          description={`${summary.users} ${userLabel} across ${summary.teams} ${teamLabel}.`}
+        />
+        <UserTable onSummaryChange={setSummary} />
+      </div>
     </Container>
   );
 }

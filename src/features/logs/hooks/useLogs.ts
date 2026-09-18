@@ -90,13 +90,9 @@ export function useLogs(options: UseLogsOptions = {}) {
     },
 
     enabled: isCustomRangeValid,
-
     placeholderData: keepPreviousData,
-
     initialPageParam: undefined as string | undefined,
-
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-
     refetchInterval,
   });
 }

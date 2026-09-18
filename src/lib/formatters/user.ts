@@ -1,4 +1,5 @@
 import type { UserRole, UserStatus } from "@/features/users/api";
+import { assertNever } from "@/utils";
 
 export function formatUserRole(role: UserRole): string {
   switch (role) {
@@ -16,6 +17,9 @@ export function formatUserRole(role: UserRole): string {
 
     case "viewer":
       return "Viewer";
+
+    default:
+      return assertNever(role);
   }
 }
 
@@ -26,5 +30,8 @@ export function formatUserStatus(status: UserStatus): string {
 
     case "inactive":
       return "Inactive";
+
+    default:
+      return assertNever(status);
   }
 }

@@ -89,7 +89,6 @@ export function SettingsPage() {
 
   useEffect(() => {
     if (data) {
-      setTheme(data.theme);
       form.reset(data);
     }
   }, [data, form, setTheme]);
@@ -186,29 +185,48 @@ export function SettingsPage() {
           description="Update the profile information associated with your OpsHub account."
         >
           <div className="grid gap-5 md:grid-cols-2">
-            <label className="text-sm font-medium">
-              Name
-              <Input className="mt-2" {...form.register("profile.name")} />
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="profile-name">
+                Name
+              </label>
+
+              <Input id="profile-name" {...form.register("profile.name")} />
+
               <FieldError message={errors.profile?.name?.message} />
-            </label>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="profile-email">
+                Email
+              </label>
 
-            <label className="text-sm font-medium">
-              Email
-              <Input className="mt-2" {...form.register("profile.email")} />
+              <Input id="profile-email" {...form.register("profile.email")} />
+
               <FieldError message={errors.profile?.email?.message} />
-            </label>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="profile-team">
+                Team
+              </label>
 
-            <label className="text-sm font-medium">
-              Team
-              <Input className="mt-2" {...form.register("profile.team")} />
+              <Input id="profile-team" {...form.register("profile.team")} />
+
               <FieldError message={errors.profile?.team?.message} />
-            </label>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="profile-role">
+                Role
+              </label>
 
-            <label className="text-sm font-medium">
-              Role
-              <Input className="mt-2" {...form.register("profile.role")} />
+              <Select id="profile-role" {...form.register("profile.role")}>
+                <option value="Administrator">Administrator</option>
+                <option value="Engineering Manager">Engineering Manager</option>
+                <option value="Tech Lead">Tech Lead</option>
+                <option value="Developer">Developer</option>
+                <option value="Viewer">Viewer</option>
+              </Select>
+
               <FieldError message={errors.profile?.role?.message} />
-            </label>
+            </div>
           </div>
         </SettingsSection>
 

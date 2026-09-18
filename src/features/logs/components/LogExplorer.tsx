@@ -193,13 +193,15 @@ export function LogExplorer() {
     <div className="space-y-4">
       <div className="space-y-2">
         <LogFilters>
-          <LogSearch
-            value={query}
-            onChange={(value) => {
-              setQuery(value);
-              setSelectedLogId(null);
-            }}
-          />
+          <div className="w-full lg:w-auto">
+            <LogSearch
+              value={query}
+              onChange={(value) => {
+                setQuery(value);
+                setSelectedLogId(null);
+              }}
+            />
+          </div>
 
           <LogSeverityFilter
             value={severity}
