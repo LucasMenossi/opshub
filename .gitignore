@@ -21,3 +21,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Playwright
+playwright/.auth/
+test-results/
+playwright-report/
+blob-report/

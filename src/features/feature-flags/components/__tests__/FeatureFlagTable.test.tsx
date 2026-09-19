@@ -65,7 +65,7 @@ describe("FeatureFlagTable", () => {
 
     const featureFlagsRoute = createRoute({
       getParentRoute: () => rootRoute,
-      path: "/feature-flags",
+      path: "/_authenticated/feature-flags/",
       validateSearch: featureFlagSearchSchema,
       component: FeatureFlagTable,
     });
@@ -75,7 +75,7 @@ describe("FeatureFlagTable", () => {
     const router = createRouter({
       routeTree,
       history: createMemoryHistory({
-        initialEntries: ["/feature-flags"],
+        initialEntries: ["/_authenticated/feature-flags/"],
       }),
       scrollRestoration: false,
     });
