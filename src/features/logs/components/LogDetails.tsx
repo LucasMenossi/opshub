@@ -32,7 +32,7 @@ function DetailField({ label, children }: DetailFieldProps) {
 
 export function LogDetails({ log }: LogDetailsProps) {
   const [copiedLogId, setCopiedLogId] = useState<string | null>(null);
-  const copyTimeoutRef = useRef<number | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const copied = copiedLogId === log?.id;
 
