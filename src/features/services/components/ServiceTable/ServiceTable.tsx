@@ -28,12 +28,9 @@ import {
   serviceEnvironmentOptions,
   serviceStatusOptions,
 } from "./serviceTableFilters";
+import { getFilterValue } from "@/utils";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
-
-function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
-  return filters.find((filter) => filter.id === id)?.value;
-}
 
 function isServiceStatus(value: unknown): value is ServiceStatus {
   return value === "healthy" || value === "degraded" || value === "down";

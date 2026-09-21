@@ -23,16 +23,13 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useUsers } from "../../hooks";
 import { getUserFilterOptions } from "./userTableFilters";
 import { userColumns } from "./userColumns";
+import { getFilterValue } from "@/utils";
 
 interface UserTableProps {
   onSummaryChange?: (summary: { users: number; teams: number }) => void;
 }
 
 const SEARCH_DEBOUNCE_DELAY = 300;
-
-function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
-  return filters.find((filter) => filter.id === id)?.value;
-}
 
 export function UserTable({ onSummaryChange }: UserTableProps) {
   const { data = [], isPending, isError, refetch, isFetching } = useUsers();

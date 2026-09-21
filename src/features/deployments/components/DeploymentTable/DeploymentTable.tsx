@@ -28,12 +28,9 @@ import {
   deploymentEnvironmentOptions,
   deploymentStatusOptions,
 } from "./deploymentTableFilters";
+import { getFilterValue } from "@/utils";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
-
-function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
-  return filters.find((filter) => filter.id === id)?.value;
-}
 
 function isDeploymentStatus(value: unknown): value is DeploymentStatus {
   return (

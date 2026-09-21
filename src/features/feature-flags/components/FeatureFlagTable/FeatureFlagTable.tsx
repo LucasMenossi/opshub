@@ -20,12 +20,9 @@ import { useFeatureFlags } from "../../hooks";
 import type { FeatureFlagTableRow } from "../../types";
 import { featureFlagColumns } from "./featureFlagColumns";
 import { getFeatureFlagFilterOptions } from "./featureFlagTableFilters";
+import { getFilterValue } from "@/utils";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
-
-function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
-  return filters.find((filter) => filter.id === id)?.value;
-}
 
 export function FeatureFlagTable() {
   const {

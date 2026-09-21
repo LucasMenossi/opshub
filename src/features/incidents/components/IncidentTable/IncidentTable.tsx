@@ -27,12 +27,9 @@ import { getIncidentFilterOptions } from "./incidentTableFilters";
 import { createGlobalFilter, useDataTable } from "@/lib/table";
 import { SearchInput } from "@/components/SearchInput";
 import { Select } from "@/components/UI";
+import { getFilterValue } from "@/utils";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
-
-function getFilterValue(filters: ColumnFiltersState, id: string): unknown {
-  return filters.find((filter) => filter.id === id)?.value;
-}
 
 function isIncidentSeverity(value: unknown): value is IncidentSeverity {
   return (
