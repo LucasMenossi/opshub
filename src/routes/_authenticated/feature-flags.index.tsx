@@ -5,7 +5,14 @@ import { FeatureFlagsPage } from "@/features/feature-flags";
 
 const featureFlagSearchSchema = z.object({
   q: z.string().optional(),
-  enabled: z.boolean().optional(),
+
+  enabled: z.preprocess((value) => {
+    if (value === "true" || value === true) return true;
+    if (value === "false" || value === false) return false;
+
+    return undefined;
+  }, z.boolean().optional()),
+
   owner: z.string().optional(),
   sortBy: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),

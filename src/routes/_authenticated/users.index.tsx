@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { UsersPage } from "@/features/users";
+import { optionalSearchEnum } from "@/utils/searchSchema";
 
 const userSearchSchema = z.object({
   q: z.string().optional(),
@@ -9,7 +10,7 @@ const userSearchSchema = z.object({
   team: z.string().optional(),
   status: z.string().optional(),
   sortBy: z.string().optional(),
-  sortOrder: z.enum(["asc", "desc"]).optional(),
+  sortOrder: optionalSearchEnum(["asc", "desc"]),
 });
 
 export const Route = createFileRoute("/_authenticated/users/")({
